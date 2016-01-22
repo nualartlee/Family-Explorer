@@ -1,0 +1,56 @@
+﻿<Window x:Class="FamilyExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
+        xmlns:self="clr-namespace:FamilyExplorer"
+        Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized">    
+    <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.AddMother" CanExecute="AddMother_CanExecute" Executed="AddMother_Executed" />
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Canvas Grid.Column="1" Grid.Row="1" x:Name="FamilyTreeCanvas" Width="Auto" Height="Auto">
+            <ListBox x:Name="FamilyTreeListBox" ItemsSource="{Binding Members}" Width="500" Height="500">
+                <ListBox.ItemTemplate>                    
+                    <DataTemplate>                        
+                    <Border x:Name="BorderMain" BorderBrush="{Binding BorderBrush}"  Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
+                            Width="{Binding Width}" Height="{Binding Height}" Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
+                        
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                    <MenuItem Header="Add Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid x:Name="GridMain" Width="{Binding Width}" Height="{Binding Height}" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="2*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
+                            <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
+
+
+                        </Grid>
+                    </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                
+            </ListBox>
+            
+        </Canvas>
+
+    </Grid>
+</Window>
