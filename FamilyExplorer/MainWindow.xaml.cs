@@ -27,20 +27,8 @@ namespace FamilyExplorer
         {
             InitializeComponent();
             family = new Family();
-            this.DataContext = family;
-            //RenderFamily();
+            this.DataContext = family;           
         }
-
-        //public void RenderFamily()
-        //{
-        //    TreeCanvas.Children.Clear();
-        //    foreach (Person person in family.Members)
-        //    {
-        //        PersonView personView = new PersonView(person);
-        //        //personView.ContextMenu = PersonContextMenu();
-        //        TreeCanvas.Children.Add(personView);
-        //    }
-        //}
 
         public ContextMenu PersonContextMenu()
         {            
