@@ -198,6 +198,7 @@ namespace FamilyExplorer
                 if (value != generationIndex)
                 {
                     generationIndex = value;
+                    setPosition();
                     NotifyPropertyChanged();
                 }
             }
@@ -211,6 +212,7 @@ namespace FamilyExplorer
                 if (value != siblingIndex)
                 {
                     siblingIndex = value;
+                    setPosition();
                     NotifyPropertyChanged();
                 }
             }
@@ -326,7 +328,7 @@ namespace FamilyExplorer
             background = "White";
             colorText = "Black";
 
-            generationIndex = 100;
+            generationIndex = 0;
             siblingIndex = 0;
             
             setColors();
@@ -364,9 +366,9 @@ namespace FamilyExplorer
         }
 
         public void setPosition()
-        {
-            X = 1000 + GenerationIndex*300;
-            Y = 1000 + SiblingIndex*300;
+        {            
+            X = 500 + SiblingIndex*150 - Width/2;
+            Y = 500 + GenerationIndex * 120 - Height / 2;
         }
 
     }

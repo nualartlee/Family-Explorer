@@ -48,18 +48,6 @@ namespace FamilyExplorer
             AddPersonToFamily(person);            
         }
 
-
-        public RoutedCommand AddMotherRoutedCommand = new RoutedCommand();        
-  
-   //   CanExecuteDelegate = x => !String.IsNullOrEmpty(SearchText),
-   //   ExecuteDelegate = x => myDataView.Filter = stateObj => ((Person)stateObj).Name.Contains(SearchText)
-
-        //BindingCommand AddMother = new BindingCommand
-        //{
-        //    CanExecuteDelegate = x => AddMother_CanExecute(),
-        //    ExecuteDelegate = x => AddMother_Executed
-        //};
-
         public void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             Person person = (Person)e.Parameter;
