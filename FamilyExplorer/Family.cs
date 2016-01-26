@@ -81,6 +81,84 @@ namespace FamilyExplorer
             child.MotherId = mom.Id;
         }
 
+        public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            if (person.FatherId == 0)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        public void AddFather_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            AddFatherToPerson(person);
+        }
+
+        public void AddFatherToPerson(Person child)
+        {
+            Person dad = new Person(GetNextID());
+            dad.FirstName = "Father Of " + child.FirstName;
+            dad.LastName = "";
+            dad.Gender = "Male";
+            dad.GenerationIndex = child.GenerationIndex - 1;
+            dad.ChildrenIds.Add(child.Id);
+
+            AddPersonToFamily(dad);
+
+            child.FatherId = dad.Id;
+        }
+
+        public void AddSibling_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {           
+                e.CanExecute = true;          
+        }
+
+        public void AddSibling_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            AddSiblingToPerson(person);
+        }
+
+        public void AddSiblingToPerson(Person person)
+        {
+            Person sibling = new Person(GetNextID());
+            sibling.FirstName = "Sibling Of " + person.FirstName;
+            sibling.LastName = "";
+            sibling.Gender = "Not Specified";
+            sibling.GenerationIndex = person.GenerationIndex;
+            sibling.SiblingIds.Add(person.Id);
+            foreach (int siblingid in person.SiblingIds)
+            {
+                sibling.SiblingIds.Add(siblingid);
+            }
+            foreach (int siblingid in sibling.SiblingIds)
+            {
+                Person otherSibling = getPerson(siblingid);
+                if (otherSibling != null)
+                {
+                    otherSibling.SiblingIds.Add(sibling.Id);
+                }
+            }
+
+            AddPersonToFamily(sibling);            
+
+        }
+
+        private void AddToAllSiblings(Person person)
+        {
+
+        }
+
+        private Person getPerson(int ID)
+        {
+            return (Person)members.Where(m => m.Id == ID);
+        }
 
         private int GetNextID()
         {
@@ -101,7 +179,13 @@ namespace FamilyExplorer
 
         private void OrderGeneration(int generation)
         {
-
+            if (members.Count < 2) { return; }
+            List<Person> generationMembers = new List<Person> { };
+            generationMembers =(List<Person>)members.Where(m => m.GenerationIndex == generation).OrderBy(m => m.DOB).ToList<Person>();
+            for (int i = 0; i< generationMembers.Count();i++)
+            {
+                generationMembers[i].SiblingIndex = i;
+            }
         }
     }
 }

@@ -54,6 +54,17 @@ namespace FamilyExplorer
                                 }
                         );
 
+        public static readonly RoutedUICommand AddSibling = new RoutedUICommand
+                        (
+                                "AddSibling",
+                                "AddSibling",
+                                typeof(CustomCommands),
+                                new InputGestureCollection()
+                                {
+                                        new KeyGesture(Key.S, ModifierKeys.Alt)
+                                }
+                        );
+
         public static readonly RoutedUICommand AddFriend = new RoutedUICommand
                        (
                                "AddFriend",

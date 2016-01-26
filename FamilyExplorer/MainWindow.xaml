@@ -15,6 +15,7 @@
                         <MenuItem Header="Add">
                             <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Sibling" Command="self:CustomCommands.AddSibling" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
@@ -133,7 +134,8 @@
         <CommandBinding Command="self:CustomCommands.Edit" />
         <CommandBinding Command="self:CustomCommands.Delete" />
         <CommandBinding Command="self:CustomCommands.AddMother" CanExecute="AddMother_CanExecute" Executed="AddMother_Executed" />
-        <CommandBinding Command="self:CustomCommands.AddFather" />
+        <CommandBinding Command="self:CustomCommands.AddFather" CanExecute="AddFather_CanExecute" Executed="AddFather_Executed"/>
+        <CommandBinding Command="self:CustomCommands.AddSibling" CanExecute="AddSibling_CanExecute" Executed="AddSibling_Executed"/>
         <CommandBinding Command="self:CustomCommands.AddPartner" />
         <CommandBinding Command="self:CustomCommands.AddFriend" />
         <CommandBinding Command="self:CustomCommands.AddChild" />
