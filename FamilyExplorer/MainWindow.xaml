@@ -6,124 +6,128 @@
     <Window.Resources>
 
         <DataTemplate x:Key="StandardItemTemplate">
-            <Grid Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Width="{Binding Width}" Height="{Binding Height}">
-                <Border x:Name="BorderMain" BorderBrush="{Binding BorderBrush}"  Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
-                            >
-
-                    <Border.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Add">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                            <MenuItem Header="Set">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Border.ContextMenu>
-                    <Viewbox Width="Auto" Height="Auto">
-                        <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="2*" />
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
-                            <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
-                        </Grid>
-                    </Viewbox>
-                </Border>
-            </Grid>
+            <Border x:Name="BorderMain" Width="{Binding Width}" Height="{Binding Height}" BorderBrush="{Binding BorderBrush}"
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        <MenuItem Header="Add">
+                            <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        </MenuItem>
+                        <MenuItem Header="Set">
+                            <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        </MenuItem>
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Viewbox Width="Auto" Height="Auto">
+                    <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
+                        <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
+                    </Grid>
+                </Viewbox>
+            </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="SelectedTemplate">
-            <Grid Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Width="{Binding Width}" Height="{Binding Height}">
-                <Border x:Name="BorderMain" BorderBrush="{Binding BorderBrush}"  Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
-                            >
-
-                    <Border.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Add">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                            <MenuItem Header="Set">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Border.ContextMenu>
-                    <Viewbox Width="Auto" Height="Auto">
-                        <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="2*" />
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
-                            <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
-                        </Grid>
-                    </Viewbox>
-                </Border>
-            </Grid>
+            <Border x:Name="BorderMain" Width="{Binding Width}" Height="{Binding Height}" BorderBrush="{Binding BorderBrush}"
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        <MenuItem Header="Add">
+                            <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        </MenuItem>
+                        <MenuItem Header="Set">
+                            <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                        </MenuItem>
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Viewbox Width="Auto" Height="Auto">
+                    <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
+                        <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
+                    </Grid>
+                </Viewbox>
+            </Border>
         </DataTemplate>
 
         <Style TargetType="{x:Type ListBoxItem}" x:Key="ContainerStyle">
             <Setter Property="ContentTemplate" Value="{StaticResource StandardItemTemplate}" />
             <Setter Property="Canvas.Left" Value="{Binding X}" />
             <Setter Property="Canvas.Top" Value="{Binding Y}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="ContentTemplate" Value="{StaticResource SelectedTemplate}" />
+                    <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <Style TargetType="{x:Type ListBox}" x:Key="ListBoxStyle">
             <Style.Resources>
-                <!-- Background of selected item when focussed -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
-                         Color="White"/>
-                <!-- Background of selected item when not focussed -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" 
-                         Color="White" />
+                <!-- Style used if item is selected and listbox has keyboard focus -->
+                <Style x:Key="NoFocusVisualStyle" TargetType="Control">
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+                <!-- Apply this style -->
+                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
+                    <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
+                </Style>
+                <!-- Color used if item is selected and listbox has focus -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                <!-- Color used if item is selected and listbox does not have focus -->
+                <SolidColorBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                <!-- Font color used if item is selected and listbox has focus -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
             </Style.Resources>
-            <!--...-->
         </Style>
-        
+
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Edit" />
@@ -163,6 +167,6 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
-        </Canvas>       
+        </Canvas>
     </Grid>
 </Window>
