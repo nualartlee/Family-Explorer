@@ -79,5 +79,55 @@ namespace FamilyExplorer
         {
             family.AddSiblingByFather_Executed(sender, e);
         }
+
+        private void AddFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddFriend_CanExecute(sender, e);
+        }
+
+        private void AddFriend_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddFriend_Executed(sender, e);
+        }
+
+        private void AddPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddPartner_CanExecute(sender, e);
+        }
+
+        private void AddPartner_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddPartner_Executed(sender, e);
+        }
+
+        private void AddChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddChild_CanExecute(sender, e);
+        }
+
+        private void AddChild_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddChild_Executed(sender, e);
+        }
+
+        private void AddAbuser_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddAbuser_CanExecute(sender, e);
+        }
+
+        private void AddAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddAbuser_Executed(sender, e);
+        }
+
+        private void AddVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddVictim_CanExecute(sender, e);
+        }
+
+        private void AddVictim_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddVictim_Executed(sender, e);
+        }
     }
 }
