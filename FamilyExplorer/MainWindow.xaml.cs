@@ -50,15 +50,34 @@ namespace FamilyExplorer
             family.AddFather_Executed(sender, e);
         }
 
-        private void AddSibling_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void AddSiblingEqualParents_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            family.AddSibling_CanExecute(sender, e);
+            family.AddSiblingEqualParents_CanExecute(sender, e);
         }
 
-        private void AddSibling_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void AddSiblingEqualParents_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            family.AddSibling_Executed(sender, e);
+            family.AddSiblingEqualParents_Executed(sender, e);
         }
 
+        private void AddSiblingByMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddSiblingByMother_CanExecute(sender, e);
+        }
+
+        private void AddSiblingByMother_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddSiblingByMother_Executed(sender, e);
+        }
+
+        private void AddSiblingByFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.AddSiblingByFather_CanExecute(sender, e);
+        }
+
+        private void AddSiblingByFather_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.AddSiblingByFather_Executed(sender, e);
+        }
     }
 }

@@ -70,6 +70,7 @@ namespace FamilyExplorer
                 if (value != gender)
                 {
                     gender = value;
+                    setColors();
                     NotifyPropertyChanged();
                 }
             }

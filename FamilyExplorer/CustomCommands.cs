@@ -54,16 +54,38 @@ namespace FamilyExplorer
                                 }
                         );
 
-        public static readonly RoutedUICommand AddSibling = new RoutedUICommand
+        public static readonly RoutedUICommand AddSiblingEqualParents = new RoutedUICommand
                         (
-                                "AddSibling",
-                                "AddSibling",
+                                "Add Equal Parent Sibling",
+                                "Add Equal Parent Sibling",
                                 typeof(CustomCommands),
                                 new InputGestureCollection()
                                 {
                                         new KeyGesture(Key.S, ModifierKeys.Alt)
                                 }
                         );
+
+        public static readonly RoutedUICommand AddSiblingByMother = new RoutedUICommand
+                        (
+                                "Add Sibling By Mother",
+                                "Add Sibling By Mother",
+                                typeof(CustomCommands),
+                                new InputGestureCollection()
+                                {
+                                        new KeyGesture(Key.J, ModifierKeys.Alt)
+                                }
+                        );
+
+        public static readonly RoutedUICommand AddSiblingByFather = new RoutedUICommand
+                       (
+                               "Add Sibling By Father",
+                               "Add Sibling By Father",
+                               typeof(CustomCommands),
+                               new InputGestureCollection()
+                               {
+                                        new KeyGesture(Key.K, ModifierKeys.Alt)
+                               }
+                       );
 
         public static readonly RoutedUICommand AddFriend = new RoutedUICommand
                        (
