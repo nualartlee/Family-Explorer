@@ -13,6 +13,7 @@ namespace FamilyExplorer
 {
     public class Family : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
@@ -432,6 +433,34 @@ namespace FamilyExplorer
             AddPersonToFamily(victim);
 
             abuser.VictimIds.Add(victim.Id);
+        }
+
+        public void SetPersonsMother(Person person, Person mother)
+        {
+            
+            if (mother.Gender != "Female") { return; }
+            // Add mother to person                          
+            person.MotherId = mother.Id;         
+            // Add mother's current children to the person's sibling list                
+            foreach (int childId in mother.ChildrenIds)
+            {
+                person.SiblingIds.Add(childId);
+            }
+            // Add person to mother's other childrens' sibling lists
+            foreach (int siblingid in person.SiblingIds)
+            {
+                Person otherSibling = getPerson(siblingid);
+                if (otherSibling != null)
+                {
+                    otherSibling.SiblingIds.Add(person.Id);
+                }
+            }
+            // Add person to mother  
+            mother.ChildrenIds.Add(person.Id);
+
+            // Set generation index
+            person.GenerationIndex = mother.GenerationIndex - 1;
+            
         }
 
         private Person getPerson(int ID)

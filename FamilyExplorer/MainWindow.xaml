@@ -2,12 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"
-        Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized">
+        Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized"
+        PreviewMouseDown="Window_PreviewMouseDown">
     <Window.Resources>
 
-        <DataTemplate x:Key="StandardItemTemplate">
+        <DataTemplate x:Key="PersonItem">
             <Border x:Name="BorderMain" Width="{Binding Width}" Height="{Binding Height}" BorderBrush="{Binding BorderBrush}"
-                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5">
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
+                    MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
@@ -55,7 +57,7 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate x:Key="SelectedTemplate">
+        <DataTemplate x:Key="PersonItemSelected">
             <Border x:Name="BorderMain" Width="{Binding Width}" Height="{Binding Height}" BorderBrush="{Binding BorderBrush}"
                         Background="{Binding Background}" CornerRadius="10" BorderThickness="5">
                 <Border.ContextMenu>
@@ -106,13 +108,13 @@
         </DataTemplate>
 
         <Style TargetType="{x:Type ListBoxItem}" x:Key="ContainerStyle">
-            <Setter Property="ContentTemplate" Value="{StaticResource StandardItemTemplate}" />
+            <Setter Property="ContentTemplate" Value="{StaticResource PersonItem}" />
             <Setter Property="Canvas.Left" Value="{Binding X}" />
             <Setter Property="Canvas.Top" Value="{Binding Y}" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource StandardItemTemplate}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource PersonItem}" />
                     <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 </Trigger>
@@ -152,7 +154,7 @@
         <CommandBinding Command="self:CustomCommands.AddChild" CanExecute="AddChild_CanExecute" Executed="AddChild_Executed"/>
         <CommandBinding Command="self:CustomCommands.AddAbuser" CanExecute="AddAbuser_CanExecute" Executed="AddAbuser_Executed"/>
         <CommandBinding Command="self:CustomCommands.AddVictim" CanExecute="AddVictim_CanExecute" Executed="AddVictim_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetMother" />
+        <CommandBinding Command="self:CustomCommands.SetMother" CanExecute="SetMother_CanExecute" Executed="SetMother_Executed"/>
         <CommandBinding Command="self:CustomCommands.SetFather" />
         <CommandBinding Command="self:CustomCommands.SetPartner" />
         <CommandBinding Command="self:CustomCommands.SetFriend" />
@@ -171,7 +173,8 @@
         </Grid.RowDefinitions>
         <Canvas Grid.Row="1" Width="Auto" Height="Auto">
             <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}"  Width="1000" Height="1000" HorizontalContentAlignment="Stretch"
-                     ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}">
+                     ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" MouseLeftButtonDown="FamilyTreeListBox_MouseLeftButtonDown"
+                     MouseEnter="FamilyTreeListBox_MouseEnter" MouseLeave="FamilyTreeListBox_MouseLeave">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas IsItemsHost="True"

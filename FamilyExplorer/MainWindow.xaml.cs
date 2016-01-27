@@ -21,15 +21,18 @@ namespace FamilyExplorer
     public partial class MainWindow : Window
     {
 
+        private int commandInProgress;
+
         public Family family;
-        
+
         public MainWindow()
         {
             InitializeComponent();
+            commandInProgress = 0;
             family = new Family();
-            this.DataContext = family;           
+            this.DataContext = family;
         }
-        
+
         private void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             family.AddMother_CanExecute(sender, e);
@@ -128,6 +131,87 @@ namespace FamilyExplorer
         private void AddVictim_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             family.AddVictim_Executed(sender, e);
+        }
+
+        private void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SetMother_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            commandInProgress = 1;
+            this.Cursor = Cursors.Cross;
+        }
+
+        private void endCommandInProgress()
+        {
+            commandInProgress = 0;
+            this.Cursor = Cursors.Arrow;
+        }
+
+        private void FamilyTreeListBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var item = ItemsControl.ContainerFromElement(FamilyTreeListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+            var SourceItem = FamilyTreeListBox.SelectedItem as ListBoxItem;
+            if (item != null && SourceItem != null)
+            {
+                var personTarget = item.DataContext;                
+                var personSource = SourceItem.DataContext;
+                if (commandInProgress > 0 && personTarget.GetType().Equals(typeof(Person)) && personSource.GetType().Equals(typeof(Person)))
+                {
+                    switch (commandInProgress)
+                    {
+                        case 1:
+                            family.SetPersonsMother((Person)personSource, (Person)personTarget);
+                            break;
+                        case 2:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            endCommandInProgress();
+        }
+
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            endCommandInProgress();
+        }
+
+        
+
+        private void FamilyTreeListBox_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (commandInProgress > 0)
+            {
+                this.Cursor = Cursors.Cross;
+            }
+        }
+
+        private void FamilyTreeListBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (commandInProgress > 0)
+            {
+                this.Cursor = Cursors.No;
+            }
+        }
+
+        private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (commandInProgress > 0)
+            {
+                this.Cursor = Cursors.Hand;
+            }
+        }
+
+        private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (commandInProgress > 0)
+            {
+                this.Cursor = Cursors.Cross;
+            }
         }
     }
 }
