@@ -36,9 +36,54 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private Cursor familyTreeCursor;
+        public Cursor FamilyTreeCursor
+        {
+            get { return familyTreeCursor; }
+            set
+            {
+                if (value != familyTreeCursor)
+                {
+                    familyTreeCursor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string setCommandInProgressDescription;
+        public string SetCommandInProgressDescription
+        {
+            get { return setCommandInProgressDescription; }
+            set
+            {
+                if (value != setCommandInProgressDescription)
+                {
+                    setCommandInProgressDescription = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }        
+        private bool setCommandInProgress;
+        public bool SetCommandInProgress
+        {
+            get { return setCommandInProgress; }
+            set
+            {
+                if (value != setCommandInProgress)
+                {
+                    setCommandInProgress = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private int setCommandInProgressType;
+        private Person setCommandTargetPerson;
         
         public Family()
-        {                     
+        {
+            FamilyTreeCursor = Cursors.Arrow;
+            setCommandInProgressType = 0;
             CreateNewFamily();                
         }
 
@@ -435,7 +480,23 @@ namespace FamilyExplorer
             abuser.VictimIds.Add(victim.Id);
         }
 
-        public void SetPersonsMother(Person person, Person mother)
+        public void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            if (person.MotherId > 0) { e.CanExecute = false; }
+            else { e.CanExecute = true; }            
+        }
+
+        public void SetMother_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 1;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Mother";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private void SetMother_Finalized(Person person, Person mother)
         {
             
             if (mother.Gender != "Female") { return; }
@@ -461,6 +522,63 @@ namespace FamilyExplorer
             // Set generation index
             person.GenerationIndex = mother.GenerationIndex - 1;
             
+        }
+
+        public void FinalizeSetCommand(Person setCommandRelationPerson)
+        {
+            if (SetCommandInProgress)
+            {
+                switch (setCommandInProgressType)
+                {
+                    case 1:
+                        SetMother_Finalized(setCommandTargetPerson, setCommandRelationPerson);
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            EndSetCommand();
+        }        
+
+        public void EndSetCommand()
+        {
+            if (SetCommandInProgress)
+            {
+                setCommandTargetPerson = null;
+                setCommandInProgressType = 0;
+                SetCommandInProgressDescription = "";
+                SetCommandInProgress = false;
+                FamilyTreeCursor = Cursors.Arrow;
+            }
+        }
+
+        public void EnterSetCommandRelation(Person person)
+        {
+            
+            switch (setCommandInProgressType)
+            {
+                case 0: // No command in progress
+                    FamilyTreeCursor = Cursors.Arrow;
+                    break;
+                case 1: // Set Mother
+                    if ( person.GenerationIndex == setCommandTargetPerson.GenerationIndex - 1  && person.Gender == "Female")
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }                        
+                    break;
+                case 2:
+                    break;
+                default:
+                    FamilyTreeCursor = Cursors.Cross;
+                    break;
+            }                
+        }
+
+        public void ExitSetCommandRelation()
+        {
+            if (SetCommandInProgress) { FamilyTreeCursor = Cursors.Cross; }           
+            else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
         private Person getPerson(int ID)
@@ -495,5 +613,7 @@ namespace FamilyExplorer
                 generationMembers[i].SiblingIndex = i;
             }
         }
+
+
     }
 }

@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"
         Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized"
-        PreviewMouseDown="Window_PreviewMouseDown">
+        PreviewMouseDown="Window_PreviewMouseDown" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
 
         <DataTemplate x:Key="PersonItem">
             <Border x:Name="BorderMain" Width="{Binding Width}" Height="{Binding Height}" BorderBrush="{Binding BorderBrush}"
                         Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
-                    MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave">
+                    MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
@@ -173,8 +173,8 @@
         </Grid.RowDefinitions>
         <Canvas Grid.Row="1" Width="Auto" Height="Auto">
             <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}"  Width="1000" Height="1000" HorizontalContentAlignment="Stretch"
-                     ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" MouseLeftButtonDown="FamilyTreeListBox_MouseLeftButtonDown"
-                     MouseEnter="FamilyTreeListBox_MouseEnter" MouseLeave="FamilyTreeListBox_MouseLeave">
+                     ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
+                     Cursor="{Binding FamilyTreeCursor}">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas IsItemsHost="True"
