@@ -139,7 +139,67 @@ namespace FamilyExplorer
         {
             family.SetMother_Executed(sender, e);
         }
-                           
+
+        private void SetFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetFather_CanExecute(sender, e);
+        }
+
+        private void SetFather_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetFather_Executed(sender, e);
+        }
+
+        private void SetFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetFriend_CanExecute(sender, e);
+        }
+
+        private void SetFriend_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetFriend_Executed(sender, e);
+        }
+
+        private void SetPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetPartner_CanExecute(sender, e);
+        }
+
+        private void SetPartner_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetPartner_Executed(sender, e);
+        }
+
+        private void SetChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetChild_CanExecute(sender, e);
+        }
+
+        private void SetChild_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetChild_Executed(sender, e);
+        }
+
+        private void SetAbuser_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetAbuser_CanExecute(sender, e);
+        }
+
+        private void SetAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetAbuser_Executed(sender, e);
+        }
+
+        private void SetVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            family.SetVictim_CanExecute(sender, e);
+        }
+
+        private void SetVictim_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.SetVictim_Executed(sender, e);
+        }
+
         private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
         {            
             family.EnterSetCommandRelation((Person)((FrameworkElement)sender).DataContext);
@@ -155,12 +215,7 @@ namespace FamilyExplorer
             family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);
             e.Handled = true;
         }
-
-        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
+       
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             family.EndSetCommand();

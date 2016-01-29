@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"
         Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized"
-        PreviewMouseDown="Window_PreviewMouseDown" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
 
         <DataTemplate x:Key="PersonItem">
@@ -155,12 +155,12 @@
         <CommandBinding Command="self:CustomCommands.AddAbuser" CanExecute="AddAbuser_CanExecute" Executed="AddAbuser_Executed"/>
         <CommandBinding Command="self:CustomCommands.AddVictim" CanExecute="AddVictim_CanExecute" Executed="AddVictim_Executed"/>
         <CommandBinding Command="self:CustomCommands.SetMother" CanExecute="SetMother_CanExecute" Executed="SetMother_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetFather" />
-        <CommandBinding Command="self:CustomCommands.SetPartner" />
-        <CommandBinding Command="self:CustomCommands.SetFriend" />
-        <CommandBinding Command="self:CustomCommands.SetChild" />
-        <CommandBinding Command="self:CustomCommands.SetAbuser" />
-        <CommandBinding Command="self:CustomCommands.SetVictim" />
+        <CommandBinding Command="self:CustomCommands.SetFather" CanExecute="SetFather_CanExecute" Executed="SetFather_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SetFriend" CanExecute="SetFriend_CanExecute" Executed="SetFriend_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SetPartner" CanExecute="SetPartner_CanExecute" Executed="SetPartner_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SetChild" CanExecute="SetChild_CanExecute" Executed="SetChild_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SetAbuser" CanExecute="SetAbuser_CanExecute" Executed="SetAbuser_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SetVictim" CanExecute="SetVictim_CanExecute" Executed="SetVictim_Executed"/>
     </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>

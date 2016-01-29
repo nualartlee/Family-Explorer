@@ -373,16 +373,8 @@ namespace FamilyExplorer
         }
 
         public void AddChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            Person parent = (Person)e.Parameter;
-            if (parent.Gender == "Male" || parent.Gender == "Female")
-            {
-                e.CanExecute = true;
-            }
-            else
-            {
-                e.CanExecute = false;
-            }
+        {            
+                e.CanExecute = true;           
         }
 
         public void AddChild_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -496,6 +488,15 @@ namespace FamilyExplorer
             FamilyTreeCursor = Cursors.Cross;
         }
 
+        private bool SetMother_CanFinalize(Person person)
+        {
+            // Not in previous generation
+            if (person.GenerationIndex != setCommandTargetPerson.GenerationIndex - 1) { return false; }
+            // Not female
+            if (person.Gender != "Female") { return false; }
+            return true;
+        }
+
         private void SetMother_Finalized(Person person, Person mother)
         {
             
@@ -517,11 +518,232 @@ namespace FamilyExplorer
                 }
             }
             // Add person to mother  
-            mother.ChildrenIds.Add(person.Id);
+            mother.ChildrenIds.Add(person.Id);                       
+        }
 
-            // Set generation index
-            person.GenerationIndex = mother.GenerationIndex - 1;
+        public void SetFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            if (person.FatherId > 0) { e.CanExecute = false; }
+            else { e.CanExecute = true; }
+        }
+
+        public void SetFather_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 2;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Father";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetFather_CanFinalize(Person person)
+        {
+            // Not in previous generation
+            if (person.GenerationIndex != setCommandTargetPerson.GenerationIndex - 1) { return false; }
+            // Not male
+            if (person.Gender != "Male") { return false; }
+            return true;
+        }
+
+        private void SetFather_Finalized(Person person, Person father)
+        {
+
+            if (father.Gender != "Male") { return; }
+            // Add father to person                          
+            person.FatherId = father.Id;
+            // Add father's current children to the person's sibling list                
+            foreach (int childId in father.ChildrenIds)
+            {
+                person.SiblingIds.Add(childId);
+            }
+            // Add person to father's other childrens' sibling lists
+            foreach (int siblingid in person.SiblingIds)
+            {
+                Person otherSibling = getPerson(siblingid);
+                if (otherSibling != null)
+                {
+                    otherSibling.SiblingIds.Add(person.Id);
+                }
+            }
+            // Add person to father  
+            father.ChildrenIds.Add(person.Id);
+        }
+
+        public void SetFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        public void SetFriend_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 3;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Friend";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetFriend_CanFinalize(Person person)
+        {
+            // Not itself
+            if (person == setCommandTargetPerson) { return false; }
+            // Not already a friend
+            if (person.FriendIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            return true;
+        }
+
+        private void SetFriend_Finalized(Person person, Person partner)
+        {
+            // Add friend to person's friends list                        
+            person.FriendIds.Add(partner.Id);
+            // Add person to friend's friend list  
+            partner.FriendIds.Add(person.Id);
+        }
+
+        public void SetPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {            
+             e.CanExecute = true;            
+        }
+
+        public void SetPartner_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 4;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Partner";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetPartner_CanFinalize(Person person)
+        {
+            // Not itself
+            if (person == setCommandTargetPerson) { return false; }
+            // Not already a partner
+            if (person.PartnerIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            return true;
+        }
+
+        private void SetPartner_Finalized(Person person, Person partner)
+        {            
+            // Add partner to person's partner list                        
+            person.PartnerIds.Add(partner.Id);            
+            // Add person to partners' partner list  
+            partner.PartnerIds.Add(person.Id);
+        }
+
+        public void SetChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Person person = (Person)e.Parameter;
+            if (person.Gender == "Male" || person.Gender == "Female")
+            { e.CanExecute = true; }
+            else { e.CanExecute = false; }
+        }
+
+        public void SetChild_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 5;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Child";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetChild_CanFinalize(Person child)
+        {
+            // Not already a child
+            if (setCommandTargetPerson.ChildrenIds.Contains(child.Id)) { return false; }           
+            // Not in the next generation
+            if (setCommandTargetPerson.GenerationIndex + 1 != child.GenerationIndex) { return false; }            
+           return true; 
+        }
+
+        private void SetChild_Finalized(Person person, Person child)
+        {
+            // Add siblings to child
+            foreach (int childId in person.ChildrenIds)
+            {
+                if (!child.SiblingIds.Contains(childId))
+                {
+                    child.SiblingIds.Add(childId);
+                }                
+            }
+            // add child to siblings
+            foreach (int siblingid in person.SiblingIds)
+            {
+                Person otherSibling = getPerson(siblingid);
+                if (otherSibling != null)
+                {
+                    if (!otherSibling.SiblingIds.Contains(child.Id))
+                    {
+                        otherSibling.SiblingIds.Add(child.Id);
+                    }                    
+                }
+            }
+            // Add child to person's children list                        
+            person.ChildrenIds.Add(child.Id);
+            // Add person as child's parent
+            if (person.Gender == "Male") { child.FatherId = person.Id; }
+            if (person.Gender == "Female") { child.MotherId = person.Id; }
             
+        }
+
+        public void SetAbuser_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        public void SetAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 6;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Abuser";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetAbuser_CanFinalize(Person person)
+        {            
+            // Not already an abuser
+            if (person.VictimIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            return true;
+        }
+
+        private void SetAbuser_Finalized(Person person, Person abuser)
+        {
+            // Add abuser to person's abuser list                        
+            person.AbuserIds.Add(abuser.Id);
+            // Add person to abuser's victim list  
+            abuser.VictimIds.Add(person.Id);
+        }
+
+        public void SetVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        public void SetVictim_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandInProgressType = 7;
+            SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Victim";
+            SetCommandInProgress = true;
+            FamilyTreeCursor = Cursors.Cross;
+        }
+
+        private bool SetVictim_CanFinalize(Person person)
+        {
+            // Not already a victim
+            if (person.AbuserIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            return true;
+        }
+
+        private void SetVictim_Finalized(Person person, Person victim)
+        {
+            // Add victim to person's victim list                        
+            person.VictimIds.Add(victim.Id);
+            // Add person to victim's abuser list  
+            victim.AbuserIds.Add(person.Id);
         }
 
         public void FinalizeSetCommand(Person setCommandRelationPerson)
@@ -530,10 +752,33 @@ namespace FamilyExplorer
             {
                 switch (setCommandInProgressType)
                 {
-                    case 1:
-                        SetMother_Finalized(setCommandTargetPerson, setCommandRelationPerson);
+                    case 1: // Set mother
+                        if (SetMother_CanFinalize(setCommandRelationPerson))
+                        { SetMother_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
                         break;
-                    case 2:
+                    case 2: // Set father
+                        if (SetFather_CanFinalize(setCommandRelationPerson))
+                        { SetFather_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
+                        break;
+                    case 3: // Set friend
+                        if (SetFriend_CanFinalize(setCommandRelationPerson))
+                        { SetFriend_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
+                        break;
+                    case 4: // Set partner
+                        if (SetPartner_CanFinalize(setCommandRelationPerson))
+                        { SetPartner_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
+                        break;
+                    case 5: // Set child
+                        if (SetChild_CanFinalize(setCommandRelationPerson))
+                        { SetChild_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
+                        break;
+                    case 6: // Set abuser
+                        if (SetAbuser_CanFinalize(setCommandRelationPerson))
+                        { SetAbuser_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
+                        break;
+                    case 7: // Set victim
+                        if (SetVictim_CanFinalize(setCommandRelationPerson))
+                        { SetVictim_Finalized(setCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     default:
                         break;
@@ -562,12 +807,40 @@ namespace FamilyExplorer
                 case 0: // No command in progress
                     FamilyTreeCursor = Cursors.Arrow;
                     break;
-                case 1: // Set Mother
-                    if ( person.GenerationIndex == setCommandTargetPerson.GenerationIndex - 1  && person.Gender == "Female")
+                case 1: // Set mother
+                    if (SetMother_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }                        
                     break;
-                case 2:
+                case 2: // Set father
+                    if (SetFather_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }
+                    break;
+                case 3: // Set friend
+                    if (SetFriend_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }
+                    break;
+                case 4: // Set partner
+                    if (SetPartner_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }
+                    break;
+                case 5: // Set child
+                    if (SetChild_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }                    
+                    else { FamilyTreeCursor = Cursors.No; }
+                    break;
+                case 6: // Set abuser
+                    if (SetAbuser_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }
+                    break;
+                case 7: // Set victim
+                    if (SetVictim_CanFinalize(person))
+                    { FamilyTreeCursor = Cursors.Hand; }
+                    else { FamilyTreeCursor = Cursors.No; }
                     break;
                 default:
                     FamilyTreeCursor = Cursors.Cross;
