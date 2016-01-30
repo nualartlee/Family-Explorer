@@ -37,6 +37,61 @@ namespace FamilyExplorer
             }
         }
 
+        private double xposition;
+        public double XPosition
+        {
+            get { return xposition; }
+            set
+            {
+                if (value != xposition)
+                {
+                    xposition = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double yposition;
+        public double YPosition
+        {
+            get { return yposition; }
+            set
+            {
+                if (value != yposition)
+                {
+                    yposition = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private double treewidth;
+        public double TreeWidth
+        {
+            get { return treewidth; }
+            set
+            {
+                if (value != treewidth)
+                {
+                    treewidth = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double treeheight;
+        public double TreeHeight
+        {
+            get { return treeheight; }
+            set
+            {
+                if (value != treeheight)
+                {
+                    treeheight = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
         private Cursor familyTreeCursor;
         public Cursor FamilyTreeCursor
         {
@@ -484,8 +539,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 1;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Mother";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;            
         }
 
         private bool SetMother_CanFinalize(Person person)
@@ -533,8 +587,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 2;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Father";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;            
         }
 
         private bool SetFather_CanFinalize(Person person)
@@ -580,8 +633,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 3;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Friend";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;            
         }
 
         private bool SetFriend_CanFinalize(Person person)
@@ -611,8 +663,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 4;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Partner";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;           
         }
 
         private bool SetPartner_CanFinalize(Person person)
@@ -645,8 +696,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 5;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Child";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;            
         }
 
         private bool SetChild_CanFinalize(Person child)
@@ -698,8 +748,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 6;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Abuser";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;            
         }
 
         private bool SetAbuser_CanFinalize(Person person)
@@ -727,8 +776,7 @@ namespace FamilyExplorer
             setCommandTargetPerson = (Person)e.Parameter;
             setCommandInProgressType = 7;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Victim";
-            SetCommandInProgress = true;
-            FamilyTreeCursor = Cursors.Cross;
+            SetCommandInProgress = true;           
         }
 
         private bool SetVictim_CanFinalize(Person person)
@@ -843,14 +891,14 @@ namespace FamilyExplorer
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 default:
-                    FamilyTreeCursor = Cursors.Cross;
+                    FamilyTreeCursor = Cursors.Arrow;
                     break;
             }                
         }
 
         public void ExitSetCommandRelation()
         {
-            if (SetCommandInProgress) { FamilyTreeCursor = Cursors.Cross; }           
+            if (SetCommandInProgress) { FamilyTreeCursor = Cursors.Arrow; }           
             else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
@@ -874,6 +922,7 @@ namespace FamilyExplorer
             }
             Members.Add(person);
             OrderGeneration(person.GenerationIndex);
+            SetTreeDimensions();
         }
 
         private void OrderGeneration(int generation)
@@ -887,6 +936,30 @@ namespace FamilyExplorer
             }
         }
 
+        private int GetNumberOfGenerations()
+        {
+            return Members.Max(m => m.GenerationIndex) - Members.Min(m => m.GenerationIndex) + 1;            
+        }
+
+        private int GetMaxNumberOfSingleGenPeople()
+        {
+            return Members.Max(m => m.SiblingIndex) + 1;
+        }
+
+        private void SetTreeDimensions()
+        {
+            //TreeWidth = (GetMaxNumberOfSingleGenPeople() * 100) - 50;
+            //TreeHeight = (GetNumberOfGenerations() * 180) - 80;            
+            TreeWidth = 100000;
+            TreeHeight = 100000;
+        }
+
+        public void SetTreePositionOnWindow(double windowWidth, double windowHeight)
+        {
+            SetTreeDimensions();
+            XPosition = (windowWidth / 2) - (TreeWidth / 2);
+            YPosition = (windowHeight / 2) - (TreeHeight / 2);
+        }
 
     }
 }

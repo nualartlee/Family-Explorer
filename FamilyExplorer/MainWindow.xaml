@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"
         Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
     <Window.Resources>
 
         <DataTemplate x:Key="PersonItem">
@@ -163,26 +163,27 @@
         <CommandBinding Command="self:CustomCommands.SetVictim" CanExecute="SetVictim_CanExecute" Executed="SetVictim_Executed"/>
     </Window.CommandBindings>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="500"/>
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="1" Width="Auto" Height="Auto">
-            <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}"  Width="1000" Height="1000" HorizontalContentAlignment="Stretch"
+        <Canvas x:Name="TreeCanvas" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="TreeCanvas_MouseMove" SizeChanged="TreeCanvas_SizeChanged">
+            <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
+                     Width="{Binding TreeWidth}" Height="{Binding TreeHeight}"
                      ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
                      Cursor="{Binding FamilyTreeCursor}">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas IsItemsHost="True"
-                            Width="1000"
-                            Height="1000"/>
+                        <Canvas IsItemsHost="True" />                                                    
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
+            <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
+                <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
+                    <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
+                </Border>
+            </Popup>
         </Canvas>
     </Grid>
 </Window>

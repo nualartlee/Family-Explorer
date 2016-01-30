@@ -23,11 +23,17 @@ namespace FamilyExplorer
         
         public Family family;
 
+        public Point FamilyTreeListBox_MousePosition
+        {
+            get { return Mouse.GetPosition(FamilyTreeListBox); }
+            set { }             
+        }
+
         public MainWindow()
         {
             InitializeComponent();            
             family = new Family();
-            this.DataContext = family;
+            this.DataContext = family;            
         }
 
         private void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -219,6 +225,22 @@ namespace FamilyExplorer
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             family.EndSetCommand();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            family.EndSetCommand();
+        }
+
+        private void TreeCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            ToolTipPopup.HorizontalOffset = e.GetPosition(TreeCanvas).X +20;
+            ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 10;            
+        }
+
+        private void TreeCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            family.SetTreePositionOnWindow(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);
         }
     }
 }

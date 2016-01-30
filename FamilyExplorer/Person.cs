@@ -370,8 +370,8 @@ namespace FamilyExplorer
 
         public void setPosition()
         {            
-            X = 500 + SiblingIndex*150 - Width/2;
-            Y = 500 + GenerationIndex * 120 - Height / 2;
+            X = 50000 + SiblingIndex*150 - Width/2;
+            Y = 50000 + GenerationIndex * 120 - Height / 2;
         }
 
     }
