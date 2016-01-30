@@ -90,6 +90,21 @@ namespace FamilyExplorer
                 }
             }
         }
+        private double windowWidth;
+        private double windowHeight;
+        private double treeScale;
+        public double TreeScale
+        {
+            get { return treeScale; }
+            set
+            {
+                if (value != treeScale)
+                {
+                    treeScale = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
 
         private Cursor familyTreeCursor;
@@ -139,12 +154,14 @@ namespace FamilyExplorer
         {
             FamilyTreeCursor = Cursors.Arrow;
             setCommandInProgressType = 0;
-            CreateNewFamily();                
+            CreateNewFamily();
+            CenterTreeInWindow();      
         }
 
 
         private void CreateNewFamily()
         {
+            treeScale = 1;
             members = new ObservableCollection<Person> { };
             Person person = new Person(GetNextID());                                              
             AddPersonToFamily(person);            
@@ -954,11 +971,31 @@ namespace FamilyExplorer
             TreeHeight = 100000;
         }
 
-        public void SetTreePositionOnWindow(double windowWidth, double windowHeight)
+        public void SetWindowSize(double width, double height)
         {
+            windowWidth = width;
+            windowHeight = height;
+        }
+
+        private void CenterTreeInWindow()
+        {
+            
             SetTreeDimensions();
             XPosition = (windowWidth / 2) - (TreeWidth / 2);
             YPosition = (windowHeight / 2) - (TreeHeight / 2);
+        }
+        
+        public void MoveTreePositionInWindow(double deltaX, double deltaY)
+        {
+            XPosition += deltaX / TreeScale;
+            YPosition += deltaY / TreeScale;
+        }
+
+        public void ScaleTree(double scaleIncrease)
+        {
+            //XPosition = (XPosition / TreeScale) * (TreeScale + scaleIncrease);
+            //YPosition = (YPosition / TreeScale) * (TreeScale + scaleIncrease);
+            TreeScale += scaleIncrease;
         }
 
     }

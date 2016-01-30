@@ -20,14 +20,12 @@ namespace FamilyExplorer
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        public Family family;
 
-        public Point FamilyTreeListBox_MousePosition
-        {
-            get { return Mouse.GetPosition(FamilyTreeListBox); }
-            set { }             
-        }
+        private bool isMouseCaptured;
+        private double mouseVerticalPosition;
+        private double mouseHorizontalPosition;
+
+        public Family family;        
 
         public MainWindow()
         {
@@ -231,16 +229,53 @@ namespace FamilyExplorer
         {
             family.EndSetCommand();
         }
-
-        private void TreeCanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            ToolTipPopup.HorizontalOffset = e.GetPosition(TreeCanvas).X +20;
-            ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 10;            
-        }
-
+       
         private void TreeCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            family.SetTreePositionOnWindow(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);
+            family.SetWindowSize(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);                      
+        }
+       
+        private void FamilyTreeListBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListBox FamilyTreeListBox = sender as ListBox;
+            mouseVerticalPosition = e.GetPosition(null).Y;
+            mouseHorizontalPosition = e.GetPosition(null).X;
+            isMouseCaptured = true;
+            FamilyTreeListBox.CaptureMouse();
+        }
+
+        private void FamilyTreeListBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            
+            if (isMouseCaptured)
+            {
+                // Calculate distance moved
+                double deltaX = e.GetPosition(null).X - mouseHorizontalPosition;
+                double deltaY = e.GetPosition(null).Y - mouseVerticalPosition;
+                // Move Tree
+                family.MoveTreePositionInWindow(deltaX, deltaY);
+                // Record current position
+                mouseHorizontalPosition = e.GetPosition(null).X;
+                mouseVerticalPosition = e.GetPosition(null).Y;
+                
+            }
+            // Tooltip for set commands
+            ToolTipPopup.HorizontalOffset = e.GetPosition(TreeCanvas).X + 20;
+            ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 30;
+        }
+
+        private void FamilyTreeListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ListBox FamilyTreeListBox = sender as ListBox;
+            isMouseCaptured = false;
+            FamilyTreeListBox.ReleaseMouseCapture();
+            mouseVerticalPosition = -1;
+            mouseHorizontalPosition = -1;
+        }
+
+        private void FamilyTreeListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            family.ScaleTree(Convert.ToDouble(e.Delta)/1000);
         }
     }
 }
