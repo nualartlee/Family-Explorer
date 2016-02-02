@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"
-        Title="Family Explorer" Height="960" Width="1200" WindowState="Maximized" x:Name="FamilyExplorerWindow"
+        Title="Family Explorer" WindowState="Maximized" x:Name="FamilyExplorerWindow"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
     <Window.Resources>
 
@@ -164,31 +164,83 @@
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Canvas x:Name="TreeCanvas" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SizeChanged="TreeCanvas_SizeChanged"                
-                     PreviewMouseWheel="FamilyTreeListBox_PreviewMouseWheel">
-            <Canvas.LayoutTransform>
-                <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding TreeScale}" ScaleY="{Binding TreeScale}" />
-            </Canvas.LayoutTransform>
-            <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
+
+        <Menu x:Name="MainMenu" Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" />
+                <MenuItem Header="_Open" />
+                <MenuItem Header="_Save" />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" />
+                <MenuItem Header="_Redo" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Zoom" />
+            </MenuItem>
+            <MenuItem Header="_About">
+            </MenuItem>
+        </Menu>
+
+        <Grid x:Name="MainGrid" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" Background="LightGray">
+                    <TextBlock Text="Person" FontSize="14" Foreground="Black"/>
+                </Border>
+            </Grid>
+            <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
+            <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                <Canvas x:Name="TreeCanvas" SizeChanged="TreeCanvas_SizeChanged"  Width="{Binding TreeWidth}" Height="{Binding TreeHeight}">
+                <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
                      Width="{Binding TreeWidth}" Height="{Binding TreeHeight}"
                      ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
                      Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single"
                      MouseLeftButtonDown="FamilyTreeListBox_MouseLeftButtonDown" MouseMove="FamilyTreeListBox_MouseMove" MouseLeftButtonUp="FamilyTreeListBox_MouseLeftButtonUp"
-                     >
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas IsItemsHost="True" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-            <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
-                <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
-                    <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
-                </Border>
-            </Popup>
-        </Canvas>
+                     PreviewMouseWheel="FamilyTreeListBox_PreviewMouseWheel"
+                     RenderTransformOrigin="{Binding TreeScaleOrigin}">
+                    <ListBox.RenderTransform>
+                        <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding TreeScale}" ScaleY="{Binding TreeScale}" />
+                    </ListBox.RenderTransform>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Center Tree" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
+                    <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
+                        <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
+                    </Border>
+                </Popup>
+            </Canvas>
+            </ScrollViewer>
+        </Grid>
+
     </Grid>
 </Window>

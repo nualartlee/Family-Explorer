@@ -275,7 +275,10 @@ namespace FamilyExplorer
 
         private void FamilyTreeListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            family.ScaleTree(Convert.ToDouble(e.Delta)/1000);
+            //FamilyTreeListBoxScaleTransform.CenterX = e.GetPosition(null).X;
+            //FamilyTreeListBoxScaleTransform.CenterY = e.GetPosition(null).Y;
+           
+            family.ScaleTree(Convert.ToDouble(e.Delta), e.GetPosition(TreeCanvas).X, e.GetPosition(TreeCanvas).Y);           
         }
     }
 }

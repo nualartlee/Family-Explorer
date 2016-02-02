@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace FamilyExplorer
@@ -105,7 +106,45 @@ namespace FamilyExplorer
                 }
             }
         }
-
+        private double treeScaleCenterX;
+        public double TreeScaleCenterX
+        {
+            get { return treeScaleCenterX; }
+            set
+            {
+                if (value != treeScaleCenterX)
+                {
+                    treeScaleCenterX = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double treeScaleCenterY;
+        public double TreeScaleCenterY
+        {
+            get { return treeScaleCenterY; }
+            set
+            {
+                if (value != treeScaleCenterY)
+                {
+                    treeScaleCenterY = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private Point treeScaleOrigin;
+        public Point TreeScaleOrigin
+        {
+            get { return treeScaleOrigin; }
+            set
+            {
+                if (value != treeScaleOrigin)
+                {
+                    treeScaleOrigin = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         private Cursor familyTreeCursor;
         public Cursor FamilyTreeCursor
@@ -987,15 +1026,27 @@ namespace FamilyExplorer
         
         public void MoveTreePositionInWindow(double deltaX, double deltaY)
         {
-            XPosition += deltaX / TreeScale;
-            YPosition += deltaY / TreeScale;
+            XPosition += deltaX; /// TreeScale;
+            YPosition += deltaY; /// TreeScale;
         }
 
-        public void ScaleTree(double scaleIncrease)
+        public void ScaleTree(double scaleIncrease, double windowCenterX, double windowCenterY)
+
         {
-            //XPosition = (XPosition / TreeScale) * (TreeScale + scaleIncrease);
-            //YPosition = (YPosition / TreeScale) * (TreeScale + scaleIncrease);
-            TreeScale += scaleIncrease;
+
+            //TreeScaleOrigin = new Point(windowCenterX / windowWidth, windowCenterY / windowHeight);
+            TreeScaleOrigin = new Point(0.5,0.5);
+
+            TreeScaleCenterX = windowCenterX;
+            TreeScaleCenterY = windowCenterY;
+
+            if (scaleIncrease > 0)
+            { TreeScale = TreeScale * (scaleIncrease / 100); }
+            else { TreeScale = TreeScale * (-100 / scaleIncrease); }
+            
+            //XPosition = XPosition - (windowWidth * TreeScale) * scaleIncrease;
+            //YPosition = YPosition - (windowHeight * TreeScale)* scaleIncrease;
+
         }
 
     }
