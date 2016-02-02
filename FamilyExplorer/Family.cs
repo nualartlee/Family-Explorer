@@ -91,6 +91,32 @@ namespace FamilyExplorer
                 }
             }
         }
+        private double treewidthscaled;
+        public double TreeWidthScaled
+        {
+            get { return treewidthscaled; }
+            set
+            {
+                if (value != treewidthscaled)
+                {
+                    treewidthscaled = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double treeheightscaled;
+        public double TreeHeightScaled
+        {
+            get { return treeheightscaled; }
+            set
+            {
+                if (value != treeheightscaled)
+                {
+                    treeheightscaled = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         private double windowWidth;
         private double windowHeight;
         private double treeScale;
@@ -1004,10 +1030,18 @@ namespace FamilyExplorer
 
         private void SetTreeDimensions()
         {
-            //TreeWidth = (GetMaxNumberOfSingleGenPeople() * 100) - 50;
-            //TreeHeight = (GetNumberOfGenerations() * 180) - 80;            
+            //TreeWidth = (GetMaxNumberOfSingleGenPeople() * 150) - 50;
+            //TreeHeight = (GetNumberOfGenerations() * 120) - 20;            
             TreeWidth = 100000;
             TreeHeight = 100000;
+
+            SetScaledTreeDimensions();
+        }
+
+        private void SetScaledTreeDimensions()
+        {
+            TreeWidthScaled = TreeWidth * TreeScale;
+            TreeHeightScaled = TreeHeight * TreeScale;
         }
 
         public void SetWindowSize(double width, double height)
@@ -1043,10 +1077,11 @@ namespace FamilyExplorer
             if (scaleIncrease > 0)
             { TreeScale = TreeScale * (scaleIncrease / 100); }
             else { TreeScale = TreeScale * (-100 / scaleIncrease); }
-            
+
             //XPosition = XPosition - (windowWidth * TreeScale) * scaleIncrease;
             //YPosition = YPosition - (windowHeight * TreeScale)* scaleIncrease;
 
+            SetScaledTreeDimensions();
         }
 
     }
