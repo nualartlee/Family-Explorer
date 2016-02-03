@@ -193,7 +193,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure">
+            <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure" DataContext="{Binding ElementName=FamilyTreeListBox, Path=SelectedItem}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="300"/>
@@ -205,19 +205,20 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" Background="LightGray">
-                    <TextBlock Text="Person" FontSize="14" Foreground="Black"/>
+                <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Black" Background="LightGray">
+                    <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="Black"/>
                 </Border>
             </Grid>
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
-            <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+            <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False"
+                          MouseLeftButtonDown="FamilyTreeScrollViewer_MouseLeftButtonDown" MouseMove="FamilyTreeScrollViewer_MouseMove" MouseLeftButtonUp="FamilyTreeScrollViewer_MouseLeftButtonUp"
+                          PreviewMouseWheel="FamilyTreeScrollViewer_PreviewMouseWheel">
                 <Canvas x:Name="TreeCanvas" SizeChanged="TreeCanvas_SizeChanged"  Width="{Binding TreeWidthScaled}" Height="{Binding TreeHeightScaled}">
-                <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
-                     Width="{Binding TreeWidth}" Height="{Binding TreeHeight}"
+                    <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
+                     Width="{Binding TreeWidth}" Height="{Binding TreeHeight}" BorderBrush="Transparent"
                      ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
-                     Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single"
-                     MouseLeftButtonDown="FamilyTreeListBox_MouseLeftButtonDown" MouseMove="FamilyTreeListBox_MouseMove" MouseLeftButtonUp="FamilyTreeListBox_MouseLeftButtonUp"
-                     PreviewMouseWheel="FamilyTreeListBox_PreviewMouseWheel"
+                     Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" 
+                     
                      RenderTransformOrigin="{Binding TreeScaleOrigin}">
                     <ListBox.RenderTransform>
                         <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding TreeScale}" ScaleY="{Binding TreeScale}" />

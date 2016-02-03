@@ -216,8 +216,7 @@ namespace FamilyExplorer
 
         private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);
-            e.Handled = true;
+            family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);           
         }
        
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -235,16 +234,16 @@ namespace FamilyExplorer
             family.SetWindowSize(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);                      
         }
        
-        private void FamilyTreeListBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void FamilyTreeScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ListBox FamilyTreeListBox = sender as ListBox;
+            ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
             mouseVerticalPosition = e.GetPosition(null).Y;
             mouseHorizontalPosition = e.GetPosition(null).X;
             isMouseCaptured = true;
-            FamilyTreeListBox.CaptureMouse();
+            FamilyTreeScrollViewer.CaptureMouse();
         }
 
-        private void FamilyTreeListBox_MouseMove(object sender, MouseEventArgs e)
+        private void FamilyTreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
         {
             
             if (isMouseCaptured)
@@ -264,21 +263,23 @@ namespace FamilyExplorer
             ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 30;
         }
 
-        private void FamilyTreeListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void FamilyTreeScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ListBox FamilyTreeListBox = sender as ListBox;
+            ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
             isMouseCaptured = false;
-            FamilyTreeListBox.ReleaseMouseCapture();
+            FamilyTreeScrollViewer.ReleaseMouseCapture();
             mouseVerticalPosition = -1;
             mouseHorizontalPosition = -1;
         }
 
-        private void FamilyTreeListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void FamilyTreeScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             //FamilyTreeListBoxScaleTransform.CenterX = e.GetPosition(null).X;
             //FamilyTreeListBoxScaleTransform.CenterY = e.GetPosition(null).Y;
            
             family.ScaleTree(Convert.ToDouble(e.Delta), e.GetPosition(TreeCanvas).X, e.GetPosition(TreeCanvas).Y);           
         }
+
+      
     }
 }

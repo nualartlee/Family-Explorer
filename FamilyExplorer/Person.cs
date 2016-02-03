@@ -201,13 +201,13 @@ namespace FamilyExplorer
                 if (value != generationIndex)
                 {
                     generationIndex = value;
-                    setPosition();
+                    //setPosition();
                     NotifyPropertyChanged();
                 }
             }
         }
-        private int siblingIndex;
-        public int SiblingIndex
+        private double siblingIndex;
+        public double SiblingIndex
         {
             get { return siblingIndex; }
             set
@@ -215,7 +215,7 @@ namespace FamilyExplorer
                 if (value != siblingIndex)
                 {
                     siblingIndex = value;
-                    setPosition();
+                    //setPosition();
                     NotifyPropertyChanged();
                 }
             }
@@ -287,8 +287,8 @@ namespace FamilyExplorer
                 }
             }
         }
-        private int x;
-        public int X
+        private double x;
+        public double X
         {
             get { return x; }
             set
@@ -300,8 +300,8 @@ namespace FamilyExplorer
                 }
             }
         }
-        private int y;
-        public int Y
+        private double y;
+        public double Y
         {
             get { return y; }
             set
@@ -336,7 +336,7 @@ namespace FamilyExplorer
             
             setColors();
             setSize();
-            setPosition();
+            //setPosition();
         }
 
         public void setColors()
@@ -368,11 +368,11 @@ namespace FamilyExplorer
             Height = 80;
         }
 
-        public void setPosition()
-        {            
-            X = 50000 + SiblingIndex*150 - Width/2;
-            Y = 50000 + GenerationIndex * 120 - Height / 2;
-        }
+        //public void setPosition()
+        //{            
+        //    X = 50000 + SiblingIndex*150 - Width/2;
+        //    Y = 50000 + GenerationIndex * 120 - Height / 2;
+        //}
 
     }
 }

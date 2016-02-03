@@ -186,6 +186,20 @@ namespace FamilyExplorer
             }
         }
 
+        private Person selectedPerson;
+        public Person SelectedPerson
+        {
+            get { return selectedPerson; }
+            set
+            {
+                if (value != selectedPerson)
+                {
+                    selectedPerson = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private string setCommandInProgressDescription;
         public string SetCommandInProgressDescription
         {
@@ -231,6 +245,8 @@ namespace FamilyExplorer
             Person person = new Person(GetNextID());                                              
             AddPersonToFamily(person);            
         }
+
+        #region Commands
 
         public void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -984,6 +1000,8 @@ namespace FamilyExplorer
             else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
+#endregion Commands
+
         private Person getPerson(int ID)
         {
             return (Person)members.Where(m => m.Id == ID).FirstOrDefault();
@@ -1003,38 +1021,39 @@ namespace FamilyExplorer
                 Members = new ObservableCollection<Person> { };
             }
             Members.Add(person);
-            OrderGeneration(person.GenerationIndex);
-            SetTreeDimensions();
+            OrderSiblings(person.GenerationIndex);
+            SetTreeLayout();
         }
 
-        private void OrderGeneration(int generation)
-        {
-            if (members.Count < 2) { return; }
+        private void SetPersonPosition(Person person)
+        {            
+            person.X = TreeWidth / 2 + person.SiblingIndex * 150 - (double)person.Width / 2;
+            person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * 120 ;
+        }
+
+        private void OrderSiblings(int generation)
+        {            
             List<Person> generationMembers = new List<Person> { };
             generationMembers =(List<Person>)members.Where(m => m.GenerationIndex == generation).OrderBy(m => m.DOB).ToList<Person>();
-            for (int i = 0; i< generationMembers.Count();i++)
-            {
-                generationMembers[i].SiblingIndex = i;
+            // Center generation members about a zero index for easy positioning (i.e. -2,-1,0,1,2)           
+            for (int i = 0; i < generationMembers.Count(); i++)
+            {                
+                generationMembers[i].SiblingIndex = Convert.ToDouble(i) - (Convert.ToDouble(generationMembers.Count()) - 1) / 2;                
             }
-        }
+            
+        }       
+        
 
-        private int GetNumberOfGenerations()
-        {
-            return Members.Max(m => m.GenerationIndex) - Members.Min(m => m.GenerationIndex) + 1;            
-        }
+        private void SetTreeLayout()
+        {            
+            TreeWidth = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * 150 -40;
+            TreeHeight = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * 120 - 30;
 
-        private int GetMaxNumberOfSingleGenPeople()
-        {
-            return Members.Max(m => m.SiblingIndex) + 1;
-        }
-
-        private void SetTreeDimensions()
-        {
-            //TreeWidth = (GetMaxNumberOfSingleGenPeople() * 150) - 50;
-            //TreeHeight = (GetNumberOfGenerations() * 120) - 20;            
-            TreeWidth = 100000;
-            TreeHeight = 100000;
-
+            foreach (Person person in Members)
+            {
+                SetPersonPosition(person);
+            }
+            
             SetScaledTreeDimensions();
         }
 
@@ -1053,7 +1072,7 @@ namespace FamilyExplorer
         private void CenterTreeInWindow()
         {
             
-            SetTreeDimensions();
+            SetTreeLayout();
             XPosition = (windowWidth / 2) - (TreeWidth / 2);
             YPosition = (windowHeight / 2) - (TreeHeight / 2);
         }
