@@ -142,6 +142,8 @@
 
     </Window.Resources>
     <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.Save" CanExecute="Save_CanExecute" Executed="Save_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
         <CommandBinding Command="self:CustomCommands.Edit" />
         <CommandBinding Command="self:CustomCommands.Delete" />
         <CommandBinding Command="self:CustomCommands.AddMother" CanExecute="AddMother_CanExecute" Executed="AddMother_Executed" />
@@ -171,8 +173,8 @@
         <Menu x:Name="MainMenu" Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" />
-                <MenuItem Header="_Open" />
-                <MenuItem Header="_Save" />
+                <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
+                <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
                 <Separator />
                 <MenuItem Header="_Exit" />
             </MenuItem>
@@ -205,23 +207,24 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Black" Background="LightGray">
-                    <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="Black"/>
+                <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,10,4,4">
+                    <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
                 </Border>
             </Grid>
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
             <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False"
                           MouseLeftButtonDown="FamilyTreeScrollViewer_MouseLeftButtonDown" MouseMove="FamilyTreeScrollViewer_MouseMove" MouseLeftButtonUp="FamilyTreeScrollViewer_MouseLeftButtonUp"
                           PreviewMouseWheel="FamilyTreeScrollViewer_PreviewMouseWheel">
-                <Canvas x:Name="TreeCanvas" SizeChanged="TreeCanvas_SizeChanged"  Width="{Binding TreeWidthScaled}" Height="{Binding TreeHeightScaled}">
-                    <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding XPosition}" Canvas.Top="{Binding YPosition}"
-                     Width="{Binding TreeWidth}" Height="{Binding TreeHeight}" BorderBrush="Transparent"
+                <Canvas x:Name="TreeCanvas" SizeChanged="TreeCanvas_SizeChanged"  Width="{Binding Tree.WidthScaled}" Height="{Binding Tree.HeightScaled}">
+                    <ListBox x:Name="FamilyTreeListBox"  Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding Tree.XPosition}" Canvas.Top="{Binding Tree.YPosition}"
+                     Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" BorderBrush="Transparent"
                      ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
                      Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" 
                      
-                     RenderTransformOrigin="{Binding TreeScaleOrigin}">
+                     RenderTransformOrigin="{Binding Tree.ScaleOrigin}">
                     <ListBox.RenderTransform>
-                        <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding TreeScale}" ScaleY="{Binding TreeScale}" />
+                        <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding Tree.Scale}" ScaleY="{Binding Tree.Scale}" />
                     </ListBox.RenderTransform>
                     <ListBox.ContextMenu>
                         <ContextMenu>

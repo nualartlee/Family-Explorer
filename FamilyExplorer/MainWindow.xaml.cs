@@ -25,12 +25,13 @@ namespace FamilyExplorer
         private double mouseVerticalPosition;
         private double mouseHorizontalPosition;
 
-        public Family family;        
+        public FamilyViewModel family;        
 
         public MainWindow()
         {
             InitializeComponent();            
-            family = new Family();
+            family = new FamilyViewModel();
+            family.CreateNewFamily();
             this.DataContext = family;            
         }
 
@@ -280,6 +281,24 @@ namespace FamilyExplorer
             family.ScaleTree(Convert.ToDouble(e.Delta), e.GetPosition(TreeCanvas).X, e.GetPosition(TreeCanvas).Y);           
         }
 
-      
+        private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.Save();
+        }
+
+        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.Open();
+        }
     }
 }

@@ -69,8 +69,7 @@ namespace FamilyExplorer
             {
                 if (value != gender)
                 {
-                    gender = value;
-                    setColors();
+                    gender = value;                    
                     NotifyPropertyChanged();
                 }
             }
@@ -313,66 +312,6 @@ namespace FamilyExplorer
                 }
             }
         }
-
-        public Person(int idNumber)
-        {
-            id = idNumber;
-            firstName = "First Name";
-            lastName = "Last Name";
-            gender = "Not Specified";
-            dob = DateTime.Now;
-            siblingIds = new List<int> { };
-            partnerIds = new List<int> { };
-            friendIds = new List<int> { };
-            childrenIds = new List<int> { };
-            abuserIds = new List<int> { };
-            victimIds = new List<int> { };
-            borderBrush = "Black";
-            background = "White";
-            colorText = "Black";
-
-            generationIndex = 0;
-            siblingIndex = 0;
-            
-            setColors();
-            setSize();
-            //setPosition();
-        }
-
-        public void setColors()
-        {
-            if (gender == "Female")
-            {
-                borderBrush = "Red";
-                background = "LightPink";
-                colorText = "Black";
-            }
-            else if (gender == "Male")
-            {
-                borderBrush = "Gray";
-                background = "LightBlue";
-                colorText = "Black";
-            }
-            else
-            {
-                borderBrush = "Black";
-                background = "White";
-                colorText = "Black";
-            }
-
-        }
-
-        public void setSize()
-        {
-            Width = 100;
-            Height = 80;
-        }
-
-        //public void setPosition()
-        //{            
-        //    X = 50000 + SiblingIndex*150 - Width/2;
-        //    Y = 50000 + GenerationIndex * 120 - Height / 2;
-        //}
-
+        
     }
 }

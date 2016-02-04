@@ -9,6 +9,27 @@ namespace FamilyExplorer
 {
     public static class CustomCommands
     {
+        public static readonly RoutedUICommand Open = new RoutedUICommand
+                       (
+                               "Open",
+                               "Open",
+                               typeof(CustomCommands),
+                               new InputGestureCollection()
+                               {
+                                        new KeyGesture(Key.O, ModifierKeys.Control)
+                               }
+                       );
+
+        public static readonly RoutedUICommand Save = new RoutedUICommand
+                        (
+                                "Save",
+                                "Save",
+                                typeof(CustomCommands),
+                                new InputGestureCollection()
+                                {
+                                        new KeyGesture(Key.S, ModifierKeys.Control)
+                                }
+                        );
 
         public static readonly RoutedUICommand Edit = new RoutedUICommand
                         (
