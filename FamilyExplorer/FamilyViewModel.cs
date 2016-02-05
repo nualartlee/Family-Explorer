@@ -21,8 +21,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
@@ -1004,8 +1002,8 @@ namespace FamilyExplorer
 
         private void SetTreeLayout()
         {
-            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * 150 - 40;
-            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * 120 - 30;
+            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * 150;// - 40;
+            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * 120;// - 30;
 
             foreach (Person person in Members)
             {
@@ -1027,7 +1025,7 @@ namespace FamilyExplorer
             Tree.WindowHeight = height;
         }
 
-        private void CenterTreeInWindow()
+        public void CenterTreeInWindow()
         {
 
             SetTreeLayout();

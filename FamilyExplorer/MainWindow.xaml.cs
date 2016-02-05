@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.If not, see<http://www.gnu.org/licenses/> */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Xps;
+using System.Windows.Xps.Packaging;
 
 namespace FamilyExplorer
 {
@@ -314,6 +317,99 @@ namespace FamilyExplorer
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             family.Open();
+        }
+
+        private void CenterTree_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CenterTree_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            family.CenterTreeInWindow();
+        }
+
+        private void Print_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            //PrintPreview(TreeScrollViewer);
+            //PrintPreview(TreeCanvas);
+            PrintPreview(TreeListBox, TreeListBox.ActualWidth, TreeListBox.ActualHeight);
+        }
+
+        private void PrintView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void PrintView_Executed(object sender, ExecutedRoutedEventArgs e)
+        {            
+            PrintPreview(TreeCanvas, TreeScrollViewer.ActualWidth, TreeScrollViewer.ActualHeight);            
+        }
+
+        private string _previewWindowXaml =
+                        @"<Window
+                            xmlns                 ='http://schemas.microsoft.com/netfx/2007/xaml/presentation'
+                            xmlns:x               ='http://schemas.microsoft.com/winfx/2006/xaml'
+                            Title                 ='@@TITLE'
+                            Height                ='@@HEIGHT'
+                            Width                 ='@@WIDTH'
+                            WindowStartupLocation ='CenterOwner'>
+                            <DocumentViewer Name='dv1'/>
+                            </Window>";
+
+        private void PrintPreview(Visual visual, double width, double height)
+        {
+            string title = FamilyExplorerWindow.Title + " (Print Preview)";
+            string fileName = System.IO.Path.GetRandomFileName();            
+            try
+            {
+                // write the XPS document
+                using (XpsDocument doc = new XpsDocument(fileName, FileAccess.ReadWrite))
+                {
+                    XpsDocumentWriter writer = XpsDocument.CreateXpsDocumentWriter(doc);
+                    writer.Write(visual);
+                }
+
+                // Read the XPS document into a dynamically generated
+                // preview Window 
+                using (XpsDocument doc = new XpsDocument(fileName, FileAccess.Read))
+                {
+                    FixedDocumentSequence fds = doc.GetFixedDocumentSequence();
+
+                    string s = _previewWindowXaml;                    
+                    s = s.Replace("@@TITLE", title.Replace("'", "&apos;"));
+                    s = s.Replace("@@WIDTH", (width + 200).ToString());
+                    s = s.Replace("@@HEIGHT", (height + 200).ToString());
+
+                    using (var reader = new System.Xml.XmlTextReader(new StringReader(s)))
+                    {
+                        Window preview = System.Windows.Markup.XamlReader.Load(reader) as Window;
+                        DocumentViewer dv1 = LogicalTreeHelper.FindLogicalNode(preview, "dv1") as DocumentViewer;                                                                                  
+                        dv1.Document = fds as IDocumentPaginatorSource;
+
+
+                        preview.ShowDialog();
+                    }
+                }
+            }
+            finally
+            {
+                if (File.Exists(fileName))
+                {
+                    try
+                    {
+                        File.Delete(fileName);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
         }
     }
 }

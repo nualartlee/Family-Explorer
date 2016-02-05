@@ -46,6 +46,39 @@ namespace FamilyExplorer
                                 }
                         );
 
+        public static readonly RoutedUICommand Print = new RoutedUICommand
+                        (
+                                "Print",
+                                "Print",
+                                typeof(CustomCommands),
+                                new InputGestureCollection()
+                                {
+                                        new KeyGesture(Key.P, ModifierKeys.Control)
+                                }
+                        );
+
+        public static readonly RoutedUICommand PrintView = new RoutedUICommand
+                        (
+                                "Print View",
+                                "Print View",
+                                typeof(CustomCommands),
+                                new InputGestureCollection()
+                                {
+                                        new KeyGesture(Key.V, ModifierKeys.Control)
+                                }
+                        );
+
+        public static readonly RoutedUICommand CenterTree = new RoutedUICommand
+                       (
+                               "Center Tree",
+                               "Center Tree",
+                               typeof(CustomCommands),
+                               new InputGestureCollection()
+                               {
+                                        new KeyGesture(Key.C, ModifierKeys.Alt)
+                               }
+                       );
+
         public static readonly RoutedUICommand Edit = new RoutedUICommand
                         (
                                 "Edit",
