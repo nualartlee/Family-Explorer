@@ -253,7 +253,7 @@ namespace FamilyExplorer
             family.SetWindowSize(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);                      
         }
        
-        private void FamilyTreeScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void TreeScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
             mouseVerticalPosition = e.GetPosition(null).Y;
@@ -262,7 +262,7 @@ namespace FamilyExplorer
             FamilyTreeScrollViewer.CaptureMouse();
         }
 
-        private void FamilyTreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
+        private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
         {
             
             if (isMouseCaptured)
@@ -282,7 +282,7 @@ namespace FamilyExplorer
             ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 30;
         }
 
-        private void FamilyTreeScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void TreeScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
             isMouseCaptured = false;
@@ -291,7 +291,7 @@ namespace FamilyExplorer
             mouseHorizontalPosition = -1;
         }
 
-        private void FamilyTreeScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void TreeScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             //FamilyTreeListBoxScaleTransform.CenterX = e.GetPosition(null).X;
             //FamilyTreeListBoxScaleTransform.CenterY = e.GetPosition(null).Y;
@@ -335,9 +335,7 @@ namespace FamilyExplorer
         }
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            //PrintPreview(TreeScrollViewer);
-            //PrintPreview(TreeCanvas);
+        {            
             PrintPreview(TreeListBox, TreeListBox.ActualWidth, TreeListBox.ActualHeight);
         }
 

@@ -1022,7 +1022,7 @@ namespace FamilyExplorer
         public void SetWindowSize(double width, double height)
         {
             Tree.WindowWidth = width;
-            Tree.WindowHeight = height;
+            Tree.WindowHeight = height;            
         }
 
         public void CenterTreeInWindow()
