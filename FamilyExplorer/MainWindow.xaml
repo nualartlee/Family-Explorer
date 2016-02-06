@@ -219,6 +219,7 @@
                 </Border>
             </Grid>
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
+
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False"
                           MouseLeftButtonDown="TreeScrollViewer_MouseLeftButtonDown" MouseMove="TreeScrollViewer_MouseMove" MouseLeftButtonUp="TreeScrollViewer_MouseLeftButtonUp"
                           PreviewMouseWheel="TreeScrollViewer_PreviewMouseWheel">
@@ -228,17 +229,18 @@
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
                 <Canvas x:Name="TreeCanvas" SizeChanged="TreeCanvas_SizeChanged"  Width="{Binding Tree.WidthScaled}" Height="{Binding Tree.HeightScaled}" Background="AntiqueWhite"
-                        Left="{Binding Tree.XPosition}" Canvas.Top="{Binding Tree.YPosition}">
+                        >
                     <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}" Canvas.Left="{Binding Tree.XPosition}" Canvas.Top="{Binding Tree.YPosition}"
-                     Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" BorderBrush="Transparent"
+                     Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" BorderBrush="Black"
                      ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}" 
+                             
                      Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" RenderTransformOrigin="{Binding Tree.ScaleOrigin}">
                         <ListBox.RenderTransform>
                                 <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding Tree.Scale}" ScaleY="{Binding Tree.Scale}" />
                             </ListBox.RenderTransform>
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" />
+                                    <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" Background="Aqua"/>
                                 </ItemsPanelTemplate>
                             </ListBox.ItemsPanel>
                         </ListBox>
