@@ -191,7 +191,7 @@
             <MenuItem Header="_View">
                 <MenuItem Header="_Zoom" />
             </MenuItem>
-            <MenuItem Header="_About">
+            <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
         </Menu>
 

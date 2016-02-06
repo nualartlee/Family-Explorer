@@ -409,5 +409,11 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private void ShowAboutWindow(object sender, RoutedEventArgs e)
+        {
+            AboutWindow about = new AboutWindow();
+            about.ShowDialog();
+        }
     }
 }
