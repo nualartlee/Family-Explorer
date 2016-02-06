@@ -44,12 +44,13 @@ namespace FamilyExplorer
             VersionTextBlock.Text = String.Format("Version {0}", version.ToString());
             CopyrightTextBlock.Text = copyright.Copyright.ToString();            
             DescriptionTextBlock.Text = description.Description;
-            LicenseTextBlock.Text = @"This program is free software: you can redistribute it and/or modify
+            SourceTextBlock.Text = @"Source code can be obtained from:";
+          LicenseTextBlock.Text = @"This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as
 published by the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details:";

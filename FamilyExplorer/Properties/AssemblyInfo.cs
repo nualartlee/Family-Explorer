@@ -27,7 +27,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Javier Nualart Lee")]
 [assembly: AssemblyProduct("FamilyExplorer")]
-[assembly: AssemblyCopyright("©  2016 Javier Nualart Lee")]
+[assembly: AssemblyCopyright("©  2016 Javier Nualart Lee  (nualartlee@yahoo.com)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
