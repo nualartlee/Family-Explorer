@@ -259,11 +259,11 @@ namespace FamilyExplorer
        
         private void TreeScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
+            Canvas FamilyTreeCanvas = sender as Canvas;
             mouseVerticalPosition = e.GetPosition(null).Y;
             mouseHorizontalPosition = e.GetPosition(null).X;
             isMouseCaptured = true;
-            FamilyTreeScrollViewer.CaptureMouse();
+            FamilyTreeCanvas.CaptureMouse();
         }
 
         private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
@@ -288,9 +288,11 @@ namespace FamilyExplorer
 
         private void TreeScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
+            //ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
+            Canvas FamilyTreeCanvas = sender as Canvas;
             isMouseCaptured = false;
-            FamilyTreeScrollViewer.ReleaseMouseCapture();
+            //FamilyTreeScrollViewer.ReleaseMouseCapture();
+            FamilyTreeCanvas.ReleaseMouseCapture();
             mouseVerticalPosition = -1;
             mouseHorizontalPosition = -1;
         }
