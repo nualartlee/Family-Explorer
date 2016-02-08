@@ -39,9 +39,9 @@ namespace FamilyExplorer
     public partial class MainWindow : Window
     {
 
-        private bool isMouseCaptured;
-        private double mouseVerticalPosition;
-        private double mouseHorizontalPosition;
+        //private bool isMouseCaptured;
+        //private double mouseVerticalPosition;
+        //private double mouseHorizontalPosition;
 
         public FamilyViewModel family;        
 
@@ -251,59 +251,7 @@ namespace FamilyExplorer
         {
             family.EndSetCommand();
         }
-       
-        private void TreeCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            family.SetWindowSize(TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);                      
-        }
-       
-        private void TreeScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Canvas FamilyTreeCanvas = sender as Canvas;
-            mouseVerticalPosition = e.GetPosition(null).Y;
-            mouseHorizontalPosition = e.GetPosition(null).X;
-            isMouseCaptured = true;
-            FamilyTreeCanvas.CaptureMouse();
-        }
 
-        private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
-        {
-            
-            if (isMouseCaptured)
-            {
-                // Calculate distance moved
-                double deltaX = e.GetPosition(null).X - mouseHorizontalPosition;
-                double deltaY = e.GetPosition(null).Y - mouseVerticalPosition;
-                // Move Tree
-                family.MoveTreePositionInWindow(deltaX, deltaY);
-                // Record current position
-                mouseHorizontalPosition = e.GetPosition(null).X;
-                mouseVerticalPosition = e.GetPosition(null).Y;
-                
-            }
-            // Tooltip for set commands
-            ToolTipPopup.HorizontalOffset = e.GetPosition(TreeCanvas).X + 20;
-            ToolTipPopup.VerticalOffset = e.GetPosition(TreeCanvas).Y + 30;
-        }
-
-        private void TreeScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            //ScrollViewer FamilyTreeScrollViewer = sender as ScrollViewer;
-            Canvas FamilyTreeCanvas = sender as Canvas;
-            isMouseCaptured = false;
-            //FamilyTreeScrollViewer.ReleaseMouseCapture();
-            FamilyTreeCanvas.ReleaseMouseCapture();
-            mouseVerticalPosition = -1;
-            mouseHorizontalPosition = -1;
-        }
-
-        private void TreeScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            //FamilyTreeListBoxScaleTransform.CenterX = e.GetPosition(null).X;
-            //FamilyTreeListBoxScaleTransform.CenterY = e.GetPosition(null).Y;
-           
-            family.ScaleTree(Convert.ToDouble(e.Delta), e.GetPosition(TreeCanvas).X, e.GetPosition(TreeCanvas).Y);           
-        }
 
         private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -353,7 +301,7 @@ namespace FamilyExplorer
 
         private void PrintView_Executed(object sender, ExecutedRoutedEventArgs e)
         {            
-            PrintPreview(TreeCanvas, TreeScrollViewer.ActualWidth, TreeScrollViewer.ActualHeight);            
+            PrintPreview(TreeZoomBorder, TreeScrollViewer.ActualWidth, TreeScrollViewer.ActualHeight);            
         }
 
         private string _previewWindowXaml =

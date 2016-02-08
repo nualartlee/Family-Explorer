@@ -4,7 +4,7 @@
         xmlns:self="clr-namespace:FamilyExplorer"
         Title="{Binding Title}" WindowState="Maximized" x:Name="FamilyExplorerWindow"
         Icon="./Resources/FEX.ico"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
+    MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
     <Window.Resources>
 
         <DataTemplate x:Key="PersonItem">
@@ -201,6 +201,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            
             <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure" DataContext="{Binding ElementName=TreeListBox, Path=SelectedItem}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -218,52 +219,31 @@
                     <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
                 </Border>
             </Grid>
+            
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False" >
-                <FlowDocument>
-                    <BlockUIContainer>
-                        <Canvas x:Name="TreeCanvas" >
-                            <!--SizeChanged="TreeCanvas_SizeChanged"  Background="AntiqueWhite"
-                        MouseLeftButtonDown="TreeScrollViewer_MouseLeftButtonDown" MouseMove="TreeScrollViewer_MouseMove" MouseLeftButtonUp="TreeScrollViewer_MouseLeftButtonUp"
-                        PreviewMouseWheel="TreeScrollViewer_PreviewMouseWheel">
-                            <Canvas.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Center Tree" Command="self:CustomCommands.CenterTree"/>
-                                </ContextMenu>
-                            </Canvas.ContextMenu>-->
 
-
-
-                            <!--<Canvas Width="{Binding Tree.WidthScaled}" Height="{Binding Tree.HeightScaled}"
-                            Canvas.Left="{Binding Tree.XPosition}" Canvas.Top="{Binding Tree.YPosition}"
-                            Background="Coral" >-->
-                            <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}"
-                                     Canvas.Left="{Binding Tree.XPosition}" Canvas.Top="{Binding Tree.YPosition}"
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                <self:ZoomBorder x:Name="TreeZoomBorder" ClipToBounds="True" Background="White">
+                    <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}" BorderBrush="Black"                                     
                          Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
-                                     BorderBrush="Black"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
                          ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}"                              
-                         Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" RenderTransformOrigin="{Binding Tree.ScaleOrigin}">
+                         Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" >
 
-                                <ListBox.RenderTransform>
-                                    <ScaleTransform x:Name="FamilyTreeListBoxScaleTransform" ScaleX="{Binding Tree.Scale}" ScaleY="{Binding Tree.Scale}" />
-                                </ListBox.RenderTransform>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" Background="Aqua"/>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-                            <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
-                                <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
-                                    <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
-                                </Border>
-                            </Popup>
-                            <!--</Canvas>-->
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" Background="Aqua"/>
+                            </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
 
-                        </Canvas>
-                    </BlockUIContainer>
-                </FlowDocument>
+                </self:ZoomBorder>
             </ScrollViewer>
+            <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
+                <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
+                    <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
+                </Border>
+            </Popup>
         </Grid>
 
     </Grid>
