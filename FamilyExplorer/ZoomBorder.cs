@@ -49,10 +49,11 @@ namespace FamilyExplorer
                 group.Children.Add(tt);
                 child.RenderTransform = group;
                 child.RenderTransformOrigin = new Point(0.0, 0.0);                
-                this.MouseWheel += child_MouseWheel;
-                this.MouseLeftButtonDown += child_MouseLeftButtonDown;
-                this.MouseLeftButtonUp += child_MouseLeftButtonUp;
-                this.MouseMove += child_MouseMove;
+                //this.MouseWheel += child_MouseWheel;
+                this.PreviewMouseWheel += child_PreviewMouseWheel;
+                this.PreviewMouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
+                this.PreviewMouseLeftButtonUp += child_PreviewMouseLeftButtonUp;
+                this.PreviewMouseMove += child_PreviewMouseMove;
                 this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
                   child_PreviewMouseRightButtonDown);
             }
@@ -76,7 +77,7 @@ namespace FamilyExplorer
 
         #region Child Events
 
-        private void child_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void child_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (child != null)
             {
@@ -102,7 +103,7 @@ namespace FamilyExplorer
             }
         }
 
-        private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void child_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (child != null)
             {
@@ -114,7 +115,7 @@ namespace FamilyExplorer
             }
         }
 
-        private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void child_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (child != null)
             {
@@ -128,7 +129,7 @@ namespace FamilyExplorer
             //this.Reset();
         }
 
-        private void child_MouseMove(object sender, MouseEventArgs e)
+        private void child_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (child != null)
             {
