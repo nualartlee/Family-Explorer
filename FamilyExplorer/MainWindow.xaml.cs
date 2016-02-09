@@ -252,7 +252,6 @@ namespace FamilyExplorer
             family.EndSetCommand();
         }
 
-
         private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;

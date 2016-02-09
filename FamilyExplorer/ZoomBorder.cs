@@ -48,8 +48,7 @@ namespace FamilyExplorer
                 TranslateTransform tt = new TranslateTransform();
                 group.Children.Add(tt);
                 child.RenderTransform = group;
-                child.RenderTransformOrigin = new Point(0.0, 0.0);                
-                //this.MouseWheel += child_MouseWheel;
+                child.RenderTransformOrigin = new Point(0.0, 0.0);                                
                 this.PreviewMouseWheel += child_PreviewMouseWheel;
                 this.PreviewMouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
                 this.PreviewMouseLeftButtonUp += child_PreviewMouseLeftButtonUp;
@@ -84,22 +83,32 @@ namespace FamilyExplorer
                 var st = GetScaleTransform(child);
                 var tt = GetTranslateTransform(child);
 
-                double zoom = e.Delta > 0 ? .1 : -.1;
+                double zoom = e.Delta > 0 ? 0.1 : -0.1;
                 if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
                     return;
 
-                Point relative = e.GetPosition(child);
+                Point relative = e.GetPosition(child);                
                 double abosuluteX;
                 double abosuluteY;
 
                 abosuluteX = relative.X * st.ScaleX + tt.X;
                 abosuluteY = relative.Y * st.ScaleY + tt.Y;
 
-                st.ScaleX += zoom;
-                st.ScaleY += zoom;
+                st.ScaleX += st.ScaleX * zoom;
+                st.ScaleY += st.ScaleY * zoom;
 
                 tt.X = abosuluteX - relative.X * st.ScaleX;
                 tt.Y = abosuluteY - relative.Y * st.ScaleY;
+
+
+
+                this.Width = ((FrameworkElement)child).ActualWidth * st.ScaleX;
+                if (this.Width < ((FrameworkElement)this.Parent).ActualWidth) { this.Width = ((FrameworkElement)this.Parent).ActualWidth - 20; }
+                this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
+                if (this.Height < ((FrameworkElement)this.Parent).ActualHeight) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
+
+                if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2; }
+                if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2; }
             }
         }
 
@@ -142,6 +151,7 @@ namespace FamilyExplorer
                 }
             }
         }
+
 
         #endregion
     }

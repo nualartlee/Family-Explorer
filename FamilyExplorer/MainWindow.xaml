@@ -218,15 +218,32 @@
                         BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,10,4,4">
                     <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
                 </Border>
+                <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="4,10,4,4">
+                    <StackPanel>
+                        <Label Margin="4" Content="First Name: " />
+                        <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                        <Label Margin="4" Content="Last Name: " />
+                        <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                        <StackPanel Margin="4" Orientation="Horizontal">
+                            <Label Margin="4" Content="Gender: " />
+                            <ComboBox Margin="4" SelectedItem="{Binding Gender}"/>
+                        </StackPanel>
+                        <StackPanel Margin="4" Orientation="Horizontal">
+                            <Label Margin="4" Content="Birthdate: " />
+                            <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    </Border>
+                
             </Grid>
             
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-                <self:ScrollZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White">
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White">
                     <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}" BorderBrush="Black"                                     
-                         Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
-                         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"                         
                          ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}"                              
                          Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" >
 
@@ -237,7 +254,7 @@
                             </ListBox.ItemsPanel>
                         </ListBox>
 
-                </self:ScrollZoomBorder>
+                </Border>
             </ScrollViewer>
             <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
                 <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">

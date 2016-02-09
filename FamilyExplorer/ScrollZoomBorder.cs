@@ -16,13 +16,13 @@ namespace FamilyExplorer
 
         private TranslateTransform GetTranslateTransform()
         {
-            return (TranslateTransform)((TransformGroup)this.LayoutTransform)
+            return (TranslateTransform)((TransformGroup)this.RenderTransform)
               .Children.First(tr => tr is TranslateTransform);
         }
 
         private ScaleTransform GetScaleTransform()
         {
-            return (ScaleTransform)((TransformGroup)this.LayoutTransform)
+            return (ScaleTransform)((TransformGroup)this.RenderTransform)
               .Children.First(tr => tr is ScaleTransform);
         }
 
@@ -51,7 +51,7 @@ namespace FamilyExplorer
             group.Children.Add(st);
             TranslateTransform tt = new TranslateTransform();
             group.Children.Add(tt);
-            this.LayoutTransform = group;
+            this.RenderTransform = group;
             this.RenderTransformOrigin = new Point(0.0, 0.0);
             parent.PreviewMouseWheel += child_PreviewMouseWheel;
             parent.PreviewMouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
@@ -96,7 +96,8 @@ namespace FamilyExplorer
             st.ScaleY += zoom;
 
             tt.X = abosuluteX - relative.X * st.ScaleX;
-            tt.Y = abosuluteY - relative.Y * st.ScaleY;
+            tt.Y = abosuluteY - relative.Y * st.ScaleY;          
+                         
 
         }
 
