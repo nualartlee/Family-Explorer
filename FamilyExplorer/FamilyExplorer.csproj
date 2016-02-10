@@ -79,12 +79,12 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BindingCommand.cs" />
     <Compile Include="Family.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ScrollZoomBorder.cs" />
+    <Compile Include="XamlConverters\IsItemSelected.cs" />
     <Compile Include="ZoomBorder.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
@@ -131,7 +131,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="FamilyExplorer.licenseheader" />
+    <None Include="Resources\FamilyExplorer.licenseheader" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -143,10 +143,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="License.txt" />
+    <Resource Include="Resources\License.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\FEX.ico" />
