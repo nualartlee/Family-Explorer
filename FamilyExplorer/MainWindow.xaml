@@ -246,23 +246,23 @@
             
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseMove="TreeScrollViewer_MouseMove">
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White">
-                    <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}" BorderBrush="Black"                                     
+                    <ListBox x:Name="TreeListBox" Style="{StaticResource ListBoxStyle}" BorderBrush="Transparent"                                     
                          Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"                         
                          ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource ContainerStyle}"                              
                          Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single" >
 
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" Background="Aqua"/>
+                                <Canvas x:Name="SubTreeCanvas" IsItemsHost="True" Background="White"/>
                             </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
 
                 </Border>
             </ScrollViewer>
-            <Popup x:Name="ToolTipPopup" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true">
+            <Popup x:Name="SetCommandPopup" Grid.Column="2" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=TreeScrollViewer}" >
                 <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
                     <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
                 </Border>

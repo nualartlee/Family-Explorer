@@ -171,8 +171,7 @@ namespace FamilyExplorer
             InitalizePerson(mom);
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
-            mom.Gender = "Female";
-            //SetPersonColors(mom);
+            mom.Gender = "Female";            
             mom.GenerationIndex = child.GenerationIndex - 1;
             mom.ChildrenIds.Add(child.Id);
 
@@ -206,8 +205,7 @@ namespace FamilyExplorer
             InitalizePerson(dad);
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
-            dad.Gender = "Male";
-            //SetPersonColors(dad);
+            dad.Gender = "Male";            
             dad.GenerationIndex = child.GenerationIndex - 1;
             dad.ChildrenIds.Add(child.Id);
 
@@ -929,10 +927,7 @@ namespace FamilyExplorer
             person.FriendIds = new List<int> { };
             person.ChildrenIds = new List<int> { };
             person.AbuserIds = new List<int> { };
-            person.VictimIds = new List<int> { };
-            person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
-            person.Background = Settings.ColorBackgroundNotSpecified;
-            person.ColorText = Settings.ColorTextNotSpecified;
+            person.VictimIds = new List<int> { };           
 
             person.GenerationIndex = 0;
             person.SiblingIndex = 0;

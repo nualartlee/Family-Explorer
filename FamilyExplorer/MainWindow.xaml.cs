@@ -425,6 +425,15 @@ namespace FamilyExplorer
             return foundChild;
         }
 
-        
+        private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (family.SetCommandInProgress)
+            {                
+                Point currentPos = e.GetPosition((FrameworkElement)sender);
+
+                SetCommandPopup.HorizontalOffset = currentPos.X + 20;
+                SetCommandPopup.VerticalOffset = currentPos.Y + 40;
+            }
+        }
     }
 }
