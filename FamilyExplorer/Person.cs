@@ -86,6 +86,7 @@ namespace FamilyExplorer
                 {
                     gender = value;                    
                     NotifyPropertyChanged();
+                    SetPersonColors();
                 }
             }
         }
@@ -275,8 +276,8 @@ namespace FamilyExplorer
             }
         }
 
-        private int width;
-        public int Width
+        private double width;
+        public double Width
         {
             get { return width; }
             set
@@ -288,8 +289,8 @@ namespace FamilyExplorer
                 }
             }
         }
-        private int height;
-        public int Height
+        private double height;
+        public double Height
         {
             get { return height; }
             set
@@ -327,6 +328,41 @@ namespace FamilyExplorer
                 }
             }
         }
-        
+
+        public void SetPersonColors()
+        {
+            if (Gender == "Female")
+            {
+                BorderBrush = Settings.ColorBorderBrushFemale;
+                Background = Settings.ColorBackgroundFemale;
+                ColorText = Settings.ColorTextFemale;
+            }
+            else if (Gender == "Male")
+            {
+                BorderBrush = Settings.ColorBorderBrushMale;
+                Background = Settings.ColorBackgroundMale;
+                ColorText = Settings.ColorTextMale;
+            }
+            else if (Gender == "Other")
+            {
+                BorderBrush = Settings.ColorBorderBrushOther;
+                Background = Settings.ColorBackgroundOther;
+                ColorText = Settings.ColorTextOther;
+            }
+            else if (Gender == "Not Specified")
+            {
+                BorderBrush = Settings.ColorBorderBrushNotSpecified;
+                Background = Settings.ColorBackgroundNotSpecified;
+                ColorText = Settings.ColorTextNotSpecified;
+            }
+            else
+            {
+                BorderBrush = Settings.ColorBorderBrushNotSpecified;
+                Background = Settings.ColorBackgroundNotSpecified;
+                ColorText = Settings.ColorTextNotSpecified;
+            }
+
+        }
+
     }
 }

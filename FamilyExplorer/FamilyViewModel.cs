@@ -36,7 +36,7 @@ namespace FamilyExplorer
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));                
             }
         }
 
@@ -172,7 +172,7 @@ namespace FamilyExplorer
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
             mom.Gender = "Female";
-            SetPersonColors(mom);
+            //SetPersonColors(mom);
             mom.GenerationIndex = child.GenerationIndex - 1;
             mom.ChildrenIds.Add(child.Id);
 
@@ -207,7 +207,7 @@ namespace FamilyExplorer
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
             dad.Gender = "Male";
-            SetPersonColors(dad);
+            //SetPersonColors(dad);
             dad.GenerationIndex = child.GenerationIndex - 1;
             dad.ChildrenIds.Add(child.Id);
 
@@ -930,15 +930,15 @@ namespace FamilyExplorer
             person.ChildrenIds = new List<int> { };
             person.AbuserIds = new List<int> { };
             person.VictimIds = new List<int> { };
-            person.BorderBrush = "Black";
-            person.Background = "White";
-            person.ColorText = "Black";
+            person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
+            person.Background = Settings.ColorBackgroundNotSpecified;
+            person.ColorText = Settings.ColorTextNotSpecified;
 
             person.GenerationIndex = 0;
             person.SiblingIndex = 0;
 
-            person.Width = 100;
-            person.Height = 80;
+            person.Width = Settings.PersonWidth;
+            person.Height = Settings.PersonHeight;
         }
 
         private int GetNextID()
@@ -948,28 +948,40 @@ namespace FamilyExplorer
             return maxId ?? 1;
         }
 
-        public void SetPersonColors(Person person)
-        {
-            if (person.Gender == "Female")
-            {
-                person.BorderBrush = "Red";
-                person.Background = "LightPink";
-                person.ColorText = "Black";
-            }
-            else if (person.Gender == "Male")
-            {
-                person.BorderBrush = "Gray";
-                person.Background = "LightBlue";
-                person.ColorText = "Black";
-            }
-            else
-            {
-                person.BorderBrush = "Black";
-                person.Background = "White";
-                person.ColorText = "Black";
-            }
+        //public void SetPersonColors(Person person)
+        //{
+        //    if (person.Gender == "Female")
+        //    {
+        //        person.BorderBrush = Settings.ColorBorderBrushFemale;
+        //        person.Background = Settings.ColorBackgroundFemale;
+        //        person.ColorText = Settings.ColorTextFemale;
+        //    }
+        //    else if (person.Gender == "Male")
+        //    {
+        //        person.BorderBrush = Settings.ColorBorderBrushMale;
+        //        person.Background = Settings.ColorBackgroundMale;
+        //        person.ColorText = Settings.ColorTextMale;
+        //    }
+        //    else if (person.Gender == "Other")
+        //    {
+        //        person.BorderBrush = Settings.ColorBorderBrushOther;
+        //        person.Background = Settings.ColorBackgroundOther;
+        //        person.ColorText = Settings.ColorTextOther;
+        //    }
+        //    else if (person.Gender == "Not Specified")
+        //    {
+        //        person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
+        //        person.Background = Settings.ColorBackgroundNotSpecified;
+        //        person.ColorText = Settings.ColorTextNotSpecified;
+        //    }
+        //    else
+        //    {
+        //        person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
+        //        person.Background = Settings.ColorBackgroundNotSpecified;
+        //        person.ColorText = Settings.ColorTextNotSpecified;
+        //    }
 
-        }
+        //}
 
         private void AddPersonToFamily(Person person)
         {
@@ -984,8 +996,8 @@ namespace FamilyExplorer
 
         private void SetPersonPosition(Person person)
         {
-            person.X = Tree.Width / 2 + person.SiblingIndex * 150 - (double)person.Width / 2;
-            person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * 120;
+            person.X = Tree.Width / 2 + person.SiblingIndex * (Settings.PersonWidth + Settings.HorizontalSpace) - Settings.PersonWidth / 2;
+            person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * (Settings.PersonHeight + Settings.VerticalSpace);
         }
 
         private void OrderSiblings(int generation)
@@ -1002,8 +1014,8 @@ namespace FamilyExplorer
 
         private void SetTreeLayout()
         {
-            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * 150;// - 40;
-            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * 120;// - 30;
+            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.PersonWidth + Settings.HorizontalSpace);// - 40;
+            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.PersonHeight + Settings.VerticalSpace);// - 30;
 
             foreach (Person person in Members)
             {
