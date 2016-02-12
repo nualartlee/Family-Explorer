@@ -103,6 +103,7 @@ namespace FamilyExplorer
                 }
             }
         }
+
         private int motherId;
         public int MotherId
         {
@@ -128,7 +129,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
+        }       
         private List<int> siblingIds;
         public List<int> SiblingIds
         {
@@ -138,19 +139,6 @@ namespace FamilyExplorer
                 if (value != siblingIds)
                 {
                     siblingIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private List<int> partnerIds;
-        public List<int> PartnerIds
-        {
-            get { return partnerIds; }
-            set
-            {
-                if (value != partnerIds)
-                {
-                    partnerIds = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -168,6 +156,19 @@ namespace FamilyExplorer
                 }
             }
         }
+        private List<int> partnerIds;
+        public List<int> PartnerIds
+        {
+            get { return partnerIds; }
+            set
+            {
+                if (value != partnerIds)
+                {
+                    partnerIds = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }        
         private List<int> childrenIds;
         public List<int> ChildrenIds
         {
@@ -207,6 +208,22 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private string notes;
+        public string Notes
+        {
+            get { return notes; }
+            set
+            {
+                if (value != notes)
+                {
+                    notes = value;
+                    NotifyPropertyChanged();
+                    SetPersonColors();
+                }
+            }
+        }
+
         private int generationIndex;
         public int GenerationIndex
         {

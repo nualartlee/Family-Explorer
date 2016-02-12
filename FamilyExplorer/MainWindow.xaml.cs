@@ -290,8 +290,8 @@ namespace FamilyExplorer
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Canvas ItemCanvas = FindChild<Canvas>(TreeListBox, "SubTreeCanvas");
-            PrintPreview(ItemCanvas, TreeListBox.ActualWidth, TreeListBox.ActualHeight);
+            Canvas ItemCanvas = FindChild<Canvas>(PersonListBox, "PersonListBoxCanvas");
+            PrintPreview(ItemCanvas, PersonListBox.ActualWidth, PersonListBox.ActualHeight);
         }
 
         private void PrintView_CanExecute(object sender, CanExecuteRoutedEventArgs e)

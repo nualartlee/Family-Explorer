@@ -68,6 +68,20 @@ namespace FamilyExplorer
             }
         }
 
+        private ObservableCollection<Relationship> relationships;
+        public ObservableCollection<Relationship> Relationships
+        {
+            get { return relationships; }
+            set
+            {
+                if (value != relationships)
+                {
+                    relationships = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private Tree tree;
         public Tree Tree
         {
@@ -134,6 +148,7 @@ namespace FamilyExplorer
         {
             Tree = new Tree();
             Members = new ObservableCollection<Person> { };
+            Relationships = new ObservableCollection<Relationship> { };
             Person person = new Person();
             InitalizePerson(person);
             AddPersonToFamily(person);
@@ -910,6 +925,142 @@ namespace FamilyExplorer
 
         #endregion Commands
 
+        private void ResetAllRelationships()
+        {
+            Relationships = new ObservableCollection<Relationship> { };
+            foreach (Person person in Members)
+            {
+                ResetPersonRelationships(person);
+            }
+        }
+
+        private void ResetPersonRelationships(Person person)
+        {
+
+            // Mother
+            if (person.MotherId > 0)
+            {
+                Person mom = getPerson(person.MotherId);
+                ResetRelationship(1, mom, person, person.DOB, null);
+            }
+
+            // Father
+            if (person.FatherId > 0)
+            {
+                Person dad = getPerson(person.FatherId);
+                ResetRelationship(2, dad, person, person.DOB, null);
+            }
+
+            // Siblings
+            foreach (int siblingId in person.SiblingIds)
+            {
+                Person sibling = getPerson(siblingId);
+                Person sourcePerson = (person.Id > sibling.Id) ? person : sibling;
+                Person destinationPerson = (person.Id > sibling.Id) ? sibling : person;
+                DateTime startDate = (person.DOB < sibling.DOB) ? person.DOB : sibling.DOB;
+                ResetRelationship(3, sourcePerson, destinationPerson, startDate, null);
+            }
+
+            // Friends
+            foreach (int friendId in person.FriendIds)
+            {
+                Person friend = getPerson(friendId);
+                Person sourcePerson = (person.Id > friend.Id) ? person : friend;
+                Person destinationPerson = (person.Id > friend.Id) ? friend : person;
+                DateTime startDate = (person.DOB < friend.DOB) ? person.DOB : friend.DOB;
+                ResetRelationship(4, sourcePerson, destinationPerson, startDate, null);
+
+
+            }
+        }
+
+        private void ResetRelationship(int type, Person personSource, Person personDestination, DateTime startDate, DateTime? endDate)
+        {
+            int Id = type * 10 ^ 6 + personSource.Id * 10 ^ 3 + personDestination.Id;
+            Relationship relationship = getRelationship(Id);
+            if (relationship != null)
+            {
+                relationship.Id = Id;
+                relationship.Type = type;
+                relationship.PersonSourceId = personSource.Id;
+                relationship.PersonDestinationId = personDestination.Id;
+                if (type < 4)
+                {
+                    relationship.StartDate = startDate;
+                    relationship.EndDate = endDate;
+                }
+                relationship.Path = CreateRelationshipPath(relationship);                
+            }
+            else
+            {
+                Relationship newRelationship = new Relationship();
+                newRelationship.Id = Id;
+                newRelationship.Type = type;
+                newRelationship.PersonSourceId = personSource.Id;
+                newRelationship.PersonDestinationId = personDestination.Id;
+                newRelationship.StartDate = startDate;
+                newRelationship.EndDate = endDate;
+                newRelationship.Path = CreateRelationshipPath(newRelationship);
+                Relationships.Add(newRelationship);
+            }
+        }
+
+        private string CreateRelationshipPath(Relationship relationship)
+        {
+            string path = "";
+            Person sourcePerson = getPerson(relationship.PersonSourceId);
+            Person destinationPerson = getPerson(relationship.PersonDestinationId);
+            Point origin = new Point(sourcePerson.X + sourcePerson.Width/2, sourcePerson.Y + sourcePerson.Height/2);
+            Point destination = new Point(destinationPerson.X + destinationPerson.Width/2, destinationPerson.Y +destinationPerson.Height/2);
+            
+            bool descending = origin.Y < destination.Y;
+            bool eastward = origin.X < destination.X;
+            double midVertical;
+            double midHorizontal;
+            Point step1;
+            Point step2;
+            Point step3;
+            Point step4;
+
+            if (descending)
+            {
+                origin.Y += sourcePerson.Height / 2;
+                destination.Y -= destinationPerson.Height / 2;
+            }
+            else
+            {
+                origin.Y -= sourcePerson.Height / 2;
+                destination.Y += destinationPerson.Height / 2;
+            }
+            if (eastward)
+            {
+                //origin.X += ;
+                //destination.X += ;
+            }
+            else
+            {
+                //origin.X += ;
+                //destination.X += ;
+            }
+
+            midVertical = (destination.Y - origin.Y) / 2;
+            midHorizontal = (destination.X - origin.X) / 2;
+            
+            step1 = new Point(origin.X, origin.Y + midVertical);
+            step2 = new Point(origin.X + midHorizontal, origin.Y + midVertical);
+            step3 = new Point(destination.X - midHorizontal, destination.Y - midVertical);
+            step4 = new Point(destination.X, destination.Y - midVertical);            
+                     
+            path = "M" + origin.ToString() + " Q" + step1.ToString() + " " + step2.ToString() + " T" + step3.ToString() + " Q" + step4.ToString() + " " + destination.ToString();
+
+            return path;
+        }
+
+        private Relationship getRelationship(int ID)
+        {
+            return (Relationship)relationships.Where(r => r.Id == ID).FirstOrDefault();
+        }
+
         private Person getPerson(int ID)
         {
             return (Person)members.Where(m => m.Id == ID).FirstOrDefault();
@@ -942,42 +1093,7 @@ namespace FamilyExplorer
             int? maxId = members.Max(m => m.Id) + 1;
             return maxId ?? 1;
         }
-
-        //public void SetPersonColors(Person person)
-        //{
-        //    if (person.Gender == "Female")
-        //    {
-        //        person.BorderBrush = Settings.ColorBorderBrushFemale;
-        //        person.Background = Settings.ColorBackgroundFemale;
-        //        person.ColorText = Settings.ColorTextFemale;
-        //    }
-        //    else if (person.Gender == "Male")
-        //    {
-        //        person.BorderBrush = Settings.ColorBorderBrushMale;
-        //        person.Background = Settings.ColorBackgroundMale;
-        //        person.ColorText = Settings.ColorTextMale;
-        //    }
-        //    else if (person.Gender == "Other")
-        //    {
-        //        person.BorderBrush = Settings.ColorBorderBrushOther;
-        //        person.Background = Settings.ColorBackgroundOther;
-        //        person.ColorText = Settings.ColorTextOther;
-        //    }
-        //    else if (person.Gender == "Not Specified")
-        //    {
-        //        person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
-        //        person.Background = Settings.ColorBackgroundNotSpecified;
-        //        person.ColorText = Settings.ColorTextNotSpecified;
-        //    }
-        //    else
-        //    {
-        //        person.BorderBrush = Settings.ColorBorderBrushNotSpecified;
-        //        person.Background = Settings.ColorBackgroundNotSpecified;
-        //        person.ColorText = Settings.ColorTextNotSpecified;
-        //    }
-
-        //}
-
+       
         private void AddPersonToFamily(Person person)
         {
             if (Members == null)
@@ -1016,7 +1132,7 @@ namespace FamilyExplorer
             {
                 SetPersonPosition(person);
             }
-
+            ResetAllRelationships();
             SetScaledTreeDimensions();
         }
 
@@ -1117,6 +1233,7 @@ namespace FamilyExplorer
                     Tree = family.Tree;
                     Members = family.Members;
                     Title = "Family Explorer - " + openfile.FileName;
+                    ResetAllRelationships();
                 }
             }
         }
