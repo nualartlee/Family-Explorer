@@ -1019,7 +1019,7 @@ namespace FamilyExplorer
             bool centered = origin.X == destination.X;
             double midVertical;
             double midHorizontal;
-            double radius = 10;
+            double radius = 15;
             Point step1 = new Point();
             Point step2 = new Point();
             Point step3 = new Point();
@@ -1033,29 +1033,26 @@ namespace FamilyExplorer
                 origin.Y += sourcePerson.Height / 2;
                 destination.Y -= destinationPerson.Height / 2;
                 midVertical = (destination.Y - origin.Y) / 2;
-                step1.Y = step2.Y = origin.Y + midVertical;                
-                step3.Y = step4.Y = destination.Y - midVertical;
-                if (step1.Y > step3.Y) { step3.Y = step4.Y = step1.Y; }                
-
+                step1.Y = origin.Y + midVertical - radius;
+                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;                
+                step6.Y = origin.Y + midVertical + radius;                        
             }
             else if (level)
             {
                 origin.Y -= sourcePerson.Height / 2;
                 destination.Y -= destinationPerson.Height / 2;
                 midVertical = sourcePerson.Height / 4;
-                step1.Y = origin.Y - midVertical;
-                step2.Y = origin.Y - midVertical;
-                step3.Y = destination.Y - midVertical;
-                step4.Y = destination.Y - midVertical;
+                step1.Y = step6.Y = origin.Y - midVertical + radius;
+                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y - midVertical;                
             }
             else // ascending
             {
                 origin.Y -= sourcePerson.Height / 2;
                 destination.Y += destinationPerson.Height / 2;
                 midVertical = (destination.Y - origin.Y) / 2;
-                step1.Y = step2.Y = origin.Y + midVertical;
-                step3.Y = step4.Y = destination.Y - midVertical;
-                if (step1.Y < step3.Y) { step3.Y = step4.Y = step1.Y; }
+                step1.Y = origin.Y + midVertical + radius;
+                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;
+                step6.Y = origin.Y + midVertical - radius;                
             }
 
             if (eastward)
@@ -1063,21 +1060,17 @@ namespace FamilyExplorer
                 //origin.X += ;
                 //destination.X += ;
                 midHorizontal = (destination.X - origin.X) / 2;
-                step1.X = origin.X;
-                step2.X = origin.X + midHorizontal;
-                step3.X = destination.X - midHorizontal;
-                if (step2.X > step3.X) { step2.X = step3.X = step2.X - (step2.X - step3.X) / 2; }
-                step4.X = destination.X;
+                step1.X = step2.X = origin.X;
+                step3.X = origin.X + radius;
+                step4.X = destination.X - radius;
+                step5.X = step6.X = destination.X;
+                
             }
             else if (centered)
             {
                 //origin.X += ;
                 //destination.X += ;
-                midHorizontal = (destination.X - origin.X) / 2;
-                step1.X = origin.X;
-                step2.X = origin.X + midHorizontal;
-                step3.X = destination.X - midHorizontal;
-                step4.X = destination.X;
+                step1.X = step2.X = step3.X = step4.X = step5.X = step6.X = origin.X;
 
             }
             else // westward
@@ -1085,14 +1078,13 @@ namespace FamilyExplorer
                 //origin.X += ;
                 //destination.X += ;
                 midHorizontal = (destination.X - origin.X) / 2;
-                step1.X = origin.X;
-                step2.X = origin.X + midHorizontal;
-                step3.X = destination.X - midHorizontal;
-                if (step2.X < step3.X) { step2.X = step3.X = step2.X + (step3.X - step2.X) / 2; }
-                step4.X = destination.X;
+                step1.X = step2.X = origin.X;
+                step3.X = origin.X - radius;
+                step4.X = destination.X + radius;
+                step5.X = step6.X = destination.X;
             }           
                      
-            path = "M" + origin.ToString() + " Q" + step1.ToString() + " " + step2.ToString() + " T" + step3.ToString() + " Q" + step4.ToString() + " " + destination.ToString();
+            path = "M" + origin.ToString() + " L" + step1.ToString() + " Q" + step2.ToString() + " " + step3.ToString() + " L" + step4.ToString() + " Q" + step5.ToString()+ " " + step6.ToString() + " L" + destination.ToString();
             //path = "M" + origin.ToString() + " S" + step1.ToString() + " " + step2.ToString() + " S" + step3.ToString() + " " + step4.ToString() + " T" + destination.ToString();
             //path = "M" + origin.ToString() + " L" + step1.ToString() + " L" + step2.ToString() + " L" + step3.ToString() + " L" + step4.ToString() + " L" + destination.ToString();
 
