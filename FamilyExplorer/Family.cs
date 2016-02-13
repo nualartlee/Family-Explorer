@@ -24,7 +24,10 @@ namespace FamilyExplorer
 {
     public class Family
     {
+        public PersonSettings PersonSettings;
+        public RelationshipSettings RelationshipSettings;
         public Tree Tree;
         public ObservableCollection<Person> Members;
+        public ObservableCollection<Relationship> Relationships;
     }
 }

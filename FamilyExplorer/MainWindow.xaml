@@ -26,6 +26,32 @@
                 <!-- Font color used if item is selected and listbox has focus -->
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
             </Style.Resources>
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBox}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <DataTemplate x:Key="PersonItem">
@@ -72,8 +98,8 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="2*" />
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}"/>
-                        <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}"/>
+                        <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}" Foreground="{Binding TextColor}"/>
+                        <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
                     </Grid>
                 </Viewbox>
             </Border>
@@ -144,7 +170,7 @@
         </Style>
 
         <DataTemplate x:Key="RelationshipItem">
-            <Path Data="{Binding Path}" StrokeThickness="5" Stroke="Black"/>
+            <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}"/>
         </DataTemplate>
 
         <Style TargetType="{x:Type ListBoxItem}" x:Key="RelationshipContainerStyle">
@@ -251,7 +277,7 @@
                         <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
                         <StackPanel Margin="4" Orientation="Horizontal">
                             <Label Margin="4" Content="Gender: " />
-                            <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:Settings.GenderList}}"/>
+                            <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
                         </StackPanel>
                         <StackPanel Margin="4" Orientation="Horizontal">
                             <Label Margin="4" Content="Birthdate: " />
@@ -281,7 +307,7 @@
                         <ListBox x:Name="RelationshipListBox" Style="{StaticResource PersonListBoxStyle}" BorderBrush="Black" Background="{x:Null}"
                              Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"      
                                  ItemsSource="{Binding Relationships}" ItemContainerStyle="{StaticResource RelationshipContainerStyle}"
-                                 SelectionMode="Single">
+                                 Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single">
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas x:Name="RelationshipListBoxCanvas" IsItemsHost="True" Background="{x:Null}"/>

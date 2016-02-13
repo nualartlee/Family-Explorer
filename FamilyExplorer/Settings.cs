@@ -1,41 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public static class Settings
+    public sealed class Settings : INotifyPropertyChanged
     {
 
-        public static string[] GenderList = new string[]
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            "Female", "Male", "Other", "Not Specified"
-        };
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
-        public static string ColorBackgroundFemale = "LightPink";
-        public static string ColorBorderBrushFemale = "Red";
-        public static string ColorTextFemale = "Black";
+        private static Settings instance = null;
+        private static readonly object padlock = new object();
 
-        public static string ColorBackgroundMale = "LightBlue";
-        public static string ColorBorderBrushMale = "Gray";
-        public static string ColorTextMale = "Black";
+        private PersonSettings personSettings;
+        public PersonSettings Person
+        {
+            get { return personSettings; }
+            set
+            {
+                if (value != personSettings)
+                {
+                    personSettings = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-        public static string ColorBackgroundOther = "White";
-        public static string ColorBorderBrushOther = "Black";
-        public static string ColorTextOther = "Black";
+        private RelationshipSettings relationshipSettings;
+        public RelationshipSettings Relationship
+        {
+            get { return relationshipSettings; }
+            set
+            {
+                if (value != relationshipSettings)
+                {
+                    relationshipSettings = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-        public static string ColorBackgroundNotSpecified = "White";
-        public static string ColorBorderBrushNotSpecified = "Black";
-        public static string ColorTextNotSpecified = "Black";
+        Settings()
+        {
+            Person = new PersonSettings();
+            Relationship = new RelationshipSettings();
+        }
 
-        public static double PersonWidth = 100;
-        public static double PersonHeight = 80;
-
-        public static double HorizontalSpace = 50;
-        public static double VerticalSpace = 80;
-
-
+        public static Settings Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Settings();
+                    }
+                    return instance;
+                }
+            }
+        }
     }
 }

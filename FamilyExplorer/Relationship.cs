@@ -130,5 +130,34 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private double pathThickness = 6;
+        public double PathThickness
+        {
+            get { return pathThickness; }
+            set
+            {
+                if (value != pathThickness)
+                {
+                    pathThickness = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string pathColor;
+        public string PathColor
+        {
+            get { return pathColor; }
+            set
+            {
+                if (value != pathColor)
+                {
+                    pathColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
     }
 }

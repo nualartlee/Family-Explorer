@@ -33,9 +33,7 @@ namespace FamilyExplorer
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-
+        }       
 
         private int id;
         public int Id
@@ -279,15 +277,15 @@ namespace FamilyExplorer
                 }
             }
         }
-        private string colorText;
-        public string ColorText
+        private string textColor;
+        public string TextColor
         {
-            get { return colorText; }
+            get { return textColor; }
             set
             {
-                if (value != colorText)
+                if (value != textColor)
                 {
-                    colorText = value;
+                    textColor = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -348,37 +346,9 @@ namespace FamilyExplorer
 
         public void SetPersonColors()
         {
-            if (Gender == "Female")
-            {
-                BorderBrush = Settings.ColorBorderBrushFemale;
-                Background = Settings.ColorBackgroundFemale;
-                ColorText = Settings.ColorTextFemale;
-            }
-            else if (Gender == "Male")
-            {
-                BorderBrush = Settings.ColorBorderBrushMale;
-                Background = Settings.ColorBackgroundMale;
-                ColorText = Settings.ColorTextMale;
-            }
-            else if (Gender == "Other")
-            {
-                BorderBrush = Settings.ColorBorderBrushOther;
-                Background = Settings.ColorBackgroundOther;
-                ColorText = Settings.ColorTextOther;
-            }
-            else if (Gender == "Not Specified")
-            {
-                BorderBrush = Settings.ColorBorderBrushNotSpecified;
-                Background = Settings.ColorBackgroundNotSpecified;
-                ColorText = Settings.ColorTextNotSpecified;
-            }
-            else
-            {
-                BorderBrush = Settings.ColorBorderBrushNotSpecified;
-                Background = Settings.ColorBackgroundNotSpecified;
-                ColorText = Settings.ColorTextNotSpecified;
-            }
-
+            Background = Settings.Instance.Person.BackgroundColor(Gender);
+            BorderBrush = Settings.Instance.Person.BorderBrushColor(Gender);
+            TextColor = Settings.Instance.Person.TextColor(Gender);
         }
 
     }

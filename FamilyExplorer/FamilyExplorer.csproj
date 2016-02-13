@@ -81,6 +81,8 @@
     </Compile>
     <Compile Include="Family.cs" />
     <Compile Include="Relationship.cs" />
+    <Compile Include="RelationshipSettings.cs" />
+    <Compile Include="PersonSettings.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

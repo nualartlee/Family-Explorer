@@ -36,7 +36,7 @@ namespace FamilyExplorer
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));                
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -94,7 +94,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
+        }        
 
         private Cursor familyTreeCursor;
         public Cursor FamilyTreeCursor
@@ -145,7 +145,7 @@ namespace FamilyExplorer
         }
 
         public void CreateNewFamily()
-        {
+        {            
             Tree = new Tree();
             Members = new ObservableCollection<Person> { };
             Relationships = new ObservableCollection<Relationship> { };
@@ -186,7 +186,7 @@ namespace FamilyExplorer
             InitalizePerson(mom);
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
-            mom.Gender = "Female";            
+            mom.Gender = "Female";
             mom.GenerationIndex = child.GenerationIndex - 1;
             mom.ChildrenIds.Add(child.Id);
 
@@ -220,7 +220,7 @@ namespace FamilyExplorer
             InitalizePerson(dad);
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
-            dad.Gender = "Male";            
+            dad.Gender = "Male";
             dad.GenerationIndex = child.GenerationIndex - 1;
             dad.ChildrenIds.Add(child.Id);
 
@@ -969,8 +969,33 @@ namespace FamilyExplorer
                 Person destinationPerson = (person.Id > friend.Id) ? friend : person;
                 DateTime startDate = (person.DOB < friend.DOB) ? person.DOB : friend.DOB;
                 ResetRelationship(4, sourcePerson, destinationPerson, startDate, null);
-
-
+            }
+            // Partners
+            foreach (int partnerId in person.PartnerIds)
+            {
+                Person partner = getPerson(partnerId);
+                Person sourcePerson = (person.Id > partner.Id) ? person : partner;
+                Person destinationPerson = (person.Id > partner.Id) ? partner : person;
+                DateTime startDate = (person.DOB < partner.DOB) ? person.DOB : partner.DOB;
+                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
+            }
+            // Abusers
+            foreach (int abuserId in person.AbuserIds)
+            {
+                Person abuser = getPerson(abuserId);
+                Person sourcePerson = (person.Id > abuser.Id) ? person : abuser;
+                Person destinationPerson = (person.Id > abuser.Id) ? abuser : person;
+                DateTime startDate = (person.DOB < abuser.DOB) ? person.DOB : abuser.DOB;
+                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
+            }
+            // Victims
+            foreach (int victimId in person.VictimIds)
+            {
+                Person victim = getPerson(victimId);
+                Person sourcePerson = (person.Id > victim.Id) ? person : victim;
+                Person destinationPerson = (person.Id > victim.Id) ? victim : person;
+                DateTime startDate = (person.DOB < victim.DOB) ? person.DOB : victim.DOB;
+                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
             }
         }
 
@@ -989,7 +1014,9 @@ namespace FamilyExplorer
                     relationship.StartDate = startDate;
                     relationship.EndDate = endDate;
                 }
-                relationship.Path = CreateRelationshipPath(relationship);                
+                relationship.Path = CreateRelationshipPath(relationship);
+                relationship.PathThickness = Settings.Instance.Relationship.PathThickness;
+                relationship.PathColor = Settings.Instance.Relationship.PathColor(type);
             }
             else
             {
@@ -1001,6 +1028,8 @@ namespace FamilyExplorer
                 newRelationship.StartDate = startDate;
                 newRelationship.EndDate = endDate;
                 newRelationship.Path = CreateRelationshipPath(newRelationship);
+                newRelationship.PathThickness = Settings.Instance.Relationship.PathThickness;
+                newRelationship.PathColor = Settings.Instance.Relationship.PathColor(type);
                 Relationships.Add(newRelationship);
             }
         }
@@ -1010,9 +1039,9 @@ namespace FamilyExplorer
             string path = "";
             Person sourcePerson = getPerson(relationship.PersonSourceId);
             Person destinationPerson = getPerson(relationship.PersonDestinationId);
-            Point origin = new Point(sourcePerson.X + sourcePerson.Width/2, sourcePerson.Y + sourcePerson.Height/2);
-            Point destination = new Point(destinationPerson.X + destinationPerson.Width/2, destinationPerson.Y +destinationPerson.Height/2);
-            
+            Point origin = new Point(sourcePerson.X + sourcePerson.Width / 2, sourcePerson.Y + sourcePerson.Height / 2);
+            Point destination = new Point(destinationPerson.X + destinationPerson.Width / 2, destinationPerson.Y + destinationPerson.Height / 2);
+
             bool descending = origin.Y < destination.Y;
             bool level = origin.Y == destination.Y;
             bool eastward = origin.X < destination.X;
@@ -1034,8 +1063,8 @@ namespace FamilyExplorer
                 destination.Y -= destinationPerson.Height / 2;
                 midVertical = (destination.Y - origin.Y) / 2;
                 step1.Y = origin.Y + midVertical - radius;
-                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;                
-                step6.Y = origin.Y + midVertical + radius;                        
+                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;
+                step6.Y = origin.Y + midVertical + radius;
             }
             else if (level)
             {
@@ -1043,7 +1072,7 @@ namespace FamilyExplorer
                 destination.Y -= destinationPerson.Height / 2;
                 midVertical = sourcePerson.Height / 4;
                 step1.Y = step6.Y = origin.Y - midVertical + radius;
-                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y - midVertical;                
+                step2.Y = step3.Y = step4.Y = step5.Y = origin.Y - midVertical;
             }
             else // ascending
             {
@@ -1052,7 +1081,7 @@ namespace FamilyExplorer
                 midVertical = (destination.Y - origin.Y) / 2;
                 step1.Y = origin.Y + midVertical + radius;
                 step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;
-                step6.Y = origin.Y + midVertical - radius;                
+                step6.Y = origin.Y + midVertical - radius;
             }
 
             if (eastward)
@@ -1064,7 +1093,7 @@ namespace FamilyExplorer
                 step3.X = origin.X + radius;
                 step4.X = destination.X - radius;
                 step5.X = step6.X = destination.X;
-                
+
             }
             else if (centered)
             {
@@ -1082,14 +1111,14 @@ namespace FamilyExplorer
                 step3.X = origin.X - radius;
                 step4.X = destination.X + radius;
                 step5.X = step6.X = destination.X;
-            }           
-                     
-            path = "M" + origin.ToString() + " L" + step1.ToString() + " Q" + step2.ToString() + " " + step3.ToString() + " L" + step4.ToString() + " Q" + step5.ToString()+ " " + step6.ToString() + " L" + destination.ToString();
+            }
+
+            path = "M" + origin.ToString() + " L" + step1.ToString() + " Q" + step2.ToString() + " " + step3.ToString() + " L" + step4.ToString() + " Q" + step5.ToString() + " " + step6.ToString() + " L" + destination.ToString();
             //path = "M" + origin.ToString() + " S" + step1.ToString() + " " + step2.ToString() + " S" + step3.ToString() + " " + step4.ToString() + " T" + destination.ToString();
             //path = "M" + origin.ToString() + " L" + step1.ToString() + " L" + step2.ToString() + " L" + step3.ToString() + " L" + step4.ToString() + " L" + destination.ToString();
 
             return path;
-        }
+        }        
 
         private Relationship getRelationship(int ID)
         {
@@ -1113,13 +1142,13 @@ namespace FamilyExplorer
             person.FriendIds = new List<int> { };
             person.ChildrenIds = new List<int> { };
             person.AbuserIds = new List<int> { };
-            person.VictimIds = new List<int> { };           
+            person.VictimIds = new List<int> { };
 
             person.GenerationIndex = 0;
             person.SiblingIndex = 0;
 
-            person.Width = Settings.PersonWidth;
-            person.Height = Settings.PersonHeight;
+            person.Width = Settings.Instance.Person.Width;
+            person.Height = Settings.Instance.Person.Height;
         }
 
         private int GetNextID()
@@ -1128,7 +1157,7 @@ namespace FamilyExplorer
             int? maxId = members.Max(m => m.Id) + 1;
             return maxId ?? 1;
         }
-       
+
         private void AddPersonToFamily(Person person)
         {
             if (Members == null)
@@ -1142,8 +1171,8 @@ namespace FamilyExplorer
 
         private void SetPersonPosition(Person person)
         {
-            person.X = Tree.Width / 2 + person.SiblingIndex * (Settings.PersonWidth + Settings.HorizontalSpace) - Settings.PersonWidth / 2;
-            person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * (Settings.PersonHeight + Settings.VerticalSpace);
+            person.X = Tree.Width / 2 + person.SiblingIndex * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) - Settings.Instance.Person.Width / 2;
+            person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace);
         }
 
         private void OrderSiblings(int generation)
@@ -1160,8 +1189,8 @@ namespace FamilyExplorer
 
         private void SetTreeLayout()
         {
-            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.PersonWidth + Settings.HorizontalSpace);// - 40;
-            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.PersonHeight + Settings.VerticalSpace);// - 30;
+            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace);// - 40;
+            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace);// - 30;
 
             foreach (Person person in Members)
             {
@@ -1180,7 +1209,7 @@ namespace FamilyExplorer
         public void SetWindowSize(double width, double height)
         {
             Tree.WindowWidth = width;
-            Tree.WindowHeight = height;            
+            Tree.WindowHeight = height;
         }
 
         public void CenterTreeInWindow()
@@ -1232,8 +1261,12 @@ namespace FamilyExplorer
             {
 
                 Family family = new Family();
+                family.PersonSettings = Settings.Instance.Person;
+                family.RelationshipSettings = Settings.Instance.Relationship;
                 family.Tree = Tree;
                 family.Members = Members;
+                family.Relationships = Relationships;
+
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(Family));
                 var subReq = family;
                 using (StringWriter sww = new StringWriter())
@@ -1244,7 +1277,8 @@ namespace FamilyExplorer
                     XmlDocument xdoc = new XmlDocument();
                     xdoc.LoadXml(xml);
                     xdoc.Save(savefile.FileName);
-                }
+                    Title = "Family Explorer - " + savefile.FileName;
+                }                
             }
         }
 
@@ -1259,16 +1293,18 @@ namespace FamilyExplorer
             Nullable<bool> result = openfile.ShowDialog();
 
             if (result == true)
-            {                
-                XmlSerializer serializer = new XmlSerializer(typeof(Family));                
-                using (StreamReader reader = new StreamReader(openfile.FileName))                
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Family));
+                using (StreamReader reader = new StreamReader(openfile.FileName))
                 {
                     Family family = new Family();
                     family = (Family)serializer.Deserialize(reader);
-                    Tree = family.Tree;
-                    Members = family.Members;
-                    Title = "Family Explorer - " + openfile.FileName;
-                    ResetAllRelationships();
+                    if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
+                    if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }       
+                    if (family.Tree != null) { Tree = family.Tree; }
+                    if (family.Members != null) { Members = family.Members; Title = "Family Explorer - " + openfile.FileName; }
+                    if (family.Relationships != null) { Relationships = family.Relationships; }
+                    SetTreeLayout();
                 }
             }
         }
