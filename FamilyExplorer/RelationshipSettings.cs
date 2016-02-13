@@ -46,6 +46,108 @@ namespace FamilyExplorer
             }
         }
 
+        private double pathOffsetMother = 0;
+        public double PathOffsetMother
+        {
+            get { return pathOffsetMother; }
+            set
+            {
+                if (value != pathOffsetMother)
+                {
+                    pathOffsetMother = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double pathOffsetFather = 5;
+        public double PathOffsetFather
+        {
+            get { return pathOffsetFather; }
+            set
+            {
+                if (value != pathOffsetFather)
+                {
+                    pathOffsetFather = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double pathOffsetSibling = 10;
+        public double PathOffsetSibling
+        {
+            get { return pathOffsetSibling; }
+            set
+            {
+                if (value != pathOffsetSibling)
+                {
+                    pathOffsetSibling = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double pathOffsetFriend = 15;
+        public double PathOffsetFriend
+        {
+            get { return pathOffsetFriend; }
+            set
+            {
+                if (value != pathOffsetFriend)
+                {
+                    pathOffsetFriend = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double pathOffsetPartner = 20;
+        public double PathOffsetPartner
+        {
+            get { return pathOffsetPartner; }
+            set
+            {
+                if (value != pathOffsetPartner)
+                {
+                    pathOffsetPartner = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private double pathOffsetAbuse = 25;
+        public double PathOffsetAbuse
+        {
+            get { return pathOffsetAbuse; }
+            set
+            {
+                if (value != pathOffsetAbuse)
+                {
+                    pathOffsetAbuse = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public double PathOffset(int type)
+        {
+            switch (type)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return PathOffsetMother;
+                case 2:
+                    return PathOffsetFather;
+                case 3:
+                    return PathOffsetSibling;
+                case 4:
+                    return PathOffsetFriend;
+                case 5:
+                    return PathOffsetPartner;
+                case 6:
+                    return PathOffsetAbuse;
+                default:
+                    return 0;
+            }
+        }
+
         private string pathColorMother = "Black";
         public string PathColorMother
         {
@@ -147,5 +249,8 @@ namespace FamilyExplorer
                     return "";
             }
         }
+
+
+
     }
 }

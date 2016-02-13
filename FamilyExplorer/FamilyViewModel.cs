@@ -190,9 +190,11 @@ namespace FamilyExplorer
             mom.GenerationIndex = child.GenerationIndex - 1;
             mom.ChildrenIds.Add(child.Id);
 
+            child.MotherId = mom.Id;
+
             AddPersonToFamily(mom);
 
-            child.MotherId = mom.Id;
+            
         }
 
         public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -224,9 +226,11 @@ namespace FamilyExplorer
             dad.GenerationIndex = child.GenerationIndex - 1;
             dad.ChildrenIds.Add(child.Id);
 
+            child.FatherId = dad.Id;
+
             AddPersonToFamily(dad);
 
-            child.FatherId = dad.Id;
+            
         }
 
         public void AddSiblingEqualParents_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -410,13 +414,13 @@ namespace FamilyExplorer
             InitalizePerson(friend);
             friend.FirstName = "Friend Of " + person.FirstName;
             friend.LastName = "";
-            friend.Gender = "";
+            friend.Gender = "Not Specified";
             friend.GenerationIndex = person.GenerationIndex;
             friend.FriendIds.Add(person.Id);
 
-            AddPersonToFamily(friend);
-
             person.FriendIds.Add(friend.Id);
+
+            AddPersonToFamily(friend);            
         }
 
         public void AddPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -436,13 +440,13 @@ namespace FamilyExplorer
             InitalizePerson(partner);
             partner.FirstName = "Partner Of " + person.FirstName;
             partner.LastName = "";
-            partner.Gender = "";
+            partner.Gender = "Not Specified";
             partner.GenerationIndex = person.GenerationIndex;
             partner.PartnerIds.Add(person.Id);
 
-            AddPersonToFamily(partner);
-
             person.PartnerIds.Add(partner.Id);
+
+            AddPersonToFamily(partner);            
         }
 
         public void AddChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -513,13 +517,13 @@ namespace FamilyExplorer
             InitalizePerson(abuser);
             abuser.FirstName = "Abuser Of " + abuser.FirstName;
             abuser.LastName = "";
-            abuser.Gender = "";
+            abuser.Gender = "Not Specified";
             abuser.GenerationIndex = abuser.GenerationIndex - 1;
             abuser.VictimIds.Add(abuser.Id);
 
-            AddPersonToFamily(abuser);
-
             abuser.AbuserIds.Add(abuser.Id);
+
+            AddPersonToFamily(abuser);            
         }
 
         public void AddVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -539,13 +543,13 @@ namespace FamilyExplorer
             InitalizePerson(victim);
             victim.FirstName = "Victim Of " + abuser.FirstName;
             victim.LastName = "";
-            victim.Gender = "";
+            victim.Gender = "Not Specified";
             victim.GenerationIndex = abuser.GenerationIndex + 1;
             victim.AbuserIds.Add(abuser.Id);
 
-            AddPersonToFamily(victim);
-
             abuser.VictimIds.Add(victim.Id);
+
+            AddPersonToFamily(victim);            
         }
 
         public void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -584,7 +588,7 @@ namespace FamilyExplorer
                 person.SiblingIds.Add(childId);
             }
             // Add person to mother's other childrens' sibling lists
-            foreach (int siblingid in person.SiblingIds)
+            foreach (int siblingid in person.SiblingIds.ToList())
             {
                 Person otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
@@ -641,7 +645,7 @@ namespace FamilyExplorer
                 }
             }
             // Add person to father  
-            father.ChildrenIds.Add(person.Id);
+            father.ChildrenIds.Add(person.Id);            
         }
 
         public void SetFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -865,7 +869,9 @@ namespace FamilyExplorer
                 SetCommandInProgressDescription = "";
                 SetCommandInProgress = false;
                 FamilyTreeCursor = Cursors.Arrow;
+                ResetAllRelationships();
             }
+            
         }
 
         public void EnterSetCommandRelation(Person person)
@@ -986,7 +992,7 @@ namespace FamilyExplorer
                 Person sourcePerson = (person.Id > abuser.Id) ? person : abuser;
                 Person destinationPerson = (person.Id > abuser.Id) ? abuser : person;
                 DateTime startDate = (person.DOB < abuser.DOB) ? person.DOB : abuser.DOB;
-                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
+                ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
             }
             // Victims
             foreach (int victimId in person.VictimIds)
@@ -995,7 +1001,7 @@ namespace FamilyExplorer
                 Person sourcePerson = (person.Id > victim.Id) ? person : victim;
                 Person destinationPerson = (person.Id > victim.Id) ? victim : person;
                 DateTime startDate = (person.DOB < victim.DOB) ? person.DOB : victim.DOB;
-                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
+                ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
             }
         }
 
@@ -1046,6 +1052,7 @@ namespace FamilyExplorer
             bool level = origin.Y == destination.Y;
             bool eastward = origin.X < destination.X;
             bool centered = origin.X == destination.X;
+            double offset = Settings.Instance.Relationship.PathOffset(relationship.Type);
             double midVertical;
             double midHorizontal;
             double radius = 15;
@@ -1086,8 +1093,8 @@ namespace FamilyExplorer
 
             if (eastward)
             {
-                //origin.X += ;
-                //destination.X += ;
+                origin.X += offset;
+                destination.X -= offset;
                 midHorizontal = (destination.X - origin.X) / 2;
                 step1.X = step2.X = origin.X;
                 step3.X = origin.X + radius;
@@ -1097,15 +1104,15 @@ namespace FamilyExplorer
             }
             else if (centered)
             {
-                //origin.X += ;
-                //destination.X += ;
+                origin.X += offset;
+                destination.X -= offset;
                 step1.X = step2.X = step3.X = step4.X = step5.X = step6.X = origin.X;
 
             }
             else // westward
             {
-                //origin.X += ;
-                //destination.X += ;
+                origin.X -= offset;
+                destination.X += offset;
                 midHorizontal = (destination.X - origin.X) / 2;
                 step1.X = step2.X = origin.X;
                 step3.X = origin.X - radius;
