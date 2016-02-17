@@ -1068,7 +1068,7 @@ namespace FamilyExplorer
             if (descending)
             {
                 origin.Y += (height / 2 + margin);
-                destination.Y -= (height / 2 - margin);                
+                destination.Y -= (height / 2 + margin);                
                 
             }
             else if (level)
@@ -1224,18 +1224,17 @@ namespace FamilyExplorer
         {
             Point next = new Point();
 
-            double width = Settings.Instance.Person.Width;
-            //double height = Settings.Instance.Person.Height;
+            double width = Settings.Instance.Person.Width;            
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            //double radius = Settings.Instance.Relationship.PathCornerRadius;
-            
+            double margin = Settings.Instance.Person.Margin;            
+
             int location = GetVerticalLocationRelativeToPeople(current, offset);
             bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
 
             if (location == 1) // Currently at bottom of person, go down to center line
             {
-                double Y = GetHorizontalSpaceCenterLine(current) + offset; 
+                double Y = current.Y - margin + offset + verticalSpace / 2;
                 next = new Point(current.X, Y);
                 return next;
             }
@@ -1279,20 +1278,14 @@ namespace FamilyExplorer
 
         private Point GetNextLevelPoint(Point current, Point destination, double offset)
         {
-            Point next = new Point();
-
-            double width = Settings.Instance.Person.Width;
-            //double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
+            Point next = new Point();           
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            //double radius = Settings.Instance.Relationship.PathCornerRadius;
-
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-            bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
+            double margin = Settings.Instance.Person.Margin;            
+            int location = GetVerticalLocationRelativeToPeople(current, offset);            
 
             if (location == 3) // Currently at origin, go up to center line
-            {
-                double Y = GetHorizontalSpaceCenterLine(current) + offset;
+            {                
+                double Y = current.Y + margin + offset - verticalSpace / 2;                
                 next = new Point(current.X, Y);
                 return next;
             }            
@@ -1321,14 +1314,15 @@ namespace FamilyExplorer
             //double height = Settings.Instance.Person.Height;
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
+            double margin = Settings.Instance.Person.Margin;
             //double radius = Settings.Instance.Relationship.PathCornerRadius;
 
             int location = GetVerticalLocationRelativeToPeople(current, offset);
             bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
 
-            if (location == 1) // Currently at origin, go up to center line
+            if (location == 3) // Currently at origin, go up to center line
             {
-                double Y = GetHorizontalSpaceCenterLine(current) + offset;
+                double Y = current.Y + margin + offset - verticalSpace / 2;
                 next = new Point(current.X, Y);
                 return next;
             }
@@ -1336,18 +1330,20 @@ namespace FamilyExplorer
             if (crossGeneration) // Go up to next level
             {
                 // Get the closest path to go up
-                double closestXPath = GetClosestVerticalSpaceCenterLine(GetGenerationIndex(current.Y) - 1, current.X);
+                int generationIndex = GetGenerationIndex(current.Y);
+                bool evenGenerationAbove = (Members.Where(m => m.GenerationIndex == generationIndex - 1).Count() % 2 == 0); // Generation to cross has an even number of people
+                bool evenGenerationHere = (Members.Where(m => m.GenerationIndex == generationIndex).Count() % 2 == 0); // This generation has an even number of people                
 
-                if (Math.Abs(current.X - closestXPath) < offset) // Go up path open directly above
+                if (evenGenerationAbove != evenGenerationHere) // Go up path open directly above
                 {
-                    double Y = GetHorizontalSpaceCenterLine(current) - (width + horizontalSpace) + offset;
+                    double Y = current.Y - (width + horizontalSpace);
                     next = new Point(current.X, Y);
                     return next;
                 }
                 else // Move sideways to vertical path opening
                 {
-                    bool moveRight = current.X < closestXPath;
-                    double X = moveRight ? closestXPath - offset : closestXPath + offset;
+                    bool moveRight = current.X <= destination.X;
+                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
                     next = new Point(X, current.Y);
                     return next;
                 }
@@ -1372,14 +1368,22 @@ namespace FamilyExplorer
         private int GetVerticalLocationRelativeToPeople(Point point, double offset)
         {
             double height = Settings.Instance.Person.Height;
-            double space = Settings.Instance.Person.HorizontalSpace;
+            double space = Settings.Instance.Person.VerticalSpace;
             double margin = Settings.Instance.Person.Margin;
-            double location = Math.Abs(point.Y % (height + space));
-            //bool positive = (point.Y % (height + space)) >= 0;
-
-            if (location == height / 2 + margin) { return 1; } // Person bottom
-            if (location == height + space / 2 + offset) { return 2; } // On horizontal path
-            if (location == margin) { return 3; } // Person top
+            double location = point.Y % (height + space);
+            bool positive = location >= 0;
+            if (positive)
+            {
+                if (location == height + margin) { return 1; } // Person bottom
+                if (location == height + space / 2 + offset) { return 2; } // On horizontal path
+                if (location == height + space - margin) { return 3; } // Person top
+            }
+            else
+            {
+                if (location == - space + margin) { return 1; } // Person bottom
+                if (location == - space / 2 + offset) { return 2; } // On horizontal path
+                if (location == - margin) { return 3; } // Person top
+            }
 
             //if (location == height/2 + margin) { return (positive) ? 1 : 3; } // Person bottom
             //if (location == (height + space) / 2 + offset) { return 2; } // On horizontal path
@@ -1403,7 +1407,7 @@ namespace FamilyExplorer
         private double GetHorizontalSpaceCenterLine(Point current)
         {
             double height = Settings.Instance.Person.Height;
-            double space = Settings.Instance.Person.HorizontalSpace;
+            double space = Settings.Instance.Person.VerticalSpace;
             double Y = Math.Floor(current.Y / (height + space)) * (height + space) + (height + space) / 2;
             return Y;
         }
