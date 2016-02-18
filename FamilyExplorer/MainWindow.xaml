@@ -255,7 +255,7 @@
             <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}" Visibility="{Binding ElementName=PersonListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="400"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

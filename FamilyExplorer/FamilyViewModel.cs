@@ -636,7 +636,7 @@ namespace FamilyExplorer
                 person.SiblingIds.Add(childId);
             }
             // Add person to father's other childrens' sibling lists
-            foreach (int siblingid in person.SiblingIds)
+            foreach (int siblingid in person.SiblingIds.ToList())
             {
                 Person otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
@@ -1007,7 +1007,7 @@ namespace FamilyExplorer
 
         private void ResetRelationship(int type, Person personSource, Person personDestination, DateTime startDate, DateTime? endDate)
         {
-            int Id = type * 10 ^ 6 + personSource.Id * 10 ^ 3 + personDestination.Id;
+            int Id = type * (int)Math.Pow(10,6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
             Relationship relationship = getRelationship(Id);
             if (relationship != null)
             {
@@ -1115,151 +1115,58 @@ namespace FamilyExplorer
             for (int i = 1; i < points.Count(); i++)
             {
                 path += "L" + points.ElementAt(i).ToString();
-            }
-            
-            #region V1
-
-            //if (descending)
-            //{
-            //    origin.Y += sourcePerson.Height / 2;
-            //    destination.Y -= destinationPerson.Height / 2;
-            //    midVertical = (destination.Y - origin.Y) / 2;
-            //    step1.Y = origin.Y + midVertical - radius;
-            //    step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;
-            //    step6.Y = origin.Y + midVertical + radius;
-            //}
-            //else if (level)
-            //{
-            //    origin.Y -= sourcePerson.Height / 2;
-            //    destination.Y -= destinationPerson.Height / 2;
-            //    midVertical = sourcePerson.Height / 4;
-            //    step1.Y = step6.Y = origin.Y - midVertical + radius;
-            //    step2.Y = step3.Y = step4.Y = step5.Y = origin.Y - midVertical;
-            //}
-            //else // ascending
-            //{
-            //    origin.Y -= sourcePerson.Height / 2;
-            //    destination.Y += destinationPerson.Height / 2;
-            //    midVertical = (destination.Y - origin.Y) / 2;
-            //    step1.Y = origin.Y + midVertical + radius;
-            //    step2.Y = step3.Y = step4.Y = step5.Y = origin.Y + midVertical;
-            //    step6.Y = origin.Y + midVertical - radius;
-            //}
-
-            //if (eastward)
-            //{
-            //    origin.X += offset;
-            //    destination.X -= offset;
-            //    midHorizontal = (destination.X - origin.X) / 2;
-            //    step1.X = step2.X = origin.X;
-            //    step3.X = origin.X + radius;
-            //    step4.X = destination.X - radius;
-            //    step5.X = step6.X = destination.X;
-            //}
-            //else if (centered)
-            //{
-            //    origin.X += offset;
-            //    destination.X -= offset;
-            //    step1.X = step2.X = step3.X = step4.X = step5.X = step6.X = origin.X;
-
-            //}
-            //else // westward
-            //{
-            //    origin.X -= offset;
-            //    destination.X += offset;
-            //    midHorizontal = (destination.X - origin.X) / 2;
-            //    step1.X = step2.X = origin.X;
-            //    step3.X = origin.X - radius;
-            //    step4.X = destination.X + radius;
-            //    step5.X = step6.X = destination.X;
-            //}
-
-            #endregion V1
-
-            //path = "M" + origin.ToString() + " L" + step1.ToString() + " Q" + step2.ToString() + " " + step3.ToString() + " L" + step4.ToString() + " Q" + step5.ToString() + " " + step6.ToString() + " L" + destination.ToString();
-            //path = "M" + origin.ToString() + " S" + step1.ToString() + " " + step2.ToString() + " S" + step3.ToString() + " " + step4.ToString() + " T" + destination.ToString();
-            //path = "M" + origin.ToString() + " L" + step1.ToString() + " L" + step2.ToString() + " L" + step3.ToString() + " L" + step4.ToString() + " L" + destination.ToString();
-
+            }            
             return path;
-        }        
-
-        //private Point GetNextPathCorner(Point current, Point destination, double offset)
-        //{
-        //    Point next = new Point();
-
-        //    double width = Settings.Instance.Person.Width;
-        //    double height = Settings.Instance.Person.Height;
-        //    double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-        //    double verticalSpace = Settings.Instance.Person.VerticalSpace;            
-        //    double radius = Settings.Instance.Relationship.PathCornerRadius;
-
-        //    bool descending = (current.Y < destination.Y);
-        //    bool ascending = (destination.Y < current.Y);
-        //    bool crossGeneration = (Math.Abs(destination.Y - current.Y) > verticalSpace);
-        //    int location = GetLocationRelativeToPeople(current);
-        //    bool moveUp, moveDown, moveLeft, moveRight = false;
-
-        //    if (descending)
-        //    {
-        //        //if (location == 1) { return new Point(current.Y + verticalSpace / 2 + offset, current.X); }
-        //        if (crossGeneration)
-        //        {
-        //            double closestXPath = GetClosestVerticalSpaceCenterLine(GetGenerationIndexBelow(current.Y), current.X);
-        //            if (Math.Abs(current.X - closestXPath) < offset) // Path open directly below
-        //            {
-
-        //            }
-        //        }
-
-        //    }
-
-           
-
-
-
-        //    return next;
-        //}
-
+        }
+        
         private Point GetNextDownwardsPoint(Point current, Point destination, double offset)
         {
             Point next = new Point();
 
-            double width = Settings.Instance.Person.Width;            
+            double width = Settings.Instance.Person.Width;
+            double height = Settings.Instance.Person.Height;
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;            
+            double margin = Settings.Instance.Person.Margin;
+            //double radius = Settings.Instance.Relationship.PathCornerRadius;
 
             int location = GetVerticalLocationRelativeToPeople(current, offset);
             bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
 
-            if (location == 1) // Currently at bottom of person, go down to center line
+            if (location == 1) // Currently at origin, go down to center line
             {
                 double Y = current.Y - margin + offset + verticalSpace / 2;
                 next = new Point(current.X, Y);
                 return next;
             }
-            
+
             if (crossGeneration) // Go down to next level
-            {
-                // Get the closest path to go down
-                double closestXPath = GetClosestVerticalSpaceCenterLine(GetGenerationIndex(current.Y) + 1, current.X);
-
-
-                if (Math.Abs(current.X - closestXPath) <= offset) // Go down path open directly below
+            {                
+                int generationIndex = GetGenerationIndex(current.Y);
+                List<Person> peopleBelow = Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
+                
+                bool spaceBelow = true;
+                foreach (Person person in peopleBelow)
                 {
-                    double Y = GetHorizontalSpaceCenterLine(current) + (width + horizontalSpace) + offset;
+                    if (current.X > person.X && current.X < person.X + width) { spaceBelow = false; break; }
+                }
+
+
+                if (spaceBelow) // Space below, go down
+                {
+                    double Y = current.Y + (height + verticalSpace);
                     next = new Point(current.X, Y);
                     return next;
                 }
                 else // Move sideways to vertical path opening
                 {
-                    bool moveRight = current.X < closestXPath;
-                    double X = moveRight ? closestXPath - offset : closestXPath + offset;
+                    bool moveRight = current.X <= destination.X;
+                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
                     next = new Point(X, current.Y);
                     return next;
                 }
             }
-            else 
+            else
             {
 
                 if (current.X == destination.X) // Move down to destination
@@ -1268,12 +1175,12 @@ namespace FamilyExplorer
                     return next;
                 }
                 else // Move sideways over destination
-                {                                       
+                {
                     next = new Point(destination.X, current.Y);
                     return next;
                 }
             }
-            
+
         }
 
         private Point GetNextLevelPoint(Point current, Point destination, double offset)
@@ -1311,11 +1218,10 @@ namespace FamilyExplorer
             Point next = new Point();
 
             double width = Settings.Instance.Person.Width;
-            //double height = Settings.Instance.Person.Height;
+            double height = Settings.Instance.Person.Height;
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-            //double radius = Settings.Instance.Relationship.PathCornerRadius;
+            double margin = Settings.Instance.Person.Margin;            
 
             int location = GetVerticalLocationRelativeToPeople(current, offset);
             bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
@@ -1328,21 +1234,18 @@ namespace FamilyExplorer
             }
 
             if (crossGeneration) // Go up to next level
-            {
-                // Get the closest path to go up
+            {                
                 int generationIndex = GetGenerationIndex(current.Y);
-                List<Person> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();
-                //bool evenGenerationAbove = (peopleAbove % 2 == 0); // Generation to cross has an even number of people
+                List<Person> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();                
                 bool spaceAbove = true;
                 foreach (Person person in peopleAbove)
                 {
                     if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
                 }
-
          
                 if (spaceAbove) // Space above, go up
                 {
-                    double Y = current.Y - (width + horizontalSpace);
+                    double Y = current.Y - (height + verticalSpace);
                     next = new Point(current.X, Y);
                     return next;
                 }
@@ -1408,15 +1311,7 @@ namespace FamilyExplorer
 
 
             return 0;
-        }
-
-        private double GetHorizontalSpaceCenterLine(Point current)
-        {
-            double height = Settings.Instance.Person.Height;
-            double space = Settings.Instance.Person.VerticalSpace;
-            double Y = Math.Floor(current.Y / (height + space)) * (height + space) + (height + space) / 2;
-            return Y;
-        }
+        }       
 
         private int GetGenerationIndex(double currentYPosition)
         {            
@@ -1432,49 +1327,7 @@ namespace FamilyExplorer
                 return (int)Math.Ceiling(currentYPosition / (height + horizontalSpace));
             }  
         }        
-
-        private double GetClosestVerticalSpaceCenterLine(int generationToCross, double currentXPosition)
-        {
-            double width = Settings.Instance.Person.Width;                        
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;            
-            double distance = 0;
-            bool even = (Members.Where(m => m.GenerationIndex == generationToCross).Count() % 2 == 0); // Generation to cross has an even number of people
-
-            if (even)
-            {
-                distance = (currentXPosition % (width + verticalSpace));                
-            }
-            else // Odd
-            {                
-                if (currentXPosition > 0)
-                {
-                    distance = currentXPosition % (width + verticalSpace) - (width + verticalSpace) / 2;
-                }
-                else
-                {
-                    distance = currentXPosition % (width + verticalSpace) + (width + verticalSpace) / 2;
-                }
-            }
-            
-            if (Math.Abs(distance) > (width + verticalSpace) / 2)
-            {
-                distance = (distance > 0) ? (width + verticalSpace) - distance : - (width + verticalSpace) - distance;
-            }
-           
-            return currentXPosition + distance;
-        }
-
-        //private int GetHorizontalPositionLocation(Point point)
-        //{
-        //    double width = Settings.Instance.Person.Width;
-        //    double space = Settings.Instance.Person.VerticalSpace;
-        //    double location = point.X % (width + space);
-        //    if (location == width / 2 || location == (width / 2 - (width + space))) { return 1; } // Person bottom
-        //    if (location == (width + space) / 2 || location == -(width + space) / 2) { return 2; } // Middle of horizontal space
-        //    if (location == -(width / 2) || location == -(width / 2 - (width + space))) { return 3; } // Person top
-        //    return 0;
-        //}       
-
+        
         private Relationship getRelationship(int ID)
         {
             return (Relationship)relationships.Where(r => r.Id == ID).FirstOrDefault();

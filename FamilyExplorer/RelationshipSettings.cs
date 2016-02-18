@@ -59,7 +59,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFather = 5;
+        private double pathOffsetFather = 2;
         public double PathOffsetFather
         {
             get { return pathOffsetFather; }
@@ -72,7 +72,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetSibling = 10;
+        private double pathOffsetSibling = 4;
         public double PathOffsetSibling
         {
             get { return pathOffsetSibling; }
@@ -85,7 +85,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFriend = 15;
+        private double pathOffsetFriend = 8;
         public double PathOffsetFriend
         {
             get { return pathOffsetFriend; }
@@ -98,7 +98,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetPartner = 20;
+        private double pathOffsetPartner = 6;
         public double PathOffsetPartner
         {
             get { return pathOffsetPartner; }
@@ -111,7 +111,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetAbuse = 25;
+        private double pathOffsetAbuse = 10;
         public double PathOffsetAbuse
         {
             get { return pathOffsetAbuse; }
