@@ -1110,12 +1110,59 @@ namespace FamilyExplorer
                 else { { points.Add(GetNextUpwardsPoint(points.Last(), destination, offset)); } }
             }
 
-            path = "M" + origin.ToString();
+            path = SmoothenPath(points);
+            
+            return path;
+        }
 
-            for (int i = 1; i < points.Count(); i++)
+        private string SmoothenPath(List<Point> points)
+        {
+            double radius = Settings.Instance.Relationship.PathCornerRadius;
+            string path = "M" + points[0].ToString();
+
+            for (int i=1; i < points.Count(); i++)
             {
-                path += "L" + points.ElementAt(i).ToString();
-            }            
+
+                // Last point
+                if (i == points.Count() - 1)
+                {
+                    path += " L" + points[i].ToString();
+                    break;
+                }
+
+                bool startedHorizontal = points[i - 1].X != points[i].X;
+                bool endedHorizontal = points[i].X != points[i + 1].X;
+                bool startedVertical = points[i - 1].Y != points[i].Y;
+                bool endedVertical = points[i].Y != points[i + 1].Y;                
+                bool notCorner = (startedVertical && endedVertical) || (startedHorizontal && endedHorizontal);
+
+                // This point is not a corner
+                if (notCorner) { break; }
+
+                Point tangent1;
+                Point tangent2;
+
+                if (startedHorizontal)
+                {
+                    bool startedGoingRight = points[i - 1].X < points[i].X;
+                    if (startedGoingRight) { tangent1 = new Point(points[i].X - radius, points[i].Y); }
+                    else { tangent1 = new Point(points[i].X + radius, points[i].Y); }
+                    bool endedGoingDown = points[i].Y < points[i + 1].Y;
+                    if (endedGoingDown) { tangent2 = new Point(points[i].X, points[i].Y + radius); }
+                    else { tangent2 = new Point(points[i].X, points[i].Y - radius); }
+                }
+                else
+                {
+                    bool startedGoingDown = points[i - 1].Y < points[i].Y;
+                    if (startedGoingDown) { tangent1 = new Point(points[i].X, points[i].Y - radius); }
+                    else { tangent1 = new Point(points[i].X, points[i].Y + radius); }
+                    bool endedGoingRight = points[i].X < points[i + 1].X;
+                    if (endedGoingRight) { tangent2 = new Point(points[i].X + radius, points[i].Y); }
+                    else { tangent2 = new Point(points[i].X - radius, points[i].Y); }                    
+                }               
+                path += " L" + tangent1.ToString() + " Q" + points[i].ToString() + " " + tangent2.ToString();
+            }
+
             return path;
         }
         
