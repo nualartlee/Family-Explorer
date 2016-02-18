@@ -1331,10 +1331,16 @@ namespace FamilyExplorer
             {
                 // Get the closest path to go up
                 int generationIndex = GetGenerationIndex(current.Y);
-                bool evenGenerationAbove = (Members.Where(m => m.GenerationIndex == generationIndex - 1).Count() % 2 == 0); // Generation to cross has an even number of people
-                bool evenGenerationHere = (Members.Where(m => m.GenerationIndex == generationIndex).Count() % 2 == 0); // This generation has an even number of people                
+                List<Person> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();
+                //bool evenGenerationAbove = (peopleAbove % 2 == 0); // Generation to cross has an even number of people
+                bool spaceAbove = true;
+                foreach (Person person in peopleAbove)
+                {
+                    if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
+                }
 
-                if (evenGenerationAbove != evenGenerationHere) // Go up path open directly above
+         
+                if (spaceAbove) // Space above, go up
                 {
                     double Y = current.Y - (width + horizontalSpace);
                     next = new Point(current.X, Y);
