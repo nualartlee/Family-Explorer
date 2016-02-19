@@ -439,7 +439,7 @@ namespace FamilyExplorer
 
         private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            RelationshipListBox.SelectedItem = null;
+            //RelationshipListBox.SelectedItem = null;
             PersonListBox.SelectedItem = null;
         }
     }
