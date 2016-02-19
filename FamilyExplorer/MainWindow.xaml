@@ -247,45 +247,96 @@
         <Grid x:Name="MainGrid" Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="400"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="PersonDataGrid" Grid.Column="0" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}" Visibility="{Binding ElementName=PersonListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="400"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,10,4,4">
-                    <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
-                </Border>
-                <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="4,10,4,4" >
-                    <StackPanel>
-                        <Label Margin="4" Content="First Name: " />
-                        <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
-                        <Label Margin="4" Content="Last Name: " />
-                        <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
-                        <StackPanel Margin="4" Orientation="Horizontal">
-                            <Label Margin="4" Content="Gender: " />
-                            <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
-                        </StackPanel>
-                        <StackPanel Margin="4" Orientation="Horizontal">
-                            <Label Margin="4" Content="Birthdate: " />
-                            <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
+            <Grid x:Name="DataGrid" Grid.Column="0" Background="Azure">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="PersonDataGrid" Grid.Row="0" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}"
+                  Visibility="{Binding ElementName=PersonListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
+                  HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,10,4,4">
+                        <TextBlock Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                    </Border>
+                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="4,10,4,4" >
+                        <StackPanel>
+                            <Label Margin="4" Content="First Name: " />
+                            <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                            <Label Margin="4" Content="Last Name: " />
+                            <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                            <StackPanel Margin="4" Orientation="Horizontal">
+                                <Label Margin="4" Content="Gender: " />
+                                <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
+                            </StackPanel>
+                            <StackPanel Margin="4" Orientation="Horizontal">
+                                <Label Margin="4" Content="Birthdate: " />
+                                <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+                
+                <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
+                
+                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding ElementName=RelatioshipListBox, Path=SelectedItem}"
+                  Visibility="{Binding ElementName=RelationshipListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
+                  HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="Gray" Background="{Binding PathColor}" Margin="4,10,4,4">
+                        <TextBlock Text="{Binding Id}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
+                    </Border>
+                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        BorderBrush="Gray" Background="White" Margin="4,10,4,4" >
+                        <StackPanel>
+                            <Label Margin="4" Content="First Name: " />
+                            <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                            <Label Margin="4" Content="Last Name: " />
+                            <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                            <StackPanel Margin="4" Orientation="Horizontal">
+                                <Label Margin="4" Content="Gender: " />
+                                <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
+                            </StackPanel>
+                            <StackPanel Margin="4" Orientation="Horizontal">
+                                <Label Margin="4" Content="Birthdate: " />
+                                <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                
             </Grid>
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
@@ -314,7 +365,7 @@
                             </ListBox.ItemsPanel>
 
                         </ListBox>
-                        
+
 
                     </Canvas>
                 </Border>

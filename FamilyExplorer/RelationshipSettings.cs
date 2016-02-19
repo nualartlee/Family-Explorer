@@ -32,7 +32,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathCornerRadius = 15;
+        private double pathCornerRadius = 5;
         public double PathCornerRadius
         {
             get { return pathCornerRadius; }
@@ -59,7 +59,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFather = 2;
+        private double pathOffsetFather = 0;
         public double PathOffsetFather
         {
             get { return pathOffsetFather; }
@@ -72,7 +72,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetSibling = 4;
+        private double pathOffsetSibling = 0;
         public double PathOffsetSibling
         {
             get { return pathOffsetSibling; }
@@ -98,7 +98,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetPartner = 6;
+        private double pathOffsetPartner = 4;
         public double PathOffsetPartner
         {
             get { return pathOffsetPartner; }
@@ -111,7 +111,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetAbuse = 10;
+        private double pathOffsetAbuse = 12;
         public double PathOffsetAbuse
         {
             get { return pathOffsetAbuse; }
@@ -200,7 +200,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private string pathColorPartner = "LightYellow";
+        private string pathColorPartner = "Orange";
         public string PathColorPartner
         {
             get { return pathColorPartner; }
