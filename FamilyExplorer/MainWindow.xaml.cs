@@ -435,5 +435,12 @@ namespace FamilyExplorer
                 SetCommandPopup.VerticalOffset = currentPos.Y + 40;
             }
         }
+        
+
+        private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            RelationshipListBox.SelectedItem = null;
+            PersonListBox.SelectedItem = null;
+        }
     }
 }
