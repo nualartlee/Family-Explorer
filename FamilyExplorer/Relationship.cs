@@ -103,6 +103,20 @@ namespace FamilyExplorer
             }
         }
 
+        private bool ended = false;
+        public bool Ended
+        {
+            get { return ended; }
+            set
+            {
+                if (value != ended)
+                {
+                    ended = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private string notes;
         public string Notes
         {
