@@ -228,7 +228,7 @@
         </Style>
 
         <DataTemplate x:Key="RelationshipItem">
-            <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}"/>
+            <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
         </DataTemplate>
 
         <DataTemplate x:Key="RelationshipItemSelected">
@@ -391,7 +391,7 @@
                 
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
                 
-                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding ElementName=RelatioshipListBox, Path=SelectedItem}"
+                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationshipData}"
                   Visibility="{Binding ElementName=RelationshipListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -406,16 +406,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="Gray" Background="{Binding PathColor}" Margin="4,10,4,4">
-                        <TextBlock Text="{Binding Id}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
+                        BorderBrush="{Binding PathColor}" Background="LightGray" Margin="4,10,4,4">
+                        <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
                         BorderBrush="Gray" Background="White" Margin="4,10,4,4" >
                         <StackPanel>
-                            <Label Margin="4" Content="First Name: " />
-                            <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
-                            <Label Margin="4" Content="Last Name: " />
-                            <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                            <Label Margin="4" Content="{Binding SourceDescription}" />
+                            <Label Margin="4" Content="{Binding DestinationDescription}" />
                             <StackPanel Margin="4" Orientation="Horizontal">
                                 <Label Margin="4" Content="Gender: " />
                                 <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
@@ -436,19 +434,9 @@
                           MouseMove="TreeScrollViewer_MouseMove" >
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
                     <Canvas Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
-
-                        <!--<ListBox x:Name="RelationshipListBox" Style="{StaticResource RelationshipListBoxStyle}" 
-                             Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" 
-                                 ItemsSource="{Binding Relationships}" ItemContainerStyle="{StaticResource RelationshipContainerStyle}"
-                                 Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <Canvas x:Name="RelationshipListBoxCanvas" IsItemsHost="True" Background="{x:Null}"/>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>-->
+                      
                         <ItemsControl Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
-                                      ItemsSource="{Binding Relationships}" 
+                                      ItemsSource="{Binding Relationships}"
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource RelationshipItem}" >
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

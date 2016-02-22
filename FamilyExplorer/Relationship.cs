@@ -159,5 +159,18 @@ namespace FamilyExplorer
             }
         }
 
+        private bool selected;
+        public bool Selected
+        {
+            get { return selected; }
+            set
+            {
+                if (value != selected)
+                {
+                    selected = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
     }
 }

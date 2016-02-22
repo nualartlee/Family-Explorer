@@ -442,5 +442,11 @@ namespace FamilyExplorer
             //RelationshipListBox.SelectedItem = null;
             PersonListBox.SelectedItem = null;
         }
+
+        private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement path = (FrameworkElement)sender;
+            family.SelectRelationship((Relationship)path.DataContext);
+        }
     }
 }

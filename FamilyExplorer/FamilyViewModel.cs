@@ -82,6 +82,34 @@ namespace FamilyExplorer
             }
         }
 
+        private Relationship selectedRelationship;
+        public Relationship SelectedRelationship
+        {
+            get { return selectedRelationship; }
+            set
+            {
+                if (value != selectedRelationship)
+                {
+                    selectedRelationship = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private RelationshipViewModel selectedRelationshipData;
+        public RelationshipViewModel SelectedRelationshipData
+        {
+            get { return selectedRelationshipData; }
+            set
+            {
+                if (value != selectedRelationshipData)
+                {
+                    selectedRelationshipData = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private Tree tree;
         public Tree Tree
         {
@@ -149,6 +177,8 @@ namespace FamilyExplorer
             Tree = new Tree();
             Members = new ObservableCollection<Person> { };
             Relationships = new ObservableCollection<Relationship> { };
+            SelectedRelationship = new Relationship();
+            SelectedRelationshipData = new RelationshipViewModel();
             Person person = new Person();
             InitalizePerson(person);
             AddPersonToFamily(person);
@@ -929,7 +959,24 @@ namespace FamilyExplorer
             else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
+        public void SelectRelationship(Relationship relationship)
+        {
+            SelectedRelationship.Selected = false;
+            SelectedRelationship = relationship;
+            SelectedRelationship.Selected = true;
+            PopulateRelationshipData(relationship);
+        }
+
+        public void PopulateRelationshipData(Relationship relationship)
+        {
+            SelectedRelationshipData.Relationship = relationship;
+            SelectedRelationshipData.PersonSource = getPerson(relationship.PersonSourceId);
+            SelectedRelationshipData.PersonDestination = getPerson(relationship.PersonDestinationId);
+        }
+
         #endregion Commands
+
+
 
         private void ResetAllRelationships()
         {
