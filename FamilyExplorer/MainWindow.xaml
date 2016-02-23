@@ -393,7 +393,7 @@
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
                 
                 <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationshipData}"
-                  Visibility="{Binding ElementName=RelationshipListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
+                  Visibility="{Binding Relationship, Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -407,7 +407,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="3"
-                        BorderBrush="{Binding Relationship.PathColor}" Background="LightGray" Margin="4,20,4,4">
+                        BorderBrush="{Binding Relationship.PathColor}" Background="White" Margin="4,20,4,4">
                         <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
@@ -420,7 +420,7 @@
                                 <DatePicker Margin="4" SelectedDate="{Binding Relationship.StartDate}"/>
                             </StackPanel>
                             <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
-                                <CheckBox IsChecked="{Binding Relationship.Ended}" Margin="4"/>
+                                <CheckBox Margin="4" IsChecked="{Binding Relationship.Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Label Margin="4" Content="{Binding EndDateDescription}" />
                                 <DatePicker Margin="4" SelectedDate="{Binding Relationship.EndDate}" Visibility="{Binding Relationship.Ended, Converter={StaticResource IsItemVisible}}"/>
                             </StackPanel>

@@ -18,7 +18,7 @@ namespace FamilyExplorer
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 ResetData();
             }
-        }        
+        }
 
         private Relationship relationship;
         public Relationship Relationship
@@ -29,7 +29,7 @@ namespace FamilyExplorer
                 if (value != relationship)
                 {
                     relationship = value;
-                    NotifyPropertyChanged();                    
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }        
+        }
 
         private string description;
         public string Description
@@ -186,24 +186,27 @@ namespace FamilyExplorer
             Relationship = relationship;
             PersonSource = source;
             PersonDestination = destination;
-            personSource.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
-            personDestination.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
-            relationship.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
-            ResetData();
+            if (relationship != null)
+            {
+                personSource.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+                personDestination.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+                relationship.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+                ResetData();
+            }
         }
-       
+
         private void DataChanged(object sender, PropertyChangedEventArgs e)
         {
             ResetData();
-        }       
+        }
 
         public void ResetData()
         {
             SetHeaderDescription();
             SetPersonDescriptions();
-            SetDateDescriptions();                    
+            SetDateDescriptions();
         }
-        
+
         private void SetHeaderDescription()
         {
             string source = (PersonSource != null) ? PersonSource.FirstName : "";
@@ -212,12 +215,12 @@ namespace FamilyExplorer
             string header = "";
             switch (Relationship.Type)
             {
-                case 1:                   
+                case 1:
                 case 2:
                     if (destinationGender == "Female") { header = "daughter"; }
                     else if (destinationGender == "Male") { header = "son"; }
                     else { header = "child"; }
-                    break;               
+                    break;
                 case 3:
                     if (destinationGender == "Female") { header = "sister"; }
                     else if (destinationGender == "Male") { header = "brother"; }
@@ -238,101 +241,111 @@ namespace FamilyExplorer
 
             }
 
-            
+
             Description = source + "'s " + header + " " + destination;
         }
 
         private void SetPersonDescriptions()
         {
-            string sourceFirstName = "";
-            string sourceLastName = "";
-            string sourceAge = "";
-            string sourceGender = "";
-            string destinationFirstName = "";
-            string destinationLastName = "";
-            string destinationAge = "";
-            string destinationGender = "";
+            string sourceFirstName = PersonSource.FirstName;
+            string sourceLastName = PersonSource.LastName;
+            string sourceAgeStart = GetAgeAtRelationshipStart(PersonSource);
+            string sourceAgeEnd = GetAgeAtRelationshipEnd(PersonSource);
+            string sourceGender = PersonSource.Gender;
+            string destinationFirstName = PersonDestination.FirstName;
+            string destinationLastName = PersonDestination.LastName;
+            string destinationAgeStart = GetAgeAtRelationshipStart(PersonDestination);
+            string destinationAgeEnd = GetAgeAtRelationshipEnd(PersonDestination);
+            string destinationGender = PersonDestination.Gender;
 
-            if (PersonSource != null)
+            switch (Relationship.Type)
             {
-                sourceFirstName = PersonSource.FirstName;
-                sourceLastName = PersonSource.LastName;               
+                case 1: // Mother
+                    SourceDescription = "Mother: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart;
 
-                DateTime now = DateTime.Today;
-                int age = now.Year - PersonSource.DOB.Year;
-                if (PersonSource.DOB > now.AddYears(-age)) age--;
-                sourceAge = GetAgeAtRelationshipStart(PersonSource);
-                sourceGender = PersonSource.Gender;
+                    if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
+                    else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
+                    else { DestinationDescription = "Child: " + destinationFirstName + " " + destinationLastName; }
+                    break;
 
-            }
-            if (PersonDestination != null)
-            {
-                destinationFirstName = PersonDestination.FirstName;
-                destinationLastName = PersonDestination.LastName;
+                case 2: // Father
+                    SourceDescription = "Father: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart;
 
-                DateTime now = DateTime.Today;
-                int age = now.Year - PersonDestination.DOB.Year;
-                if (PersonDestination.DOB > now.AddYears(-age)) age--;
-                destinationAge = GetAgeAtRelationshipStart(PersonDestination);
-                destinationGender = PersonDestination.Gender;
-            }
-                switch (Relationship.Type)
-                {
-                    case 1:
-                        SourceDescription = "Mother: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge;
+                    if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
+                    else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
+                    else { DestinationDescription = "Child: " + destinationFirstName + " " + destinationLastName; }
+                    break;
 
-                        if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
-                        else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
-                        else { DestinationDescription = "Child: " + destinationFirstName + " " + destinationLastName; }
+                case 3: // Sibling
+                    if (sourceGender == "Female") { SourceDescription = "Sister: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart; }
+                    else if (sourceGender == "Male") { SourceDescription = "Brother: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart; }
+                    else { SourceDescription = "Sibling: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart; }
+
+                    if (destinationGender == "Female") { DestinationDescription = "Sister: " + destinationFirstName + " " + destinationLastName; }
+                    else if (destinationGender == "Male") { DestinationDescription = "Brother: " + destinationFirstName + " " + destinationLastName; }
+                    else { DestinationDescription = "Sibling: " + destinationFirstName + " " + destinationLastName; }
+                    break;
+
+                case 4: // Friend
+                    if (relationship.Ended)
+                    {
+                        SourceDescription = sourceFirstName + " " + sourceLastName + " from age " + sourceAgeStart + " to " + sourceAgeEnd ;
+                        DestinationDescription = destinationFirstName + " " + destinationLastName + " from age " + destinationAgeStart + " to " + destinationAgeEnd;
                         break;
-
-                    case 2:
-                        SourceDescription = "Father: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge;
-
-                        if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
-                        else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
-                        else { DestinationDescription = "Child: " + destinationFirstName + " " + destinationLastName; }
+                    }
+                    else
+                    {
+                        SourceDescription = sourceFirstName + " " + sourceLastName + " from age " + sourceAgeStart;
+                        DestinationDescription = destinationFirstName + " " + destinationLastName + " from age " + destinationAgeStart;
                         break;
+                    }
 
-                    case 3:
-                        if (sourceGender == "Female") { SourceDescription = "Sister: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge; }
-                        else if (sourceGender == "Male") { SourceDescription = "Brother: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge; }
-                        else { SourceDescription = "Sibling: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge; }
-
-                        if (destinationGender == "Female") { DestinationDescription = "Sister: " + destinationFirstName + " " + destinationLastName; }
-                        else if (destinationGender == "Male") { DestinationDescription = "Brother: " + destinationFirstName + " " + destinationLastName; }
-                        else { DestinationDescription = "Sibling: " + destinationFirstName + " " + destinationLastName; }
+                case 5: // Partner
+                    if (relationship.Ended)
+                    {
+                        SourceDescription = sourceFirstName + " " + sourceLastName + " from age " + sourceAgeStart + " to " + sourceAgeEnd;
+                        DestinationDescription = destinationFirstName + " " + destinationLastName + " from age " + destinationAgeStart + " to " + destinationAgeEnd;
                         break;
-
-                    case 4:
-                        SourceDescription = sourceFirstName + " " + sourceLastName + " at age " + sourceAge;
-                        DestinationDescription = destinationFirstName + " " + destinationLastName + " at age " + destinationAge;
+                    }
+                    else
+                    {
+                        SourceDescription = sourceFirstName + " " + sourceLastName + " at age " + sourceAgeStart;
+                        DestinationDescription = destinationFirstName + " " + destinationLastName + " at age " + destinationAgeStart;
                         break;
+                    }
+                    
 
-                    case 5:
-                        SourceDescription = sourceFirstName + " " + sourceLastName + " at age " + sourceAge;
-                        DestinationDescription = destinationFirstName + " " + destinationLastName + " at age " + destinationAge;
-                        break;
+                case 6: // Abuse
+                    SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + " from age " + sourceAgeStart + " to " + sourceAgeEnd;
+                    DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + " from age " + destinationAgeStart + " to " + destinationAgeEnd;
+                    break;
 
-                    case 6:
-                        SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + " at age " + sourceAge;
-                        DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + " at age " + destinationAge;
-                        break;
+                default:
+                    break;
 
-                    default:
-                        break;
 
-                
             }
         }
-        
+
         private string GetAgeAtRelationshipStart(Person person)
         {
-            
+
             int age = relationship.StartDate.Year - person.DOB.Year;
             if (person.DOB > relationship.StartDate.AddYears(-age) && age > 0) age--;
-            
+
             return age.ToString();
+        }
+
+        private string GetAgeAtRelationshipEnd(Person person)
+        {
+            if (relationship.EndDate != null)
+            {
+                DateTime end = (DateTime)relationship.EndDate;
+                int age = end.Year - person.DOB.Year;
+                if (person.DOB > end.AddYears(-age) && age > 0) age--;
+                return age.ToString();
+            }
+            else { return ""; }
         }
 
         private void SetDateDescriptions()
@@ -341,7 +354,7 @@ namespace FamilyExplorer
             {
                 case 1:
                 case 2:
-                    
+
                 case 3:
                     StartDateDescription = "";
                     EndDateDescription = "";
@@ -349,7 +362,7 @@ namespace FamilyExplorer
                 case 4:
                     StartDateDescription = "Friendship started:";
                     EndDateDescription = "Friendship ended:";
-                    break;
+                    break;                                       
                 case 5:
                     StartDateDescription = "Partnership started:";
                     EndDateDescription = "Partnership ended:";

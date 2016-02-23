@@ -961,14 +961,19 @@ namespace FamilyExplorer
         public void SelectRelationship(Relationship relationship)
         {
             SelectedRelationship.Selected = false;
-            SelectedRelationship = relationship;
-            SelectedRelationship.Selected = true;
-            SelectedRelationshipData = new RelationshipViewModel(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));            
+            if (relationship != null)
+            {
+                SelectedRelationship = relationship;
+                SelectedRelationship.Selected = true;
+                SelectedRelationshipData = new RelationshipViewModel(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));
+            }
+            else
+            {
+                SelectedRelationshipData = new RelationshipViewModel(null, null, null);
+            }  
         }
         
         #endregion Commands
-
-
 
         private void ResetAllRelationships()
         {
@@ -1489,8 +1494,8 @@ namespace FamilyExplorer
 
         private void SetTreeLayout()
         {
-            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace);// - 40;
-            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace);// - 30;
+            Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) + Settings.Instance.Person.HorizontalSpace;
+            Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace) + Settings.Instance.Person.VerticalSpace;
 
             foreach (Person person in Members)
             {
