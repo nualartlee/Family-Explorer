@@ -177,8 +177,7 @@ namespace FamilyExplorer
             Tree = new Tree();
             Members = new ObservableCollection<Person> { };
             Relationships = new ObservableCollection<Relationship> { };
-            SelectedRelationship = new Relationship();
-            SelectedRelationshipData = new RelationshipViewModel();
+            SelectedRelationship = new Relationship();            
             Person person = new Person();
             InitalizePerson(person);
             AddPersonToFamily(person);
@@ -964,16 +963,9 @@ namespace FamilyExplorer
             SelectedRelationship.Selected = false;
             SelectedRelationship = relationship;
             SelectedRelationship.Selected = true;
-            PopulateRelationshipData(relationship);
+            SelectedRelationshipData = new RelationshipViewModel(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));            
         }
-
-        public void PopulateRelationshipData(Relationship relationship)
-        {
-            SelectedRelationshipData.Relationship = relationship;
-            SelectedRelationshipData.PersonSource = getPerson(relationship.PersonSourceId);
-            SelectedRelationshipData.PersonDestination = getPerson(relationship.PersonDestinationId);
-        }
-
+        
         #endregion Commands
 
 

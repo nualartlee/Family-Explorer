@@ -420,9 +420,9 @@
                                 <DatePicker Margin="4" SelectedDate="{Binding Relationship.StartDate}"/>
                             </StackPanel>
                             <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
+                                <CheckBox IsChecked="{Binding Relationship.Ended}" Margin="4"/>
                                 <Label Margin="4" Content="{Binding EndDateDescription}" />
                                 <DatePicker Margin="4" SelectedDate="{Binding Relationship.EndDate}" Visibility="{Binding Relationship.Ended, Converter={StaticResource IsItemVisible}}"/>
-                                <CheckBox IsChecked="{Binding Relationship.Ended}" Content="Ended"/>
                             </StackPanel>
                             <Label Margin="4" Content="Notes:" />
                             <TextBox Margin="4" Text="{Binding Relationship.Notes}" AcceptsReturn="True"/>

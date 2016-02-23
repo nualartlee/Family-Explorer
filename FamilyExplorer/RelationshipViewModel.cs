@@ -18,7 +18,7 @@ namespace FamilyExplorer
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 ResetData();
             }
-        }
+        }        
 
         private Relationship relationship;
         public Relationship Relationship
@@ -60,7 +60,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
+        }        
 
         private string description;
         public string Description
@@ -134,7 +134,7 @@ namespace FamilyExplorer
 
         public bool StartDateVisible
         {
-            
+
             get
             {
                 if (Relationship != null)
@@ -181,12 +181,23 @@ namespace FamilyExplorer
             }
         }
 
-        private void ResetData()
+        public RelationshipViewModel(Relationship relationship, Person source, Person destination)
         {
-            SetDescription();
+            Relationship = relationship;
+            PersonSource = source;
+            PersonDestination = destination;
+            personSource.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+            personDestination.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+            relationship.PropertyChanged += new PropertyChangedEventHandler(DataChanged);
+            ResetData();
         }
+       
+        private void DataChanged(object sender, PropertyChangedEventArgs e)
+        {
+            ResetData();
+        }       
 
-        public void SetDescription()
+        public void ResetData()
         {
             SetHeaderDescription();
             SetPersonDescriptions();
@@ -319,7 +330,7 @@ namespace FamilyExplorer
         {
             
             int age = relationship.StartDate.Year - person.DOB.Year;
-            if (person.DOB > relationship.StartDate.AddYears(-age)) age--;
+            if (person.DOB > relationship.StartDate.AddYears(-age) && age > 0) age--;
             
             return age.ToString();
         }
