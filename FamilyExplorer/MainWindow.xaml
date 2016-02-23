@@ -385,6 +385,7 @@
                                 <Label Margin="4" Content="Birthdate: " />
                                 <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
                             </StackPanel>
+                            <!--<ComboBox ItemsSource="{Binding SelectedPersonSiblings}" />-->
                         </StackPanel>
                     </Border>
 

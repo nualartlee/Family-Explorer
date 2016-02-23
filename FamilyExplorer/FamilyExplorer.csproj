@@ -80,15 +80,16 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Family.cs" />
+    <Compile Include="PersonData.cs" />
     <Compile Include="Relationship.cs" />
     <Compile Include="RelationshipSettings.cs" />
     <Compile Include="PersonSettings.cs" />
-    <Compile Include="RelationshipViewModel.cs" />
+    <Compile Include="RelationshipData.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Tree.cs" />
+    <Compile Include="ScrollZoomBorder.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="ScrollZoomBorder.cs" />
     <Compile Include="XamlConverters\IsItemSelected.cs" />
     <Compile Include="XamlConverters\IsItemVisible.cs" />
     <Compile Include="ZoomBorder.cs" />
@@ -110,15 +111,8 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PersonView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PersonView.xaml.cs">
-      <DependentUpon>PersonView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -157,6 +151,7 @@
   <ItemGroup>
     <Resource Include="Resources\FamilyExplorerLogo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

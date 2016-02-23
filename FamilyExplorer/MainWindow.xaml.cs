@@ -238,7 +238,11 @@ namespace FamilyExplorer
 
         private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);           
+            family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);
+
+            FrameworkElement personItem = (FrameworkElement)sender;
+            family.SelectPerson((Person)personItem.DataContext);
+            //e.Handled = true;
         }
 
         #endregion Person Commands
@@ -450,5 +454,6 @@ namespace FamilyExplorer
             family.SelectRelationship((Relationship)path.DataContext);
             e.Handled = true;
         }
+        
     }
 }

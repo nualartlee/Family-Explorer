@@ -344,6 +344,20 @@ namespace FamilyExplorer
             }
         }
 
+        private bool selected;
+        public bool Selected
+        {
+            get { return selected; }
+            set
+            {
+                if (value != selected)
+                {
+                    selected = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public void SetPersonColors()
         {
             Background = Settings.Instance.Person.BackgroundColor(Gender);

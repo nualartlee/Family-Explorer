@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public class RelationshipViewModel : INotifyPropertyChanged
+    public class RelationshipData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -181,7 +181,7 @@ namespace FamilyExplorer
             }
         }
 
-        public RelationshipViewModel(Relationship relationship, Person source, Person destination)
+        public RelationshipData(Relationship relationship, Person source, Person destination)
         {
             Relationship = relationship;
             PersonSource = source;

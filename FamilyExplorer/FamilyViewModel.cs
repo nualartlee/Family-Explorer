@@ -68,6 +68,34 @@ namespace FamilyExplorer
             }
         }
 
+        private Person selectedPerson;
+        public Person SelectedPerson
+        {
+            get { return selectedPerson; }
+            set
+            {
+                if (value != selectedPerson)
+                {
+                    selectedPerson = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Person> selectedPersonSiblings;
+        public ObservableCollection<Person> SelectedPersonSiblings
+        {
+            get { return selectedPersonSiblings; }
+            set
+            {
+                if (value != selectedPersonSiblings)
+                {
+                    selectedPersonSiblings = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private ObservableCollection<Relationship> relationships;
         public ObservableCollection<Relationship> Relationships
         {
@@ -96,8 +124,8 @@ namespace FamilyExplorer
             }
         }
 
-        private RelationshipViewModel selectedRelationshipData;
-        public RelationshipViewModel SelectedRelationshipData
+        private RelationshipData selectedRelationshipData;
+        public RelationshipData SelectedRelationshipData
         {
             get { return selectedRelationshipData; }
             set
@@ -177,7 +205,9 @@ namespace FamilyExplorer
             Tree = new Tree();
             Members = new ObservableCollection<Person> { };
             Relationships = new ObservableCollection<Relationship> { };
-            SelectedRelationship = new Relationship();            
+            SelectedRelationship = new Relationship();
+            SelectedPerson = new Person();
+            SelectedPersonSiblings = new ObservableCollection<Person> { };
             Person person = new Person();
             InitalizePerson(person);
             AddPersonToFamily(person);
@@ -965,14 +995,38 @@ namespace FamilyExplorer
             {
                 SelectedRelationship = relationship;
                 SelectedRelationship.Selected = true;
-                SelectedRelationshipData = new RelationshipViewModel(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));
+                SelectedRelationshipData = new RelationshipData(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));
             }
             else
             {
-                SelectedRelationshipData = new RelationshipViewModel(null, null, null);
+                SelectedRelationshipData = new RelationshipData(null, null, null);
             }  
         }
-        
+
+        public void SelectPerson(Person person)
+        {
+            SelectedPerson.Selected = false;
+            if (person != null)
+            {
+                SelectedPerson = person;
+                SelectedPerson.Selected = true;
+                PopulateSelectedPersonsRelationships();
+            }
+            else
+            {
+                SelectedPerson = null;
+            }
+        }
+
+        private void PopulateSelectedPersonsRelationships()
+        {
+            SelectedPersonSiblings.Clear();
+            foreach (int id in SelectedPerson.SiblingIds)
+            {                
+                SelectedPersonSiblings.Add(getPerson(id));
+            }
+        }
+
         #endregion Commands
 
         private void ResetAllRelationships()
