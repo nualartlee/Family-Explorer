@@ -54,8 +54,8 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<Person> members;
-        public ObservableCollection<Person> Members
+        private ObservableCollection<PersonView> members;
+        public ObservableCollection<PersonView> Members
         {
             get { return members; }
             set
@@ -68,8 +68,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Person selectedPerson;
-        public Person SelectedPerson
+        private PersonView selectedPerson;
+        public PersonView SelectedPerson
         {
             get { return selectedPerson; }
             set
@@ -82,8 +82,8 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<Person> selectedPersonSiblings;
-        public ObservableCollection<Person> SelectedPersonSiblings
+        private ObservableCollection<PersonView> selectedPersonSiblings;
+        public ObservableCollection<PersonView> SelectedPersonSiblings
         {
             get { return selectedPersonSiblings; }
             set
@@ -193,7 +193,7 @@ namespace FamilyExplorer
             }
         }
         private int setCommandInProgressType;
-        private Person setCommandTargetPerson;
+        private PersonView setCommandTargetPerson;
 
         public FamilyViewModel()
         {
@@ -203,12 +203,12 @@ namespace FamilyExplorer
         public void CreateNewFamily()
         {            
             Tree = new Tree();
-            Members = new ObservableCollection<Person> { };
+            Members = new ObservableCollection<PersonView> { };
             Relationships = new ObservableCollection<Relationship> { };
             SelectedRelationship = new Relationship();
-            SelectedPerson = new Person();
-            SelectedPersonSiblings = new ObservableCollection<Person> { };
-            Person person = new Person();
+            SelectedPerson = new PersonView();
+            SelectedPersonSiblings = new ObservableCollection<PersonView> { };
+            PersonView person = new PersonView();
             InitalizePerson(person);
             AddPersonToFamily(person);
             Tree.Scale = 1;
@@ -222,7 +222,7 @@ namespace FamilyExplorer
 
         public void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             if (person.MotherId == 0)
             {
                 e.CanExecute = true;
@@ -235,13 +235,13 @@ namespace FamilyExplorer
 
         public void AddMother_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddMotherToPerson(person);
         }
 
-        private void AddMotherToPerson(Person child)
+        private void AddMotherToPerson(PersonView child)
         {
-            Person mom = new Person();
+            PersonView mom = new PersonView();
             InitalizePerson(mom);
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
@@ -258,7 +258,7 @@ namespace FamilyExplorer
 
         public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             if (person.FatherId == 0)
             {
                 e.CanExecute = true;
@@ -271,13 +271,13 @@ namespace FamilyExplorer
 
         public void AddFather_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddFatherToPerson(person);
         }
 
-        private void AddFatherToPerson(Person child)
+        private void AddFatherToPerson(PersonView child)
         {
-            Person dad = new Person();
+            PersonView dad = new PersonView();
             InitalizePerson(dad);
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
@@ -299,14 +299,14 @@ namespace FamilyExplorer
 
         public void AddSiblingEqualParents_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddSiblingEqualParentsToPerson(person);
         }
 
-        private void AddSiblingEqualParentsToPerson(Person person)
+        private void AddSiblingEqualParentsToPerson(PersonView person)
         {
             // Create new sibling
-            Person newSibling = new Person();
+            PersonView newSibling = new PersonView();
             InitalizePerson(newSibling);
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
@@ -324,20 +324,20 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
                 }
             }
             // Add new sibling to mother's children
-            Person mom = getPerson(person.MotherId);
+            PersonView mom = getPerson(person.MotherId);
             if (mom != null)
             {
                 mom.ChildrenIds.Add(newSibling.Id);
             }
             // Add new sibling to father's children
-            Person dad = getPerson(person.FatherId);
+            PersonView dad = getPerson(person.FatherId);
             if (dad != null)
             {
                 dad.ChildrenIds.Add(newSibling.Id);
@@ -354,21 +354,21 @@ namespace FamilyExplorer
 
         public void AddSiblingByMother_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddSiblingByMotherToPerson(person);
         }
 
-        private void AddSiblingByMotherToPerson(Person person)
+        private void AddSiblingByMotherToPerson(PersonView person)
         {
             // Create new sibling
-            Person newSibling = new Person();
+            PersonView newSibling = new PersonView();
             InitalizePerson(newSibling);
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
             // Add current siblings to new sibling's list    
-            Person mom = getPerson(person.MotherId);
+            PersonView mom = getPerson(person.MotherId);
             if (mom != null)
             {
                 foreach (int siblingid in mom.ChildrenIds)
@@ -385,7 +385,7 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
@@ -408,22 +408,22 @@ namespace FamilyExplorer
 
         public void AddSiblingByFather_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddSiblingByFatherToPerson(person);
         }
 
-        private void AddSiblingByFatherToPerson(Person person)
+        private void AddSiblingByFatherToPerson(PersonView person)
 
         {
             // Create new sibling
-            Person newSibling = new Person();
+            PersonView newSibling = new PersonView();
             InitalizePerson(newSibling);
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
             // Add current siblings to new sibling's list    
-            Person dad = getPerson(person.FatherId);
+            PersonView dad = getPerson(person.FatherId);
             if (dad != null)
             {
                 foreach (int siblingid in dad.ChildrenIds)
@@ -440,7 +440,7 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
@@ -463,13 +463,13 @@ namespace FamilyExplorer
 
         public void AddFriend_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddFriendToPerson(person);
         }
 
-        private void AddFriendToPerson(Person person)
+        private void AddFriendToPerson(PersonView person)
         {
-            Person friend = new Person();
+            PersonView friend = new PersonView();
             InitalizePerson(friend);
             friend.FirstName = "Friend Of " + person.FirstName;
             friend.LastName = "";
@@ -489,13 +489,13 @@ namespace FamilyExplorer
 
         public void AddPartner_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddPartnerToPerson(person);
         }
 
-        private void AddPartnerToPerson(Person person)
+        private void AddPartnerToPerson(PersonView person)
         {
-            Person partner = new Person();
+            PersonView partner = new PersonView();
             InitalizePerson(partner);
             partner.FirstName = "Partner Of " + person.FirstName;
             partner.LastName = "";
@@ -515,15 +515,15 @@ namespace FamilyExplorer
 
         public void AddChild_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddChildToPerson(person);
         }
 
-        private void AddChildToPerson(Person parent)
+        private void AddChildToPerson(PersonView parent)
 
         {
             // Create new child
-            Person newChild = new Person();
+            PersonView newChild = new PersonView();
             InitalizePerson(newChild);
             newChild.FirstName = "Child Of " + parent.FirstName;
             newChild.LastName = "";
@@ -546,7 +546,7 @@ namespace FamilyExplorer
             // Add new child to all other childrens' sibling lists
             foreach (int siblingid in newChild.SiblingIds)
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newChild.Id);
@@ -566,13 +566,13 @@ namespace FamilyExplorer
 
         public void AddAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddAbuserToPerson(person);
         }
 
-        private void AddAbuserToPerson(Person victim)
+        private void AddAbuserToPerson(PersonView victim)
         {
-            Person abuser = new Person();
+            PersonView abuser = new PersonView();
             InitalizePerson(abuser);
             abuser.FirstName = "Abuser Of " + abuser.FirstName;
             abuser.LastName = "";
@@ -592,13 +592,13 @@ namespace FamilyExplorer
 
         public void AddVictim_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             AddVictimToPerson(person);
         }
 
-        private void AddVictimToPerson(Person abuser)
+        private void AddVictimToPerson(PersonView abuser)
         {
-            Person victim = new Person();
+            PersonView victim = new PersonView();
             InitalizePerson(victim);
             victim.FirstName = "Victim Of " + abuser.FirstName;
             victim.LastName = "";
@@ -613,20 +613,20 @@ namespace FamilyExplorer
 
         public void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             if (person.MotherId > 0) { e.CanExecute = false; }
             else { e.CanExecute = true; }
         }
 
         public void SetMother_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 1;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Mother";
             SetCommandInProgress = true;
         }
 
-        private bool SetMother_CanFinalize(Person person)
+        private bool SetMother_CanFinalize(PersonView person)
         {
             // Not in previous generation
             if (person.GenerationIndex != setCommandTargetPerson.GenerationIndex - 1) { return false; }
@@ -635,7 +635,7 @@ namespace FamilyExplorer
             return true;
         }
 
-        private void SetMother_Finalized(Person person, Person mother)
+        private void SetMother_Finalized(PersonView person, PersonView mother)
         {
 
             if (mother.Gender != "Female") { return; }
@@ -649,7 +649,7 @@ namespace FamilyExplorer
             // Add person to mother's other childrens' sibling lists
             foreach (int siblingid in person.SiblingIds.ToList())
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(person.Id);
@@ -661,20 +661,20 @@ namespace FamilyExplorer
 
         public void SetFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             if (person.FatherId > 0) { e.CanExecute = false; }
             else { e.CanExecute = true; }
         }
 
         public void SetFather_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 2;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Father";
             SetCommandInProgress = true;
         }
 
-        private bool SetFather_CanFinalize(Person person)
+        private bool SetFather_CanFinalize(PersonView person)
         {
             // Not in previous generation
             if (person.GenerationIndex != setCommandTargetPerson.GenerationIndex - 1) { return false; }
@@ -683,7 +683,7 @@ namespace FamilyExplorer
             return true;
         }
 
-        private void SetFather_Finalized(Person person, Person father)
+        private void SetFather_Finalized(PersonView person, PersonView father)
         {
 
             if (father.Gender != "Male") { return; }
@@ -697,7 +697,7 @@ namespace FamilyExplorer
             // Add person to father's other childrens' sibling lists
             foreach (int siblingid in person.SiblingIds.ToList())
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(person.Id);
@@ -714,13 +714,13 @@ namespace FamilyExplorer
 
         public void SetFriend_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 3;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Friend";
             SetCommandInProgress = true;
         }
 
-        private bool SetFriend_CanFinalize(Person person)
+        private bool SetFriend_CanFinalize(PersonView person)
         {
             // Not itself
             if (person == setCommandTargetPerson) { return false; }
@@ -729,7 +729,7 @@ namespace FamilyExplorer
             return true;
         }
 
-        private void SetFriend_Finalized(Person person, Person partner)
+        private void SetFriend_Finalized(PersonView person, PersonView partner)
         {
             // Add friend to person's friends list                        
             person.FriendIds.Add(partner.Id);
@@ -744,13 +744,13 @@ namespace FamilyExplorer
 
         public void SetPartner_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 4;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Partner";
             SetCommandInProgress = true;
         }
 
-        private bool SetPartner_CanFinalize(Person person)
+        private bool SetPartner_CanFinalize(PersonView person)
         {
             // Not itself
             if (person == setCommandTargetPerson) { return false; }
@@ -759,7 +759,7 @@ namespace FamilyExplorer
             return true;
         }
 
-        private void SetPartner_Finalized(Person person, Person partner)
+        private void SetPartner_Finalized(PersonView person, PersonView partner)
         {
             // Add partner to person's partner list                        
             person.PartnerIds.Add(partner.Id);
@@ -769,7 +769,7 @@ namespace FamilyExplorer
 
         public void SetChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Person person = (Person)e.Parameter;
+            PersonView person = (PersonView)e.Parameter;
             if (person.Gender == "Male" || person.Gender == "Female")
             { e.CanExecute = true; }
             else { e.CanExecute = false; }
@@ -777,13 +777,13 @@ namespace FamilyExplorer
 
         public void SetChild_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 5;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Child";
             SetCommandInProgress = true;
         }
 
-        private bool SetChild_CanFinalize(Person child)
+        private bool SetChild_CanFinalize(PersonView child)
         {
             // Not already a child
             if (setCommandTargetPerson.ChildrenIds.Contains(child.Id)) { return false; }
@@ -792,7 +792,7 @@ namespace FamilyExplorer
             return true;
         }
 
-        private void SetChild_Finalized(Person person, Person child)
+        private void SetChild_Finalized(PersonView person, PersonView child)
         {
             // Add siblings to child
             foreach (int childId in person.ChildrenIds)
@@ -805,7 +805,7 @@ namespace FamilyExplorer
             // add child to siblings
             foreach (int siblingid in person.SiblingIds)
             {
-                Person otherSibling = getPerson(siblingid);
+                PersonView otherSibling = getPerson(siblingid);
                 if (otherSibling != null)
                 {
                     if (!otherSibling.SiblingIds.Contains(child.Id))
@@ -829,20 +829,20 @@ namespace FamilyExplorer
 
         public void SetAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 6;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Abuser";
             SetCommandInProgress = true;
         }
 
-        private bool SetAbuser_CanFinalize(Person person)
+        private bool SetAbuser_CanFinalize(PersonView person)
         {
             // Not already an abuser
             if (person.VictimIds.Contains(setCommandTargetPerson.Id)) { return false; }
             return true;
         }
 
-        private void SetAbuser_Finalized(Person person, Person abuser)
+        private void SetAbuser_Finalized(PersonView person, PersonView abuser)
         {
             // Add abuser to person's abuser list                        
             person.AbuserIds.Add(abuser.Id);
@@ -857,20 +857,20 @@ namespace FamilyExplorer
 
         public void SetVictim_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            setCommandTargetPerson = (Person)e.Parameter;
+            setCommandTargetPerson = (PersonView)e.Parameter;
             setCommandInProgressType = 7;
             SetCommandInProgressDescription = "Select " + setCommandTargetPerson.FirstName + "'s Victim";
             SetCommandInProgress = true;
         }
 
-        private bool SetVictim_CanFinalize(Person person)
+        private bool SetVictim_CanFinalize(PersonView person)
         {
             // Not already a victim
             if (person.AbuserIds.Contains(setCommandTargetPerson.Id)) { return false; }
             return true;
         }
 
-        private void SetVictim_Finalized(Person person, Person victim)
+        private void SetVictim_Finalized(PersonView person, PersonView victim)
         {
             // Add victim to person's victim list                        
             person.VictimIds.Add(victim.Id);
@@ -878,7 +878,7 @@ namespace FamilyExplorer
             victim.AbuserIds.Add(person.Id);
         }
 
-        public void FinalizeSetCommand(Person setCommandRelationPerson)
+        public void FinalizeSetCommand(PersonView setCommandRelationPerson)
         {
             if (SetCommandInProgress)
             {
@@ -933,7 +933,7 @@ namespace FamilyExplorer
             
         }
 
-        public void EnterSetCommandRelation(Person person)
+        public void EnterSetCommandRelation(PersonView person)
         {
 
             switch (setCommandInProgressType)
@@ -1003,7 +1003,7 @@ namespace FamilyExplorer
             }  
         }
 
-        public void SelectPerson(Person person)
+        public void SelectPerson(PersonView person)
         {
             SelectedPerson.Selected = false;
             if (person != null)
@@ -1032,35 +1032,35 @@ namespace FamilyExplorer
         private void ResetAllRelationships()
         {
             Relationships = new ObservableCollection<Relationship> { };
-            foreach (Person person in Members)
+            foreach (PersonView person in Members)
             {
                 ResetPersonRelationships(person);
             }
         }
 
-        private void ResetPersonRelationships(Person person)
+        private void ResetPersonRelationships(PersonView person)
         {
 
             // Mother
             if (person.MotherId > 0)
             {
-                Person mom = getPerson(person.MotherId);
+                PersonView mom = getPerson(person.MotherId);
                 ResetRelationship(1, mom, person, person.DOB, null);
             }
 
             // Father
             if (person.FatherId > 0)
             {
-                Person dad = getPerson(person.FatherId);
+                PersonView dad = getPerson(person.FatherId);
                 ResetRelationship(2, dad, person, person.DOB, null);
             }
 
             // Siblings
             foreach (int siblingId in person.SiblingIds)
             {
-                Person sibling = getPerson(siblingId);
-                Person sourcePerson = (person.Id > sibling.Id) ? person : sibling;
-                Person destinationPerson = (person.Id > sibling.Id) ? sibling : person;
+                PersonView sibling = getPerson(siblingId);
+                PersonView sourcePerson = (person.Id > sibling.Id) ? person : sibling;
+                PersonView destinationPerson = (person.Id > sibling.Id) ? sibling : person;
                 DateTime startDate = (person.DOB < sibling.DOB) ? person.DOB : sibling.DOB;
                 ResetRelationship(3, sourcePerson, destinationPerson, startDate, null);
             }
@@ -1068,42 +1068,42 @@ namespace FamilyExplorer
             // Friends
             foreach (int friendId in person.FriendIds)
             {
-                Person friend = getPerson(friendId);
-                Person sourcePerson = (person.Id > friend.Id) ? person : friend;
-                Person destinationPerson = (person.Id > friend.Id) ? friend : person;
+                PersonView friend = getPerson(friendId);
+                PersonView sourcePerson = (person.Id > friend.Id) ? person : friend;
+                PersonView destinationPerson = (person.Id > friend.Id) ? friend : person;
                 DateTime startDate = (person.DOB < friend.DOB) ? person.DOB : friend.DOB;
                 ResetRelationship(4, sourcePerson, destinationPerson, startDate, null);
             }
             // Partners
             foreach (int partnerId in person.PartnerIds)
             {
-                Person partner = getPerson(partnerId);
-                Person sourcePerson = (person.Id > partner.Id) ? person : partner;
-                Person destinationPerson = (person.Id > partner.Id) ? partner : person;
+                PersonView partner = getPerson(partnerId);
+                PersonView sourcePerson = (person.Id > partner.Id) ? person : partner;
+                PersonView destinationPerson = (person.Id > partner.Id) ? partner : person;
                 DateTime startDate = (person.DOB < partner.DOB) ? person.DOB : partner.DOB;
                 ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
             }
             // Abusers
             foreach (int abuserId in person.AbuserIds)
             {
-                Person abuser = getPerson(abuserId);
-                Person sourcePerson = (person.Id > abuser.Id) ? person : abuser;
-                Person destinationPerson = (person.Id > abuser.Id) ? abuser : person;
+                PersonView abuser = getPerson(abuserId);
+                PersonView sourcePerson = (person.Id > abuser.Id) ? person : abuser;
+                PersonView destinationPerson = (person.Id > abuser.Id) ? abuser : person;
                 DateTime startDate = (person.DOB < abuser.DOB) ? person.DOB : abuser.DOB;
                 ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
             }
             // Victims
             foreach (int victimId in person.VictimIds)
             {
-                Person victim = getPerson(victimId);
-                Person sourcePerson = (person.Id > victim.Id) ? person : victim;
-                Person destinationPerson = (person.Id > victim.Id) ? victim : person;
+                PersonView victim = getPerson(victimId);
+                PersonView sourcePerson = (person.Id > victim.Id) ? person : victim;
+                PersonView destinationPerson = (person.Id > victim.Id) ? victim : person;
                 DateTime startDate = (person.DOB < victim.DOB) ? person.DOB : victim.DOB;
                 ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
             }
         }
 
-        private void ResetRelationship(int type, Person personSource, Person personDestination, DateTime startDate, DateTime? endDate)
+        private void ResetRelationship(int type, PersonView personSource, PersonView personDestination, DateTime startDate, DateTime? endDate)
         {
             int Id = type * (int)Math.Pow(10,6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
             Relationship relationship = getRelationship(Id);
@@ -1150,8 +1150,8 @@ namespace FamilyExplorer
             double margin = Settings.Instance.Person.Margin;
             double radius = Settings.Instance.Relationship.PathCornerRadius;
 
-            Person sourcePerson = getPerson(relationship.PersonSourceId);
-            Person destinationPerson = getPerson(relationship.PersonDestinationId);
+            PersonView sourcePerson = getPerson(relationship.PersonSourceId);
+            PersonView destinationPerson = getPerson(relationship.PersonDestinationId);
             Point origin = new Point(sourcePerson.X + width / 2, sourcePerson.Y + height / 2);
             Point destination = new Point(destinationPerson.X + width / 2, destinationPerson.Y + height / 2);            
 
@@ -1294,10 +1294,10 @@ namespace FamilyExplorer
             if (crossGeneration) // Go down to next level
             {                
                 int generationIndex = GetGenerationIndex(current.Y);
-                List<Person> peopleBelow = Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
+                List<PersonView> peopleBelow = Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
                 
                 bool spaceBelow = true;
-                foreach (Person person in peopleBelow)
+                foreach (PersonView person in peopleBelow)
                 {
                     if (current.X > person.X && current.X < person.X + width) { spaceBelow = false; break; }
                 }
@@ -1387,9 +1387,9 @@ namespace FamilyExplorer
             if (crossGeneration) // Go up to next level
             {                
                 int generationIndex = GetGenerationIndex(current.Y);
-                List<Person> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();                
+                List<PersonView> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();                
                 bool spaceAbove = true;
-                foreach (Person person in peopleAbove)
+                foreach (PersonView person in peopleAbove)
                 {
                     if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
                 }
@@ -1484,12 +1484,12 @@ namespace FamilyExplorer
             return (Relationship)relationships.Where(r => r.Id == ID).FirstOrDefault();
         }
 
-        private Person getPerson(int ID)
+        private PersonView getPerson(int ID)
         {
-            return (Person)members.Where(m => m.Id == ID).FirstOrDefault();
+            return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
         }
 
-        public void InitalizePerson(Person person)
+        public void InitalizePerson(PersonView person)
         {
             person.Id = GetNextID();
             person.FirstName = "First Name";
@@ -1517,18 +1517,18 @@ namespace FamilyExplorer
             return maxId ?? 1;
         }
 
-        private void AddPersonToFamily(Person person)
+        private void AddPersonToFamily(PersonView person)
         {
             if (Members == null)
             {
-                Members = new ObservableCollection<Person> { };
+                Members = new ObservableCollection<PersonView> { };
             }
             Members.Add(person);
             OrderSiblings(person.GenerationIndex);
             SetTreeLayout();
         }
 
-        private void SetPersonPosition(Person person)
+        private void SetPersonPosition(PersonView person)
         {
             person.X = Tree.Width / 2 + person.SiblingIndex * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) - Settings.Instance.Person.Width / 2;
             person.Y = (person.GenerationIndex - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace);
@@ -1536,8 +1536,8 @@ namespace FamilyExplorer
 
         private void OrderSiblings(int generation)
         {
-            List<Person> generationMembers = new List<Person> { };
-            generationMembers = (List<Person>)members.Where(m => m.GenerationIndex == generation).OrderBy(m => m.DOB).ToList<Person>();
+            List<PersonView> generationMembers = new List<PersonView> { };
+            generationMembers = (List<PersonView>)members.Where(m => m.GenerationIndex == generation).OrderBy(m => m.DOB).ToList<PersonView>();
             // Center generation members about a zero index for easy positioning (i.e. -2,-1,0,1,2)           
             for (int i = 0; i < generationMembers.Count(); i++)
             {
@@ -1551,7 +1551,7 @@ namespace FamilyExplorer
             Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) + Settings.Instance.Person.HorizontalSpace;
             Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace) + Settings.Instance.Person.VerticalSpace;
 
-            foreach (Person person in Members)
+            foreach (PersonView person in Members)
             {
                 SetPersonPosition(person);
             }
@@ -1623,7 +1623,13 @@ namespace FamilyExplorer
                 family.PersonSettings = Settings.Instance.Person;
                 family.RelationshipSettings = Settings.Instance.Relationship;
                 family.Tree = Tree;
-                family.Members = Members;
+                family.Members = new ObservableCollection<PersonModel>() { };
+                foreach (PersonView personView in Members)
+                {
+                    PersonModel personModel = new PersonModel();
+                    personModel.CopyBaseProperties(personView);
+                    family.Members.Add(personModel);
+                }                
                 family.Relationships = Relationships;
 
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(Family));
@@ -1661,7 +1667,14 @@ namespace FamilyExplorer
                     if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
                     if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }       
                     if (family.Tree != null) { Tree = family.Tree; }
-                    if (family.Members != null) { Members = family.Members; Title = "Family Explorer - " + openfile.FileName; }
+                    Members.Clear();                   
+                    foreach (PersonModel personModel in family.Members)
+                    {
+                        PersonView personView = new PersonView();
+                        personView.CopyBaseProperties(personModel);
+                        Members.Add(personView);
+                    }                                      
+                    Title = "Family Explorer - " + openfile.FileName;
                     if (family.Relationships != null) { Relationships = family.Relationships; }
                     SetTreeLayout();
                 }

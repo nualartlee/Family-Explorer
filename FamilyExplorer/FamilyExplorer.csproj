@@ -81,6 +81,8 @@
     </Compile>
     <Compile Include="Family.cs" />
     <Compile Include="PersonData.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PersonModel.cs" />
     <Compile Include="Relationship.cs" />
     <Compile Include="RelationshipSettings.cs" />
     <Compile Include="PersonSettings.cs" />
@@ -113,7 +115,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Person.cs" />
+    <Compile Include="PersonView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

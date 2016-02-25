@@ -22,8 +22,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Person person;
-        public Person Person
+        private PersonView person;
+        public PersonView Person
         {
             get { return person; }
             set
@@ -36,8 +36,8 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<Person> siblings;
-        public ObservableCollection<Person> Siblings
+        private ObservableCollection<PersonView> siblings;
+        public ObservableCollection<PersonView> Siblings
         {
             get { return siblings; }
             set
@@ -50,7 +50,7 @@ namespace FamilyExplorer
             }
         }
 
-        public PersonData(Person person)
+        public PersonData(PersonView person)
         {
             Person = person;
             if (person != null)

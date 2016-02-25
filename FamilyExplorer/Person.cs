@@ -17,17 +17,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public class Person : INotifyPropertyChanged
+    public abstract class Person : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {
@@ -83,8 +84,7 @@ namespace FamilyExplorer
                 if (value != gender)
                 {
                     gender = value;                    
-                    NotifyPropertyChanged();
-                    SetPersonColors();
+                    NotifyPropertyChanged();                    
                 }
             }
         }
@@ -216,8 +216,7 @@ namespace FamilyExplorer
                 if (value != notes)
                 {
                     notes = value;
-                    NotifyPropertyChanged();
-                    SetPersonColors();
+                    NotifyPropertyChanged();                    
                 }
             }
         }
@@ -251,119 +250,14 @@ namespace FamilyExplorer
             }
         }
 
-        private string borderBrush;
-        public string BorderBrush
+        public void CopyBaseProperties(Object personObject)
         {
-            get { return borderBrush; }
-            set
+           foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
             {
-                if (value != borderBrush)
-                {
-                    borderBrush = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private string background;
-        public string Background
-        {
-            get { return background; }
-            set
-            {
-                if (value != background)
-                {
-                    background = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private string textColor;
-        public string TextColor
-        {
-            get { return textColor; }
-            set
-            {
-                if (value != textColor)
-                {
-                    textColor = value;
-                    NotifyPropertyChanged();
-                }
-            }
+                property.SetValue(this, property.GetValue(personObject));
+            }            
         }
 
-        private double width;
-        public double Width
-        {
-            get { return width; }
-            set
-            {
-                if (value != width)
-                {
-                    width = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private double height;
-        public double Height
-        {
-            get { return height; }
-            set
-            {
-                if (value != height)
-                {
-                    height = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private double x;
-        public double X
-        {
-            get { return x; }
-            set
-            {
-                if (value != x)
-                {
-                    x = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private double y;
-        public double Y
-        {
-            get { return y; }
-            set
-            {
-                if (value != y)
-                {
-                    y = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        private bool selected;
-        public bool Selected
-        {
-            get { return selected; }
-            set
-            {
-                if (value != selected)
-                {
-                    selected = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public void SetPersonColors()
-        {
-            Background = Settings.Instance.Person.BackgroundColor(Gender);
-            BorderBrush = Settings.Instance.Person.BorderBrushColor(Gender);
-            TextColor = Settings.Instance.Person.TextColor(Gender);
-        }
-
+        
     }
 }

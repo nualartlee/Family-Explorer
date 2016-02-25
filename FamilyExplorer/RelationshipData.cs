@@ -34,8 +34,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Person personSource;
-        public Person PersonSource
+        private PersonView personSource;
+        public PersonView PersonSource
         {
             get { return personSource; }
             set
@@ -48,8 +48,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Person personDestination;
-        public Person PersonDestination
+        private PersonView personDestination;
+        public PersonView PersonDestination
         {
             get { return personDestination; }
             set
@@ -181,7 +181,7 @@ namespace FamilyExplorer
             }
         }
 
-        public RelationshipData(Relationship relationship, Person source, Person destination)
+        public RelationshipData(Relationship relationship, PersonView source, PersonView destination)
         {
             Relationship = relationship;
             PersonSource = source;
@@ -327,7 +327,7 @@ namespace FamilyExplorer
             }
         }
 
-        private string GetAgeAtRelationshipStart(Person person)
+        private string GetAgeAtRelationshipStart(PersonView person)
         {
 
             int age = relationship.StartDate.Year - person.DOB.Year;
@@ -336,7 +336,7 @@ namespace FamilyExplorer
             return age.ToString();
         }
 
-        private string GetAgeAtRelationshipEnd(Person person)
+        private string GetAgeAtRelationshipEnd(PersonView person)
         {
             if (relationship.EndDate != null)
             {

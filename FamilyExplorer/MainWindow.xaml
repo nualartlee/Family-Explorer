@@ -385,7 +385,9 @@
                                 <Label Margin="4" Content="Birthdate: " />
                                 <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
                             </StackPanel>
-                            <!--<ComboBox ItemsSource="{Binding SelectedPersonSiblings}" />-->
+                            <ComboBox ItemsSource="{Binding SelectedPersonSiblings}" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext}"
+                                      DisplayMemberPath="FirstName">
+                            </ComboBox>
                         </StackPanel>
                     </Border>
 

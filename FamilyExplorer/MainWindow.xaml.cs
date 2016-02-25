@@ -228,7 +228,7 @@ namespace FamilyExplorer
 
         private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
         {            
-            family.EnterSetCommandRelation((Person)((FrameworkElement)sender).DataContext);
+            family.EnterSetCommandRelation((PersonView)((FrameworkElement)sender).DataContext);
         }
 
         private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
@@ -238,10 +238,10 @@ namespace FamilyExplorer
 
         private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            family.FinalizeSetCommand((Person)((FrameworkElement)sender).DataContext);
+            family.FinalizeSetCommand((PersonView)((FrameworkElement)sender).DataContext);
 
             FrameworkElement personItem = (FrameworkElement)sender;
-            family.SelectPerson((Person)personItem.DataContext);
+            family.SelectPerson((PersonView)personItem.DataContext);
             //e.Handled = true;
         }
 
