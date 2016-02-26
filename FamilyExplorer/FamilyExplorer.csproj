@@ -80,10 +80,9 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FamilyModel.cs" />
-    <Compile Include="PersonData.cs" />
-    <Compile Include="Person.cs" />
+    <Compile Include="PersonBase.cs" />
     <Compile Include="PersonModel.cs" />
-    <Compile Include="Relationship.cs" />
+    <Compile Include="RelationshipBase.cs" />
     <Compile Include="RelationshipModel.cs" />
     <Compile Include="RelationshipView.cs" />
     <Compile Include="RelationshipSettings.cs" />

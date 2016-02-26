@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public abstract class Relationship : INotifyPropertyChanged
+    public abstract class RelationshipBase : INotifyPropertyChanged
 
     {
         public event PropertyChangedEventHandler PropertyChanged;

@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public abstract class Person : INotifyPropertyChanged
+    public abstract class PersonBase : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;

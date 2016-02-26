@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public class RelationshipModel : Relationship
+    public class RelationshipModel : RelationshipBase
     {
     }
 }

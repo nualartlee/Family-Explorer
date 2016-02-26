@@ -335,20 +335,20 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
                 }
             }
             // Add new sibling to mother's children
-            PersonView mom = getPerson(person.MotherId);
+            PersonView mom = GetPerson(person.MotherId);
             if (mom != null)
             {
                 mom.ChildrenIds.Add(newSibling.Id);
             }
             // Add new sibling to father's children
-            PersonView dad = getPerson(person.FatherId);
+            PersonView dad = GetPerson(person.FatherId);
             if (dad != null)
             {
                 dad.ChildrenIds.Add(newSibling.Id);
@@ -378,7 +378,7 @@ namespace FamilyExplorer
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
             // Add current siblings to new sibling's list    
-            PersonView mom = getPerson(person.MotherId);
+            PersonView mom = GetPerson(person.MotherId);
             if (mom != null)
             {
                 foreach (int siblingid in mom.ChildrenIds)
@@ -395,7 +395,7 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
@@ -432,7 +432,7 @@ namespace FamilyExplorer
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
             // Add current siblings to new sibling's list    
-            PersonView dad = getPerson(person.FatherId);
+            PersonView dad = GetPerson(person.FatherId);
             if (dad != null)
             {
                 foreach (int siblingid in dad.ChildrenIds)
@@ -449,7 +449,7 @@ namespace FamilyExplorer
             // Add new sibling to all other siblings' lists
             foreach (int siblingid in newSibling.SiblingIds)
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newSibling.Id);
@@ -552,7 +552,7 @@ namespace FamilyExplorer
             // Add new child to all other childrens' sibling lists
             foreach (int siblingid in newChild.SiblingIds)
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(newChild.Id);
@@ -653,7 +653,7 @@ namespace FamilyExplorer
             // Add person to mother's other childrens' sibling lists
             foreach (int siblingid in person.SiblingIds.ToList())
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(person.Id);
@@ -701,7 +701,7 @@ namespace FamilyExplorer
             // Add person to father's other childrens' sibling lists
             foreach (int siblingid in person.SiblingIds.ToList())
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     otherSibling.SiblingIds.Add(person.Id);
@@ -809,7 +809,7 @@ namespace FamilyExplorer
             // add child to siblings
             foreach (int siblingid in person.SiblingIds)
             {
-                PersonView otherSibling = getPerson(siblingid);
+                PersonView otherSibling = GetPerson(siblingid);
                 if (otherSibling != null)
                 {
                     if (!otherSibling.SiblingIds.Contains(child.Id))
@@ -999,7 +999,7 @@ namespace FamilyExplorer
             {
                 SelectedRelationship = relationship;
                 SelectedRelationship.Selected = true;
-                SelectedRelationshipData = new RelationshipData(relationship, getPerson(relationship.PersonSourceId), getPerson(relationship.PersonDestinationId));
+                SelectedRelationshipData = new RelationshipData(relationship, GetPerson(relationship.PersonSourceId), GetPerson(relationship.PersonDestinationId));
             }
             else
             {
@@ -1027,7 +1027,7 @@ namespace FamilyExplorer
             SelectedPersonSiblings.Clear();
             foreach (int id in SelectedPerson.SiblingIds)
             {                
-                SelectedPersonSiblings.Add(getPerson(id));
+                SelectedPersonSiblings.Add(GetPerson(id));
             }
         }
 
@@ -1048,21 +1048,21 @@ namespace FamilyExplorer
             // Mother
             if (person.MotherId > 0)
             {
-                PersonView mom = getPerson(person.MotherId);
+                PersonView mom = GetPerson(person.MotherId);
                 ResetRelationship(1, mom, person, person.DOB, null);
             }
 
             // Father
             if (person.FatherId > 0)
             {
-                PersonView dad = getPerson(person.FatherId);
+                PersonView dad = GetPerson(person.FatherId);
                 ResetRelationship(2, dad, person, person.DOB, null);
             }
 
             // Siblings
             foreach (int siblingId in person.SiblingIds)
             {
-                PersonView sibling = getPerson(siblingId);
+                PersonView sibling = GetPerson(siblingId);
                 PersonView sourcePerson = (person.Id > sibling.Id) ? person : sibling;
                 PersonView destinationPerson = (person.Id > sibling.Id) ? sibling : person;
                 DateTime startDate = (person.DOB < sibling.DOB) ? person.DOB : sibling.DOB;
@@ -1072,7 +1072,7 @@ namespace FamilyExplorer
             // Friends
             foreach (int friendId in person.FriendIds)
             {
-                PersonView friend = getPerson(friendId);
+                PersonView friend = GetPerson(friendId);
                 PersonView sourcePerson = (person.Id > friend.Id) ? person : friend;
                 PersonView destinationPerson = (person.Id > friend.Id) ? friend : person;
                 DateTime startDate = (person.DOB < friend.DOB) ? person.DOB : friend.DOB;
@@ -1081,7 +1081,7 @@ namespace FamilyExplorer
             // Partners
             foreach (int partnerId in person.PartnerIds)
             {
-                PersonView partner = getPerson(partnerId);
+                PersonView partner = GetPerson(partnerId);
                 PersonView sourcePerson = (person.Id > partner.Id) ? person : partner;
                 PersonView destinationPerson = (person.Id > partner.Id) ? partner : person;
                 DateTime startDate = (person.DOB < partner.DOB) ? person.DOB : partner.DOB;
@@ -1090,7 +1090,7 @@ namespace FamilyExplorer
             // Abusers
             foreach (int abuserId in person.AbuserIds)
             {
-                PersonView abuser = getPerson(abuserId);
+                PersonView abuser = GetPerson(abuserId);
                 PersonView sourcePerson = (person.Id > abuser.Id) ? person : abuser;
                 PersonView destinationPerson = (person.Id > abuser.Id) ? abuser : person;
                 DateTime startDate = (person.DOB < abuser.DOB) ? person.DOB : abuser.DOB;
@@ -1099,7 +1099,7 @@ namespace FamilyExplorer
             // Victims
             foreach (int victimId in person.VictimIds)
             {
-                PersonView victim = getPerson(victimId);
+                PersonView victim = GetPerson(victimId);
                 PersonView sourcePerson = (person.Id > victim.Id) ? person : victim;
                 PersonView destinationPerson = (person.Id > victim.Id) ? victim : person;
                 DateTime startDate = (person.DOB < victim.DOB) ? person.DOB : victim.DOB;
@@ -1110,7 +1110,7 @@ namespace FamilyExplorer
         private void ResetRelationship(int type, PersonView personSource, PersonView personDestination, DateTime startDate, DateTime? endDate)
         {
             int Id = type * (int)Math.Pow(10,6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
-            RelationshipView relationship = getRelationship(Id);
+            RelationshipView relationship = GetRelationship(Id);
             if (relationship != null)
             {
                 relationship.Id = Id;
@@ -1154,8 +1154,8 @@ namespace FamilyExplorer
             double margin = Settings.Instance.Person.Margin;
             double radius = Settings.Instance.Relationship.PathCornerRadius;
 
-            PersonView sourcePerson = getPerson(relationship.PersonSourceId);
-            PersonView destinationPerson = getPerson(relationship.PersonDestinationId);
+            PersonView sourcePerson = GetPerson(relationship.PersonSourceId);
+            PersonView destinationPerson = GetPerson(relationship.PersonDestinationId);
             Point origin = new Point(sourcePerson.X + width / 2, sourcePerson.Y + height / 2);
             Point destination = new Point(destinationPerson.X + width / 2, destinationPerson.Y + height / 2);            
 
@@ -1483,12 +1483,12 @@ namespace FamilyExplorer
             }  
         }        
         
-        private RelationshipView getRelationship(int ID)
+        public RelationshipView GetRelationship(int ID)
         {
             return (RelationshipView)relationships.Where(r => r.Id == ID).FirstOrDefault();
         }
 
-        private PersonView getPerson(int ID)
+        public PersonView GetPerson(int ID)
         {
             return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public class PersonModel : Person
+    public class PersonModel : PersonBase
     {
     }
 }
