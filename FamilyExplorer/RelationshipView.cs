@@ -222,12 +222,8 @@ namespace FamilyExplorer
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
            if (e.PropertyName == "PersonSourceId") { PersonSource = FamilyView.Instance.GetPerson(PersonSourceId); }
-            if (e.PropertyName == "PersonDestinationId") { PersonDestination = FamilyView.Instance.GetPerson(PersonDestinationId); }
-        }
-
-        private void DataChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ResetData();
+           if (e.PropertyName == "PersonDestinationId") { PersonDestination = FamilyView.Instance.GetPerson(PersonDestinationId); }
+           if (PersonSource != null && PersonDestination != null) { ResetData(); }           
         }
 
         public void ResetData()
