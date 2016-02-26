@@ -208,8 +208,7 @@ namespace FamilyExplorer
             SelectedRelationship = new Relationship();
             SelectedPerson = new PersonView();
             SelectedPersonSiblings = new ObservableCollection<PersonView> { };
-            PersonView person = new PersonView();
-            InitalizePerson(person);
+            PersonView person = new PersonView(GetNextID());            
             AddPersonToFamily(person);
             Tree.Scale = 1;
             CenterTreeInWindow();
@@ -241,8 +240,7 @@ namespace FamilyExplorer
 
         private void AddMotherToPerson(PersonView child)
         {
-            PersonView mom = new PersonView();
-            InitalizePerson(mom);
+            PersonView mom = new PersonView(GetNextID());            
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
             mom.Gender = "Female";
@@ -251,9 +249,7 @@ namespace FamilyExplorer
 
             child.MotherId = mom.Id;
 
-            AddPersonToFamily(mom);
-
-            
+            AddPersonToFamily(mom);            
         }
 
         public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -277,8 +273,7 @@ namespace FamilyExplorer
 
         private void AddFatherToPerson(PersonView child)
         {
-            PersonView dad = new PersonView();
-            InitalizePerson(dad);
+            PersonView dad = new PersonView(GetNextID());            
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
             dad.Gender = "Male";
@@ -306,8 +301,7 @@ namespace FamilyExplorer
         private void AddSiblingEqualParentsToPerson(PersonView person)
         {
             // Create new sibling
-            PersonView newSibling = new PersonView();
-            InitalizePerson(newSibling);
+            PersonView newSibling = new PersonView(GetNextID());            
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
@@ -361,8 +355,7 @@ namespace FamilyExplorer
         private void AddSiblingByMotherToPerson(PersonView person)
         {
             // Create new sibling
-            PersonView newSibling = new PersonView();
-            InitalizePerson(newSibling);
+            PersonView newSibling = new PersonView(GetNextID());            
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
@@ -416,8 +409,7 @@ namespace FamilyExplorer
 
         {
             // Create new sibling
-            PersonView newSibling = new PersonView();
-            InitalizePerson(newSibling);
+            PersonView newSibling = new PersonView(GetNextID());            
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
@@ -469,8 +461,7 @@ namespace FamilyExplorer
 
         private void AddFriendToPerson(PersonView person)
         {
-            PersonView friend = new PersonView();
-            InitalizePerson(friend);
+            PersonView friend = new PersonView(GetNextID());           
             friend.FirstName = "Friend Of " + person.FirstName;
             friend.LastName = "";
             friend.Gender = "Not Specified";
@@ -495,8 +486,7 @@ namespace FamilyExplorer
 
         private void AddPartnerToPerson(PersonView person)
         {
-            PersonView partner = new PersonView();
-            InitalizePerson(partner);
+            PersonView partner = new PersonView(GetNextID());            
             partner.FirstName = "Partner Of " + person.FirstName;
             partner.LastName = "";
             partner.Gender = "Not Specified";
@@ -523,8 +513,7 @@ namespace FamilyExplorer
 
         {
             // Create new child
-            PersonView newChild = new PersonView();
-            InitalizePerson(newChild);
+            PersonView newChild = new PersonView(GetNextID());           
             newChild.FirstName = "Child Of " + parent.FirstName;
             newChild.LastName = "";
             newChild.Gender = "Not Specified";
@@ -572,8 +561,7 @@ namespace FamilyExplorer
 
         private void AddAbuserToPerson(PersonView victim)
         {
-            PersonView abuser = new PersonView();
-            InitalizePerson(abuser);
+            PersonView abuser = new PersonView(GetNextID());            
             abuser.FirstName = "Abuser Of " + abuser.FirstName;
             abuser.LastName = "";
             abuser.Gender = "Not Specified";
@@ -598,8 +586,7 @@ namespace FamilyExplorer
 
         private void AddVictimToPerson(PersonView abuser)
         {
-            PersonView victim = new PersonView();
-            InitalizePerson(victim);
+            PersonView victim = new PersonView(GetNextID());            
             victim.FirstName = "Victim Of " + abuser.FirstName;
             victim.LastName = "";
             victim.Gender = "Not Specified";
@@ -1489,31 +1476,31 @@ namespace FamilyExplorer
             return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
         }
 
-        public void InitalizePerson(PersonView person)
-        {
-            person.Id = GetNextID();
-            person.FirstName = "First Name";
-            person.LastName = "Last Name";
-            person.Gender = "Not Specified";
-            person.DOB = DateTime.Now;
-            person.SiblingIds = new List<int> { };
-            person.PartnerIds = new List<int> { };
-            person.FriendIds = new List<int> { };
-            person.ChildrenIds = new List<int> { };
-            person.AbuserIds = new List<int> { };
-            person.VictimIds = new List<int> { };
+        //public void InitalizePerson(PersonView person)
+        //{
+        //    person.Id = GetNextID();
+        //    person.FirstName = "First Name";
+        //    person.LastName = "Last Name";
+        //    person.Gender = "Not Specified";
+        //    person.DOB = DateTime.Now;
+        //    person.SiblingIds = new List<int> { };
+        //    person.PartnerIds = new List<int> { };
+        //    person.FriendIds = new List<int> { };
+        //    person.ChildrenIds = new List<int> { };
+        //    person.AbuserIds = new List<int> { };
+        //    person.VictimIds = new List<int> { };
 
-            person.GenerationIndex = 0;
-            person.SiblingIndex = 0;
+        //    person.GenerationIndex = 0;
+        //    person.SiblingIndex = 0;
 
-            person.Width = Settings.Instance.Person.Width;
-            person.Height = Settings.Instance.Person.Height;
-        }
+        //    person.Width = Settings.Instance.Person.Width;
+        //    person.Height = Settings.Instance.Person.Height;
+        //}
 
         private int GetNextID()
         {
-            if (members.Count == 0) { return 1; }
-            int? maxId = members.Max(m => m.Id) + 1;
+            if (Members.Count == 0) { return 1; }
+            int? maxId = Members.Max(m => m.Id) + 1;
             return maxId ?? 1;
         }
 
@@ -1667,13 +1654,16 @@ namespace FamilyExplorer
                     if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
                     if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }       
                     if (family.Tree != null) { Tree = family.Tree; }
-                    Members.Clear();                   
-                    foreach (PersonModel personModel in family.Members)
+                    Members.Clear();
+                    if (family.Members != null)
                     {
-                        PersonView personView = new PersonView();
-                        personView.CopyBaseProperties(personModel);
-                        Members.Add(personView);
-                    }                                      
+                        foreach (PersonModel personModel in family.Members)
+                        {
+                            PersonView personView = new PersonView();
+                            personView.CopyBaseProperties(personModel);
+                            Members.Add(personView);                                                        
+                        }
+                    }                                   
                     Title = "Family Explorer - " + openfile.FileName;
                     if (family.Relationships != null) { Relationships = family.Relationships; }
                     SetTreeLayout();
