@@ -20,8 +20,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Relationship relationship;
-        public Relationship Relationship
+        private RelationshipView relationship;
+        public RelationshipView Relationship
         {
             get { return relationship; }
             set
@@ -181,7 +181,7 @@ namespace FamilyExplorer
             }
         }
 
-        public RelationshipData(Relationship relationship, PersonView source, PersonView destination)
+        public RelationshipData(RelationshipView relationship, PersonView source, PersonView destination)
         {
             Relationship = relationship;
             PersonSource = source;

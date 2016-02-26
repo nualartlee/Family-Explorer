@@ -28,7 +28,7 @@ using System.Xml.Serialization;
 
 namespace FamilyExplorer
 {
-    public class FamilyViewModel : INotifyPropertyChanged
+    public sealed class FamilyView : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,6 +39,9 @@ namespace FamilyExplorer
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private static FamilyView instance = null;
+        private static readonly object padlock = new object();
 
         private string title;
         public string Title
@@ -96,8 +99,8 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<Relationship> relationships;
-        public ObservableCollection<Relationship> Relationships
+        private ObservableCollection<RelationshipView> relationships;
+        public ObservableCollection<RelationshipView> Relationships
         {
             get { return relationships; }
             set
@@ -110,8 +113,8 @@ namespace FamilyExplorer
             }
         }
 
-        private Relationship selectedRelationship;
-        public Relationship SelectedRelationship
+        private RelationshipView selectedRelationship;
+        public RelationshipView SelectedRelationship
         {
             get { return selectedRelationship; }
             set
@@ -195,20 +198,34 @@ namespace FamilyExplorer
         private int setCommandInProgressType;
         private PersonView setCommandTargetPerson;
 
-        public FamilyViewModel()
+        public FamilyView()
         {
+            Tree = new Tree();
+            Members = new ObservableCollection<PersonView> { };
+            Relationships = new ObservableCollection<RelationshipView> { };
+            SelectedRelationship = new RelationshipView();
+            SelectedPerson = new PersonView();
+            SelectedPersonSiblings = new ObservableCollection<PersonView> { };            
+        }
 
+        public static FamilyView Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new FamilyView();
+                    }
+                    return instance;
+                }
+            }
         }
 
         public void CreateNewFamily()
-        {            
-            Tree = new Tree();
-            Members = new ObservableCollection<PersonView> { };
-            Relationships = new ObservableCollection<Relationship> { };
-            SelectedRelationship = new Relationship();
-            SelectedPerson = new PersonView();
-            SelectedPersonSiblings = new ObservableCollection<PersonView> { };
-            PersonView person = new PersonView(GetNextID());            
+        {
+            PersonView person = new PersonView(GetNextID());
             AddPersonToFamily(person);
             Tree.Scale = 1;
             CenterTreeInWindow();
@@ -975,7 +992,7 @@ namespace FamilyExplorer
             else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
-        public void SelectRelationship(Relationship relationship)
+        public void SelectRelationship(RelationshipView relationship)
         {
             SelectedRelationship.Selected = false;
             if (relationship != null)
@@ -1018,7 +1035,7 @@ namespace FamilyExplorer
 
         private void ResetAllRelationships()
         {
-            Relationships = new ObservableCollection<Relationship> { };
+            Relationships = new ObservableCollection<RelationshipView> { };
             foreach (PersonView person in Members)
             {
                 ResetPersonRelationships(person);
@@ -1093,7 +1110,7 @@ namespace FamilyExplorer
         private void ResetRelationship(int type, PersonView personSource, PersonView personDestination, DateTime startDate, DateTime? endDate)
         {
             int Id = type * (int)Math.Pow(10,6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
-            Relationship relationship = getRelationship(Id);
+            RelationshipView relationship = getRelationship(Id);
             if (relationship != null)
             {
                 relationship.Id = Id;
@@ -1111,7 +1128,7 @@ namespace FamilyExplorer
             }
             else
             {
-                Relationship newRelationship = new Relationship();
+                RelationshipView newRelationship = new RelationshipView();
                 newRelationship.Id = Id;
                 newRelationship.Type = type;
                 newRelationship.PersonSourceId = personSource.Id;
@@ -1125,7 +1142,7 @@ namespace FamilyExplorer
             }
         }
 
-        private string CreateRelationshipPath(Relationship relationship)
+        private string CreateRelationshipPath(RelationshipView relationship)
         {
             string path = "";
 
@@ -1466,9 +1483,9 @@ namespace FamilyExplorer
             }  
         }        
         
-        private Relationship getRelationship(int ID)
+        private RelationshipView getRelationship(int ID)
         {
-            return (Relationship)relationships.Where(r => r.Id == ID).FirstOrDefault();
+            return (RelationshipView)relationships.Where(r => r.Id == ID).FirstOrDefault();
         }
 
         private PersonView getPerson(int ID)
@@ -1497,7 +1514,7 @@ namespace FamilyExplorer
         //    person.Height = Settings.Instance.Person.Height;
         //}
 
-        private int GetNextID()
+        public int GetNextID()
         {
             if (Members.Count == 0) { return 1; }
             int? maxId = Members.Max(m => m.Id) + 1;
@@ -1606,7 +1623,7 @@ namespace FamilyExplorer
             if (result == true)
             {
 
-                Family family = new Family();
+                FamilyModel family = new FamilyModel();
                 family.PersonSettings = Settings.Instance.Person;
                 family.RelationshipSettings = Settings.Instance.Relationship;
                 family.Tree = Tree;
@@ -1616,10 +1633,15 @@ namespace FamilyExplorer
                     PersonModel personModel = new PersonModel();
                     personModel.CopyBaseProperties(personView);
                     family.Members.Add(personModel);
-                }                
-                family.Relationships = Relationships;
-
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(Family));
+                }
+                family.Relationships = new ObservableCollection<RelationshipModel> { };
+                foreach (RelationshipView relationshipView in Relationships)
+                {
+                    RelationshipModel relationshipModel = new RelationshipModel();
+                    relationshipModel.CopyBaseProperties(relationshipView);
+                    family.Relationships.Add(relationshipModel);
+                }
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
                 var subReq = family;
                 using (StringWriter sww = new StringWriter())
                 using (XmlWriter writer = XmlWriter.Create(sww))
@@ -1646,11 +1668,11 @@ namespace FamilyExplorer
 
             if (result == true)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Family));
+                XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));
                 using (StreamReader reader = new StreamReader(openfile.FileName))
                 {
-                    Family family = new Family();
-                    family = (Family)serializer.Deserialize(reader);
+                    FamilyModel family = new FamilyModel();
+                    family = (FamilyModel)serializer.Deserialize(reader);
                     if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
                     if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }       
                     if (family.Tree != null) { Tree = family.Tree; }
@@ -1659,13 +1681,23 @@ namespace FamilyExplorer
                     {
                         foreach (PersonModel personModel in family.Members)
                         {
-                            PersonView personView = new PersonView();
+                            PersonView personView = new PersonView(GetNextID());
                             personView.CopyBaseProperties(personModel);
                             Members.Add(personView);                                                        
                         }
-                    }                                   
+                    }
+                    Relationships.Clear();
+                    if (family.Relationships != null)
+                    {
+                        foreach (RelationshipModel relationshipModel in family.Relationships)
+                        {
+                            RelationshipView relationshipView = new RelationshipView();
+                            relationshipView.CopyBaseProperties(relationshipModel);
+                            Relationships.Add(relationshipView);
+                        }
+                    }
                     Title = "Family Explorer - " + openfile.FileName;
-                    if (family.Relationships != null) { Relationships = family.Relationships; }
+                    
                     SetTreeLayout();
                 }
             }

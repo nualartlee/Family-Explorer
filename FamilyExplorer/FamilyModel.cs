@@ -22,12 +22,12 @@ using System.Threading.Tasks;
 
 namespace FamilyExplorer
 {
-    public class Family
+    public class FamilyModel
     {
         public PersonSettings PersonSettings;
         public RelationshipSettings RelationshipSettings;
         public Tree Tree;
         public ObservableCollection<PersonModel> Members;
-        public ObservableCollection<Relationship> Relationships;
+        public ObservableCollection<RelationshipModel> Relationships;
     }
 }

@@ -44,14 +44,14 @@ namespace FamilyExplorer
         //private double mouseVerticalPosition;
         //private double mouseHorizontalPosition;
 
-        public FamilyViewModel family;        
+        public FamilyView family;        
 
         public MainWindow()
         {
-            InitializeComponent();            
-            family = new FamilyViewModel();
+            InitializeComponent();                       
+            family = FamilyView.Instance;
             family.CreateNewFamily();
-            this.DataContext = family;            
+            this.DataContext = family;
         }
 
         #region Person Commands
@@ -451,7 +451,7 @@ namespace FamilyExplorer
         private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement path = (FrameworkElement)sender;
-            family.SelectRelationship((Relationship)path.DataContext);
+            family.SelectRelationship((RelationshipView)path.DataContext);
             e.Handled = true;
         }
         

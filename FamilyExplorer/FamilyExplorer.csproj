@@ -79,11 +79,13 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Family.cs" />
+    <Compile Include="FamilyModel.cs" />
     <Compile Include="PersonData.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="PersonModel.cs" />
     <Compile Include="Relationship.cs" />
+    <Compile Include="RelationshipModel.cs" />
+    <Compile Include="RelationshipView.cs" />
     <Compile Include="RelationshipSettings.cs" />
     <Compile Include="PersonSettings.cs" />
     <Compile Include="RelationshipData.cs" />
@@ -108,7 +110,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CustomCommands.cs" />
-    <Compile Include="FamilyViewModel.cs" />
+    <Compile Include="FamilyView.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
