@@ -395,7 +395,7 @@
                 
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
                 
-                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationshipData}"
+                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationship}"
                   Visibility="{Binding Relationship, Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>

@@ -127,19 +127,19 @@ namespace FamilyExplorer
             }
         }
 
-        private RelationshipData selectedRelationshipData;
-        public RelationshipData SelectedRelationshipData
-        {
-            get { return selectedRelationshipData; }
-            set
-            {
-                if (value != selectedRelationshipData)
-                {
-                    selectedRelationshipData = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private RelationshipData selectedRelationshipData;
+        //public RelationshipData SelectedRelationshipData
+        //{
+        //    get { return selectedRelationshipData; }
+        //    set
+        //    {
+        //        if (value != selectedRelationshipData)
+        //        {
+        //            selectedRelationshipData = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private Tree tree;
         public Tree Tree
@@ -999,11 +999,11 @@ namespace FamilyExplorer
             {
                 SelectedRelationship = relationship;
                 SelectedRelationship.Selected = true;
-                SelectedRelationshipData = new RelationshipData(relationship, GetPerson(relationship.PersonSourceId), GetPerson(relationship.PersonDestinationId));
+                //SelectedRelationshipData = new RelationshipData(relationship, GetPerson(relationship.PersonSourceId), GetPerson(relationship.PersonDestinationId));
             }
             else
             {
-                SelectedRelationshipData = new RelationshipData(null, null, null);
+                //SelectedRelationshipData = new RelationshipData(null, null, null);
             }  
         }
 
