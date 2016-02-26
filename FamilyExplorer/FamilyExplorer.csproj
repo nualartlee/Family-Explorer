@@ -87,7 +87,6 @@
     <Compile Include="RelationshipView.cs" />
     <Compile Include="RelationshipSettings.cs" />
     <Compile Include="PersonSettings.cs" />
-    <Compile Include="RelationshipData.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="ScrollZoomBorder.cs" />
