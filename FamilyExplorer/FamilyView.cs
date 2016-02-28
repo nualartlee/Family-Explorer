@@ -243,7 +243,8 @@ namespace FamilyExplorer
 
         private void AddMotherToPerson(PersonView child)
         {
-            PersonView mom = new PersonView(GetNextID());            
+            PersonView mom = new PersonView(GetNextID());
+            
             mom.FirstName = "Mother Of " + child.FirstName;
             mom.LastName = "";
             mom.Gender = "Female";
@@ -252,7 +253,7 @@ namespace FamilyExplorer
 
             child.MotherId = mom.Id;
 
-            AddPersonToFamily(mom);            
+            AddPersonToFamily(mom);
         }
 
         public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -285,9 +286,7 @@ namespace FamilyExplorer
 
             child.FatherId = dad.Id;
 
-            AddPersonToFamily(dad);
-
-            
+            AddPersonToFamily(dad);            
         }
 
         public void AddSiblingEqualParents_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -918,7 +917,7 @@ namespace FamilyExplorer
                 SetCommandInProgressDescription = "";
                 SetCommandInProgress = false;
                 FamilyTreeCursor = Cursors.Arrow;
-                ResetAllRelationships();
+                //ResetAllRelationships();
             }
             
         }
@@ -1013,456 +1012,6 @@ namespace FamilyExplorer
         }
 
         #endregion Commands
-
-        private void ResetAllRelationships()
-        {
-            Relationships = new ObservableCollection<RelationshipView> { };
-            foreach (PersonView person in Members)
-            {
-                ResetPersonRelationships(person);
-            }
-        }
-
-        private void ResetPersonRelationships(PersonView person)
-        {
-
-            // Mother
-            if (person.MotherId > 0)
-            {
-                PersonView mom = GetPerson(person.MotherId);
-                ResetRelationship(1, mom, person, person.DOB, null);
-            }
-
-            // Father
-            if (person.FatherId > 0)
-            {
-                PersonView dad = GetPerson(person.FatherId);
-                ResetRelationship(2, dad, person, person.DOB, null);
-            }
-
-            // Siblings
-            foreach (int siblingId in person.SiblingIds)
-            {
-                PersonView sibling = GetPerson(siblingId);
-                PersonView sourcePerson = (person.Id > sibling.Id) ? person : sibling;
-                PersonView destinationPerson = (person.Id > sibling.Id) ? sibling : person;
-                DateTime startDate = (person.DOB < sibling.DOB) ? person.DOB : sibling.DOB;
-                ResetRelationship(3, sourcePerson, destinationPerson, startDate, null);
-            }
-
-            // Friends
-            foreach (int friendId in person.FriendIds)
-            {
-                PersonView friend = GetPerson(friendId);
-                PersonView sourcePerson = (person.Id > friend.Id) ? person : friend;
-                PersonView destinationPerson = (person.Id > friend.Id) ? friend : person;
-                DateTime startDate = (person.DOB < friend.DOB) ? person.DOB : friend.DOB;
-                ResetRelationship(4, sourcePerson, destinationPerson, startDate, null);
-            }
-            // Partners
-            foreach (int partnerId in person.PartnerIds)
-            {
-                PersonView partner = GetPerson(partnerId);
-                PersonView sourcePerson = (person.Id > partner.Id) ? person : partner;
-                PersonView destinationPerson = (person.Id > partner.Id) ? partner : person;
-                DateTime startDate = (person.DOB < partner.DOB) ? person.DOB : partner.DOB;
-                ResetRelationship(5, sourcePerson, destinationPerson, startDate, null);
-            }
-            // Abusers
-            foreach (int abuserId in person.AbuserIds)
-            {
-                PersonView abuser = GetPerson(abuserId);
-                PersonView sourcePerson = (person.Id > abuser.Id) ? person : abuser;
-                PersonView destinationPerson = (person.Id > abuser.Id) ? abuser : person;
-                DateTime startDate = (person.DOB < abuser.DOB) ? person.DOB : abuser.DOB;
-                ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
-            }
-            // Victims
-            foreach (int victimId in person.VictimIds)
-            {
-                PersonView victim = GetPerson(victimId);
-                PersonView sourcePerson = (person.Id > victim.Id) ? person : victim;
-                PersonView destinationPerson = (person.Id > victim.Id) ? victim : person;
-                DateTime startDate = (person.DOB < victim.DOB) ? person.DOB : victim.DOB;
-                ResetRelationship(6, sourcePerson, destinationPerson, startDate, null);
-            }
-        }
-
-        private void ResetRelationship(int type, PersonView personSource, PersonView personDestination, DateTime startDate, DateTime? endDate)
-        {
-            int Id = type * (int)Math.Pow(10,6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
-            RelationshipView relationship = GetRelationship(Id);
-            if (relationship != null)
-            {
-                relationship.Id = Id;
-                relationship.Type = type;
-                relationship.PersonSourceId = personSource.Id;
-                relationship.PersonDestinationId = personDestination.Id;
-                if (type < 4)
-                {
-                    relationship.StartDate = startDate;
-                    relationship.EndDate = endDate;
-                }
-                relationship.Path = CreateRelationshipPath(relationship);
-                relationship.PathThickness = Settings.Instance.Relationship.PathThickness;
-                relationship.PathColor = Settings.Instance.Relationship.PathColor(type);
-            }
-            else
-            {
-                RelationshipView newRelationship = new RelationshipView();
-                newRelationship.Id = Id;
-                newRelationship.Type = type;
-                newRelationship.PersonSourceId = personSource.Id;
-                newRelationship.PersonDestinationId = personDestination.Id;
-                newRelationship.StartDate = startDate;
-                newRelationship.EndDate = endDate;
-                newRelationship.Path = CreateRelationshipPath(newRelationship);
-                newRelationship.PathThickness = Settings.Instance.Relationship.PathThickness;
-                newRelationship.PathColor = Settings.Instance.Relationship.PathColor(type);
-                Relationships.Add(newRelationship);
-            }
-        }
-
-        private string CreateRelationshipPath(RelationshipView relationship)
-        {
-            string path = "";
-
-            double width = Settings.Instance.Person.Width;
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double offset = Settings.Instance.Relationship.PathOffset(relationship.Type);
-            double margin = Settings.Instance.Person.Margin;
-            double radius = Settings.Instance.Relationship.PathCornerRadius;
-
-            PersonView sourcePerson = GetPerson(relationship.PersonSourceId);
-            PersonView destinationPerson = GetPerson(relationship.PersonDestinationId);
-            Point origin = new Point(sourcePerson.X + width / 2, sourcePerson.Y + height / 2);
-            Point destination = new Point(destinationPerson.X + width / 2, destinationPerson.Y + height / 2);            
-
-            int generationCrossings = destinationPerson.GenerationIndex - sourcePerson.GenerationIndex;
-            bool descending = (generationCrossings > 0);
-            bool level = (generationCrossings == 0);
-            bool eastward = (origin.X < destination.X);
-            bool centered = (origin.X == destination.X);                       
-
-            #region Origin & Destination Points
-
-            if (descending)
-            {
-                origin.Y += (height / 2 + margin);
-                destination.Y -= (height / 2 + margin);                
-                
-            }
-            else if (level)
-            {
-                origin.Y -= (height / 2 + margin);
-                destination.Y -= (height / 2 + margin);                               
-            }
-            else // ascending
-            {
-                origin.Y -= (height / 2 + margin);
-                destination.Y += (height / 2 + margin);                              
-            }
-
-            if (eastward)
-            {
-                origin.X += offset;
-                destination.X -= offset;
-            }
-            else if (centered)
-            {
-                origin.X += offset;
-                destination.X -= offset;
-            }
-            else // westward
-            {
-                origin.X -= offset;
-                destination.X += offset;
-            }
-
-            #endregion Origin & Destination Points
-
-            List<Point> points = new List<Point> { };
-            points.Add(origin);
-
-            while (points.Last() != destination)
-            {
-                if (descending) { points.Add(GetNextDownwardsPoint(points.Last(), destination, offset)); }
-                else if (level) { points.Add(GetNextLevelPoint(points.Last(), destination, offset)); }
-                else { { points.Add(GetNextUpwardsPoint(points.Last(), destination, offset)); } }
-            }
-
-            path = SmoothenPath(points);
-            
-            return path;
-        }
-
-        private string SmoothenPath(List<Point> points)
-        {
-            double radius = Settings.Instance.Relationship.PathCornerRadius;
-            string path = "M" + points[0].ToString();
-
-            for (int i=1; i < points.Count(); i++)
-            {
-
-                // Last point
-                if (i == points.Count() - 1)
-                {
-                    path += " L" + points[i].ToString();
-                    break;
-                }
-
-                bool startedHorizontal = points[i - 1].X != points[i].X;
-                bool endedHorizontal = points[i].X != points[i + 1].X;
-                bool startedVertical = points[i - 1].Y != points[i].Y;
-                bool endedVertical = points[i].Y != points[i + 1].Y;                
-                bool notCorner = (startedVertical && endedVertical) || (startedHorizontal && endedHorizontal);
-
-                // This point is not a corner
-                if (notCorner) { break; }
-
-                Point tangent1;
-                Point tangent2;
-
-                if (startedHorizontal)
-                {
-                    var list = new[] { radius, Math.Abs(points[i - 1].X - points[i].X), Math.Abs(points[i].Y - points[i + 1].Y) };
-                    radius = list.Min(); // Reduce corner radius if points are too close
-
-                    bool startedGoingRight = points[i - 1].X < points[i].X;
-                    if (startedGoingRight) { tangent1 = new Point(points[i].X - radius, points[i].Y); }
-                    else { tangent1 = new Point(points[i].X + radius, points[i].Y); }
-                    bool endedGoingDown = points[i].Y < points[i + 1].Y;
-                    if (endedGoingDown) { tangent2 = new Point(points[i].X, points[i].Y + radius); }
-                    else { tangent2 = new Point(points[i].X, points[i].Y - radius); }
-                }
-                else
-                {
-                    var list = new[] { radius, Math.Abs(points[i - 1].Y - points[i].Y), Math.Abs(points[i].X - points[i + 1].X) };
-                    radius = list.Min(); // Reduce corner radius if points are too close
-
-                    bool startedGoingDown = points[i - 1].Y < points[i].Y;
-                    if (startedGoingDown) { tangent1 = new Point(points[i].X, points[i].Y - radius); }
-                    else { tangent1 = new Point(points[i].X, points[i].Y + radius); }
-                    bool endedGoingRight = points[i].X < points[i + 1].X;
-                    if (endedGoingRight) { tangent2 = new Point(points[i].X + radius, points[i].Y); }
-                    else { tangent2 = new Point(points[i].X - radius, points[i].Y); }                    
-                }               
-                path += " L" + tangent1.ToString() + " Q" + points[i].ToString() + " " + tangent2.ToString();
-            }
-
-            return path;
-        }
-        
-        private Point GetNextDownwardsPoint(Point current, Point destination, double offset)
-        {
-            Point next = new Point();
-
-            double width = Settings.Instance.Person.Width;
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-            //double radius = Settings.Instance.Relationship.PathCornerRadius;
-
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-            bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
-
-            if (location == 1) // Currently at origin, go down to center line
-            {
-                double Y = current.Y - margin + offset + verticalSpace / 2;
-                next = new Point(current.X, Y);
-                return next;
-            }
-
-            if (crossGeneration) // Go down to next level
-            {                
-                int generationIndex = GetGenerationIndex(current.Y);
-                List<PersonView> peopleBelow = Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
-                
-                bool spaceBelow = true;
-                foreach (PersonView person in peopleBelow)
-                {
-                    if (current.X > person.X && current.X < person.X + width) { spaceBelow = false; break; }
-                }
-
-
-                if (spaceBelow) // Space below, go down
-                {
-                    double Y = current.Y + (height + verticalSpace);
-                    next = new Point(current.X, Y);
-                    return next;
-                }
-                else // Move sideways to vertical path opening
-                {
-                    bool moveRight = current.X <= destination.X;
-                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
-                    next = new Point(X, current.Y);
-                    return next;
-                }
-            }
-            else
-            {
-
-                if (current.X == destination.X) // Move down to destination
-                {
-                    next = new Point(current.X, destination.Y);
-                    return next;
-                }
-                else // Move sideways over destination
-                {
-                    next = new Point(destination.X, current.Y);
-                    return next;
-                }
-            }
-
-        }
-
-        private Point GetNextLevelPoint(Point current, Point destination, double offset)
-        {
-            Point next = new Point();           
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;            
-            int location = GetVerticalLocationRelativeToPeople(current, offset);            
-
-            if (location == 3) // Currently at origin, go up to center line
-            {                
-                double Y = current.Y + margin + offset - verticalSpace / 2;                
-                next = new Point(current.X, Y);
-                return next;
-            }            
-            else
-            {
-
-                if (current.X == destination.X) // Currently over destination, move down
-                {
-                    next = new Point(current.X, destination.Y);
-                    return next;
-                }
-                else // Move sideways over destination
-                {
-                    next = new Point(destination.X, current.Y);
-                    return next;
-                }
-            }
-
-        }
-
-        private Point GetNextUpwardsPoint(Point current, Point destination, double offset)
-        {
-            Point next = new Point();
-
-            double width = Settings.Instance.Person.Width;
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;            
-
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-            bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
-
-            if (location == 3) // Currently at origin, go up to center line
-            {
-                double Y = current.Y + margin + offset - verticalSpace / 2;
-                next = new Point(current.X, Y);
-                return next;
-            }
-
-            if (crossGeneration) // Go up to next level
-            {                
-                int generationIndex = GetGenerationIndex(current.Y);
-                List<PersonView> peopleAbove = Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();                
-                bool spaceAbove = true;
-                foreach (PersonView person in peopleAbove)
-                {
-                    if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
-                }
-         
-                if (spaceAbove) // Space above, go up
-                {
-                    double Y = current.Y - (height + verticalSpace);
-                    next = new Point(current.X, Y);
-                    return next;
-                }
-                else // Move sideways to vertical path opening
-                {
-                    bool moveRight = current.X <= destination.X;
-                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
-                    next = new Point(X, current.Y);
-                    return next;
-                }
-            }
-            else
-            {
-
-                if (current.X == destination.X) // Move down to destination
-                {
-                    next = new Point(current.X, destination.Y);
-                    return next;
-                }
-                else // Move sideways over destination
-                {
-                    next = new Point(destination.X, current.Y);
-                    return next;
-                }
-            }
-
-        }
-
-        private int GetVerticalLocationRelativeToPeople(Point point, double offset)
-        {
-            double height = Settings.Instance.Person.Height;
-            double space = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-            double location = point.Y % (height + space);
-            bool positive = location >= 0;
-            if (positive)
-            {
-                if (location == height + margin) { return 1; } // Person bottom
-                if (location == height + space / 2 + offset) { return 2; } // On horizontal path
-                if (location == height + space - margin) { return 3; } // Person top
-            }
-            else
-            {
-                if (location == - space + margin) { return 1; } // Person bottom
-                if (location == - space / 2 + offset) { return 2; } // On horizontal path
-                if (location == - margin) { return 3; } // Person top
-            }
-
-            //if (location == height/2 + margin) { return (positive) ? 1 : 3; } // Person bottom
-            //if (location == (height + space) / 2 + offset) { return 2; } // On horizontal path
-            //if (location == height/2 + space - margin) { return (positive) ? 3 : 1; } // Person top
-
-            //if (positive)
-            //{
-
-            //}
-            //else
-            //{
-            //    if (location == height/2 + margin) { return 1; } // Person bottom
-            //    if (location == (height + space) / 2 + offset) { return 2; } // On horizontal path
-            //    if (location == margin) { return 3; } // Person top
-            //}
-
-
-            return 0;
-        }       
-
-        private int GetGenerationIndex(double currentYPosition)
-        {            
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
- 
-            if (currentYPosition > 0)
-            {
-                return (int)Math.Floor(currentYPosition / (height + horizontalSpace));
-            }
-            else
-            {
-                return (int)Math.Ceiling(currentYPosition / (height + horizontalSpace));
-            }  
-        }        
         
         public RelationshipView GetRelationship(int ID)
         {
@@ -1473,28 +1022,7 @@ namespace FamilyExplorer
         {
             return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
         }
-
-        //public void InitalizePerson(PersonView person)
-        //{
-        //    person.Id = GetNextID();
-        //    person.FirstName = "First Name";
-        //    person.LastName = "Last Name";
-        //    person.Gender = "Not Specified";
-        //    person.DOB = DateTime.Now;
-        //    person.SiblingIds = new List<int> { };
-        //    person.PartnerIds = new List<int> { };
-        //    person.FriendIds = new List<int> { };
-        //    person.ChildrenIds = new List<int> { };
-        //    person.AbuserIds = new List<int> { };
-        //    person.VictimIds = new List<int> { };
-
-        //    person.GenerationIndex = 0;
-        //    person.SiblingIndex = 0;
-
-        //    person.Width = Settings.Instance.Person.Width;
-        //    person.Height = Settings.Instance.Person.Height;
-        //}
-
+                
         public int GetNextID()
         {
             if (Members.Count == 0) { return 1; }
@@ -1540,7 +1068,7 @@ namespace FamilyExplorer
             {
                 SetPersonPosition(person);
             }
-            ResetAllRelationships();
+            //ResetAllRelationships();
             SetScaledTreeDimensions();
         }
 
