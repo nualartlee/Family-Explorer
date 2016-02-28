@@ -151,7 +151,7 @@ namespace FamilyExplorer
                 }
             }
         }
-
+        
         private string endDateDescription;
         public string EndDateDescription
         {
@@ -161,6 +161,21 @@ namespace FamilyExplorer
                 if (value != endDateDescription)
                 {
                     endDateDescription = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private bool ended = false;
+        public bool Ended
+        {
+            get { return EndDate == null; }
+            set
+            {
+                if (value != ended)
+                {
+                    if (ended == true) { EndDate = DateTime.Now; }
+                    else { EndDate = null; }
                     NotifyPropertyChanged();
                 }
             }
@@ -209,23 +224,34 @@ namespace FamilyExplorer
             }
         }
 
-        public RelationshipView()
+        public RelationshipView(int id)
         {
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
-            Initialize();
+            GetDataFromId(id);           
         }
 
-        public void Initialize()
+        public RelationshipView(int id, DateTime? start, DateTime? end)
         {
-                       
-        }
-
+            PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
+            GetDataFromId(id);
+            if (start != null) { StartDate = (DateTime)start; }
+            if (end != null) { EndDate = (DateTime)end; }                        
+        }        
+        
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-           if (e.PropertyName == "PersonSourceId") { PersonSource = FamilyView.Instance.GetPerson(PersonSourceId); }
-           if (e.PropertyName == "PersonDestinationId") { PersonDestination = FamilyView.Instance.GetPerson(PersonDestinationId); }
-            if (e.PropertyName == "PersonSource") { SubscribeToSourcePersonEvents(); }
-            if (e.PropertyName == "PersonDestination") { SubscribeToDestinationPersonEvents(); }
+           //if (e.PropertyName == "PersonSourceId") { PersonSource = FamilyView.Instance.GetPerson(PersonSourceId); }
+           //if (e.PropertyName == "PersonDestinationId") { PersonDestination = FamilyView.Instance.GetPerson(PersonDestinationId); }
+            if (e.PropertyName == "PersonSource")
+            {
+                SubscribeToSourcePersonEvents();
+                //PersonSourceId = PersonSource.Id;
+            }
+            if (e.PropertyName == "PersonDestination")
+            {
+                SubscribeToDestinationPersonEvents();
+                //PersonDestinationId = personDestination.Id;
+            }
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }           
         }
 
@@ -247,6 +273,17 @@ namespace FamilyExplorer
         private void DestinationPersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
+        }
+
+        private void GetDataFromId(int id)
+        {           
+            int destinationId = id % 1000;
+            int sourceId = ((id - destinationId) / 1000) % 1000;
+            int tp = (id - sourceId * 1000 - destinationId) / 1000000;
+
+            PersonDestination = FamilyView.Instance.GetPerson(destinationId);
+            PersonSource = FamilyView.Instance.GetPerson(sourceId);
+            Type = tp;
         }
 
         public void ResetAllData()

@@ -189,7 +189,7 @@ namespace FamilyExplorer
             Tree = new Tree();
             Members = new ObservableCollection<PersonView> { };
             Relationships = new ObservableCollection<RelationshipView> { };
-            SelectedRelationship = new RelationshipView();
+            //SelectedRelationship = new RelationshipView();
             SelectedPerson = new PersonView();
             SelectedPersonSiblings = new ObservableCollection<PersonView> { };            
         }
@@ -225,13 +225,13 @@ namespace FamilyExplorer
         public void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             PersonView person = (PersonView)e.Parameter;
-            if (person.MotherId == 0)
+            if (person.MotherRelationship != null)
             {
-                e.CanExecute = true;
+                e.CanExecute = false;
             }
             else
             {
-                e.CanExecute = false;
+                e.CanExecute = true;
             }
         }
 
@@ -249,23 +249,23 @@ namespace FamilyExplorer
             mom.LastName = "";
             mom.Gender = "Female";
             mom.GenerationIndex = child.GenerationIndex - 1;
-            mom.ChildrenIds.Add(child.Id);
-
-            child.MotherId = mom.Id;
+            //mom.ChildrenIds.Add(child.Id);
+            //child.MotherId = mom.Id;
 
             AddPersonToFamily(mom);
+            CreateRelationship(1, mom, child, child.DOB, null);
         }
 
         public void AddFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             PersonView person = (PersonView)e.Parameter;
-            if (person.FatherId == 0)
+            if (person.FatherRelationship != null)
             {
-                e.CanExecute = true;
+                e.CanExecute = false;
             }
             else
             {
-                e.CanExecute = false;
+                e.CanExecute = true;
             }
         }
 
@@ -281,12 +281,9 @@ namespace FamilyExplorer
             dad.FirstName = "Father Of " + child.FirstName;
             dad.LastName = "";
             dad.Gender = "Male";
-            dad.GenerationIndex = child.GenerationIndex - 1;
-            dad.ChildrenIds.Add(child.Id);
-
-            child.FatherId = dad.Id;
-
-            AddPersonToFamily(dad);            
+            dad.GenerationIndex = child.GenerationIndex - 1;            
+            AddPersonToFamily(dad);
+            CreateRelationship(2, dad, child, child.DOB, null);
         }
 
         public void AddSiblingEqualParents_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -308,38 +305,22 @@ namespace FamilyExplorer
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
-            // Add current siblings to new sibling's list
-            newSibling.SiblingIds.Add(person.Id);
-            foreach (int siblingid in person.SiblingIds)
-            {
-                newSibling.SiblingIds.Add(siblingid);
-            }
-            // Add parents to new sibling
-            newSibling.MotherId = person.MotherId;
-            newSibling.FatherId = person.FatherId;
-            // Add new sibling to all other siblings' lists
-            foreach (int siblingid in newSibling.SiblingIds)
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(newSibling.Id);
-                }
-            }
-            // Add new sibling to mother's children
-            PersonView mom = GetPerson(person.MotherId);
-            if (mom != null)
-            {
-                mom.ChildrenIds.Add(newSibling.Id);
-            }
-            // Add new sibling to father's children
-            PersonView dad = GetPerson(person.FatherId);
-            if (dad != null)
-            {
-                dad.ChildrenIds.Add(newSibling.Id);
-            }
-
             AddPersonToFamily(newSibling);
+
+            // Create new relationships
+            PersonView mom = person.MotherRelationship.PersonSource;
+            foreach (RelationshipView childRelationship in mom.ChildRelationships)
+            {                
+                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+            }
+            CreateRelationship(1, mom, newSibling, newSibling.DOB, null);
+
+            PersonView dad = person.FatherRelationship.PersonSource;
+            foreach (RelationshipView childRelationship in dad.ChildRelationships)
+            {
+                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+            }
+            CreateRelationship(2, dad, newSibling, newSibling.DOB, null);                        
 
         }
 
@@ -357,42 +338,20 @@ namespace FamilyExplorer
         private void AddSiblingByMotherToPerson(PersonView person)
         {
             // Create new sibling
-            PersonView newSibling = new PersonView(GetNextID());            
+            PersonView newSibling = new PersonView(GetNextID());
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
-            // Add current siblings to new sibling's list    
-            PersonView mom = GetPerson(person.MotherId);
-            if (mom != null)
-            {
-                foreach (int siblingid in mom.ChildrenIds)
-                {
-                    newSibling.SiblingIds.Add(siblingid);
-                }
-            }
-            else
-            {
-                newSibling.SiblingIds.Add(person.Id);
-            }
-            // Add mother to new sibling
-            newSibling.MotherId = person.MotherId;
-            // Add new sibling to all other siblings' lists
-            foreach (int siblingid in newSibling.SiblingIds)
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(newSibling.Id);
-                }
-            }
-            // Add new sibling to mother's children    
-            if (mom != null)
-            {
-                mom.ChildrenIds.Add(newSibling.Id);
-            }
-
             AddPersonToFamily(newSibling);
+
+            // Create new relationships
+            PersonView mom = person.MotherRelationship.PersonSource;
+            foreach (RelationshipView childRelationship in mom.ChildRelationships)
+            {
+                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+            }
+            CreateRelationship(1, mom, newSibling, newSibling.DOB, null);           
 
         }
 
@@ -411,42 +370,20 @@ namespace FamilyExplorer
 
         {
             // Create new sibling
-            PersonView newSibling = new PersonView(GetNextID());            
+            PersonView newSibling = new PersonView(GetNextID());
             newSibling.FirstName = "Sibling Of " + person.FirstName;
             newSibling.LastName = "";
             newSibling.Gender = "Not Specified";
             newSibling.GenerationIndex = person.GenerationIndex;
-            // Add current siblings to new sibling's list    
-            PersonView dad = GetPerson(person.FatherId);
-            if (dad != null)
-            {
-                foreach (int siblingid in dad.ChildrenIds)
-                {
-                    newSibling.SiblingIds.Add(siblingid);
-                }
-            }
-            else
-            {
-                newSibling.SiblingIds.Add(person.Id);
-            }
-            // Add father to new sibling            
-            newSibling.FatherId = person.FatherId;
-            // Add new sibling to all other siblings' lists
-            foreach (int siblingid in newSibling.SiblingIds)
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(newSibling.Id);
-                }
-            }
-            // Add new sibling to father's children     
-            if (dad != null)
-            {
-                dad.ChildrenIds.Add(newSibling.Id);
-            }
-
             AddPersonToFamily(newSibling);
+
+            // Create new relationships           
+            PersonView dad = person.FatherRelationship.PersonSource;
+            foreach (RelationshipView childRelationship in dad.ChildRelationships)
+            {
+                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+            }
+            CreateRelationship(2, dad, newSibling, newSibling.DOB, null);
 
         }
 
@@ -467,12 +404,10 @@ namespace FamilyExplorer
             friend.FirstName = "Friend Of " + person.FirstName;
             friend.LastName = "";
             friend.Gender = "Not Specified";
-            friend.GenerationIndex = person.GenerationIndex;
-            friend.FriendIds.Add(person.Id);
-
-            person.FriendIds.Add(friend.Id);
-
-            AddPersonToFamily(friend);            
+            friend.GenerationIndex = person.GenerationIndex;       
+                 
+            AddPersonToFamily(friend);
+            CreateRelationship(4, person, friend, DateTime.Now, null);
         }
 
         public void AddPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -492,12 +427,10 @@ namespace FamilyExplorer
             partner.FirstName = "Partner Of " + person.FirstName;
             partner.LastName = "";
             partner.Gender = "Not Specified";
-            partner.GenerationIndex = person.GenerationIndex;
-            partner.PartnerIds.Add(person.Id);
+            partner.GenerationIndex = person.GenerationIndex;            
 
-            person.PartnerIds.Add(partner.Id);
-
-            AddPersonToFamily(partner);            
+            AddPersonToFamily(partner);
+            CreateRelationship(5, person, partner, DateTime.Now, null);
         }
 
         public void AddChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -520,34 +453,22 @@ namespace FamilyExplorer
             newChild.LastName = "";
             newChild.Gender = "Not Specified";
             newChild.GenerationIndex = parent.GenerationIndex + 1;
-            // Add parent to new child   
-            if (parent.Gender == "Male")
-            {
-                newChild.FatherId = parent.FatherId;
-            }
-            if (parent.Gender == "Female")
-            {
-                newChild.MotherId = parent.MotherId;
-            }
-            // Add current children to new child's sibling list                
-            foreach (int childId in parent.ChildrenIds)
-            {
-                newChild.SiblingIds.Add(childId);
-            }
-            // Add new child to all other childrens' sibling lists
-            foreach (int siblingid in newChild.SiblingIds)
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(newChild.Id);
-                }
-            }
-            // Add new child to parent  
-            parent.ChildrenIds.Add(newChild.Id);
-
             AddPersonToFamily(newChild);
 
+            // Create relationships               
+            if (parent.Gender == "Female")
+            {
+                CreateRelationship(1, parent, newChild, newChild.DOB, null);                
+            }
+            if (parent.Gender == "Male")
+            {
+                CreateRelationship(2, parent, newChild, newChild.DOB, null);
+            }
+
+            foreach (RelationshipView childRelationship in parent.ChildRelationships)
+            {
+                CreateRelationship(3, childRelationship.PersonDestination, newChild, newChild.DOB, null);
+            }            
         }
 
         public void AddAbuser_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -567,12 +488,10 @@ namespace FamilyExplorer
             abuser.FirstName = "Abuser Of " + abuser.FirstName;
             abuser.LastName = "";
             abuser.Gender = "Not Specified";
-            abuser.GenerationIndex = abuser.GenerationIndex - 1;
-            abuser.VictimIds.Add(abuser.Id);
+            abuser.GenerationIndex = abuser.GenerationIndex - 1;           
 
-            abuser.AbuserIds.Add(abuser.Id);
-
-            AddPersonToFamily(abuser);            
+            AddPersonToFamily(abuser);
+            CreateRelationship(6, abuser, victim, DateTime.Now, null);
         }
 
         public void AddVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -593,17 +512,15 @@ namespace FamilyExplorer
             victim.LastName = "";
             victim.Gender = "Not Specified";
             victim.GenerationIndex = abuser.GenerationIndex + 1;
-            victim.AbuserIds.Add(abuser.Id);
-
-            abuser.VictimIds.Add(victim.Id);
-
-            AddPersonToFamily(victim);            
+           
+            AddPersonToFamily(victim);
+            CreateRelationship(6, abuser, victim, DateTime.Now, null);
         }
 
         public void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             PersonView person = (PersonView)e.Parameter;
-            if (person.MotherId > 0) { e.CanExecute = false; }
+            if (person.MotherRelationship != null) { e.CanExecute = false; }
             else { e.CanExecute = true; }
         }
 
@@ -628,30 +545,23 @@ namespace FamilyExplorer
         {
 
             if (mother.Gender != "Female") { return; }
-            // Add mother to person                          
-            person.MotherId = mother.Id;
-            // Add mother's current children to the person's sibling list                
-            foreach (int childId in mother.ChildrenIds)
+            // Create new relationships            
+            foreach (RelationshipView childRelationship in mother.ChildRelationships)
             {
-                person.SiblingIds.Add(childId);
+                PersonView sibling = childRelationship.PersonDestination;
+
+                if (sibling.Id < person.Id)
+                { CreateRelationship(3, sibling, person, person.DOB, null); }
+                else
+                { CreateRelationship(3, person, sibling, sibling.DOB, null); }
             }
-            // Add person to mother's other childrens' sibling lists
-            foreach (int siblingid in person.SiblingIds.ToList())
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(person.Id);
-                }
-            }
-            // Add person to mother  
-            mother.ChildrenIds.Add(person.Id);
+            CreateRelationship(1, mother, person, person.DOB, null);
         }
 
         public void SetFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             PersonView person = (PersonView)e.Parameter;
-            if (person.FatherId > 0) { e.CanExecute = false; }
+            if (person.FatherRelationship != null) { e.CanExecute = false; }
             else { e.CanExecute = true; }
         }
 
@@ -675,25 +585,18 @@ namespace FamilyExplorer
         private void SetFather_Finalized(PersonView person, PersonView father)
         {
 
-            if (father.Gender != "Male") { return; }
-            // Add father to person                          
-            person.FatherId = father.Id;
-            // Add father's current children to the person's sibling list                
-            foreach (int childId in father.ChildrenIds)
+            if (father.Gender != "Male") { return; }           
+            // Create new relationships            
+            foreach (RelationshipView childRelationship in father.ChildRelationships)
             {
-                person.SiblingIds.Add(childId);
+                PersonView sibling = childRelationship.PersonDestination;
+
+                if (sibling.Id < person.Id)
+                { CreateRelationship(3, sibling, person, person.DOB, null); }
+                else
+                { CreateRelationship(3, person, sibling, sibling.DOB, null); }
             }
-            // Add person to father's other childrens' sibling lists
-            foreach (int siblingid in person.SiblingIds.ToList())
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    otherSibling.SiblingIds.Add(person.Id);
-                }
-            }
-            // Add person to father  
-            father.ChildrenIds.Add(person.Id);            
+            CreateRelationship(2, father, person, person.DOB, null);
         }
 
         public void SetFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -714,16 +617,22 @@ namespace FamilyExplorer
             // Not itself
             if (person == setCommandTargetPerson) { return false; }
             // Not already a friend
-            if (person.FriendIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            foreach (RelationshipView friendRelationship in person.FriendRelationships)
+            {
+                if (friendRelationship.PersonSource == setCommandTargetPerson) { return false; }
+                if (friendRelationship.PersonDestination == setCommandTargetPerson) { return false; }
+            }        
+               
             return true;
         }
 
-        private void SetFriend_Finalized(PersonView person, PersonView partner)
+        private void SetFriend_Finalized(PersonView person, PersonView friend)
         {
-            // Add friend to person's friends list                        
-            person.FriendIds.Add(partner.Id);
-            // Add person to friend's friend list  
-            partner.FriendIds.Add(person.Id);
+            // Create relationship
+            if (person.Id < friend.Id)
+            { CreateRelationship(4, person, friend, DateTime.Now, null); }
+            else
+            { CreateRelationship(4, friend, person, DateTime.Now, null); }
         }
 
         public void SetPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -744,16 +653,21 @@ namespace FamilyExplorer
             // Not itself
             if (person == setCommandTargetPerson) { return false; }
             // Not already a partner
-            if (person.PartnerIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            foreach (RelationshipView partnerRelationship in person.PartnerRelationships)
+            {
+                if (partnerRelationship.PersonSource == setCommandTargetPerson) { return false; }
+                if (partnerRelationship.PersonDestination == setCommandTargetPerson) { return false; }
+            }
             return true;
         }
 
         private void SetPartner_Finalized(PersonView person, PersonView partner)
         {
-            // Add partner to person's partner list                        
-            person.PartnerIds.Add(partner.Id);
-            // Add person to partners' partner list  
-            partner.PartnerIds.Add(person.Id);
+            // Create relationship
+            if (person.Id < partner.Id)
+            { CreateRelationship(5, person, partner, DateTime.Now, null); }
+            else
+            { CreateRelationship(5, partner, person, DateTime.Now, null); }
         }
 
         public void SetChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -775,7 +689,10 @@ namespace FamilyExplorer
         private bool SetChild_CanFinalize(PersonView child)
         {
             // Not already a child
-            if (setCommandTargetPerson.ChildrenIds.Contains(child.Id)) { return false; }
+            foreach (RelationshipView childRelationship in setCommandTargetPerson.ChildRelationships)
+            {                
+                if (childRelationship.PersonDestination == child) { return false; }
+            }
             // Not in the next generation
             if (setCommandTargetPerson.GenerationIndex + 1 != child.GenerationIndex) { return false; }
             return true;
@@ -783,31 +700,19 @@ namespace FamilyExplorer
 
         private void SetChild_Finalized(PersonView person, PersonView child)
         {
-            // Add siblings to child
-            foreach (int childId in person.ChildrenIds)
+            // Create relationships
+            foreach (RelationshipView childRelationship in person.ChildRelationships)
             {
-                if (!child.SiblingIds.Contains(childId))
-                {
-                    child.SiblingIds.Add(childId);
-                }
+                PersonView sibling = childRelationship.PersonDestination;
+
+                if (sibling.Id < person.Id)
+                { CreateRelationship(3, sibling, person, person.DOB, null); }
+                else
+                { CreateRelationship(3, person, sibling, sibling.DOB, null); }
             }
-            // add child to siblings
-            foreach (int siblingid in person.SiblingIds)
-            {
-                PersonView otherSibling = GetPerson(siblingid);
-                if (otherSibling != null)
-                {
-                    if (!otherSibling.SiblingIds.Contains(child.Id))
-                    {
-                        otherSibling.SiblingIds.Add(child.Id);
-                    }
-                }
-            }
-            // Add child to person's children list                        
-            person.ChildrenIds.Add(child.Id);
-            // Add person as child's parent
-            if (person.Gender == "Male") { child.FatherId = person.Id; }
-            if (person.Gender == "Female") { child.MotherId = person.Id; }
+            if (person.Gender == "Female") { CreateRelationship(1, person, child, child.DOB, null); }
+            if (person.Gender == "Male") { CreateRelationship(2, person, child, child.DOB, null); }
+
 
         }
 
@@ -827,16 +732,18 @@ namespace FamilyExplorer
         private bool SetAbuser_CanFinalize(PersonView person)
         {
             // Not already an abuser
-            if (person.VictimIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            foreach (RelationshipView victimRelationship in person.VictimRelationships)
+            {               
+                if (victimRelationship.PersonDestination == setCommandTargetPerson) { return false; }
+            }
+            
             return true;
         }
 
         private void SetAbuser_Finalized(PersonView person, PersonView abuser)
         {
-            // Add abuser to person's abuser list                        
-            person.AbuserIds.Add(abuser.Id);
-            // Add person to abuser's victim list  
-            abuser.VictimIds.Add(person.Id);
+            // Create relationship                      
+            CreateRelationship(6, person, setCommandTargetPerson, DateTime.Now, null);
         }
 
         public void SetVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -855,16 +762,17 @@ namespace FamilyExplorer
         private bool SetVictim_CanFinalize(PersonView person)
         {
             // Not already a victim
-            if (person.AbuserIds.Contains(setCommandTargetPerson.Id)) { return false; }
+            foreach (RelationshipView abuserRelationship in person.AbuserRelationships)
+            {
+                if (abuserRelationship.PersonSource == setCommandTargetPerson) { return false; }
+            }
             return true;
         }
 
         private void SetVictim_Finalized(PersonView person, PersonView victim)
         {
-            // Add victim to person's victim list                        
-            person.VictimIds.Add(victim.Id);
-            // Add person to victim's abuser list  
-            victim.AbuserIds.Add(person.Id);
+            // Create relationship                      
+            CreateRelationship(6, setCommandTargetPerson, person, DateTime.Now, null);
         }
 
         public void FinalizeSetCommand(PersonView setCommandRelationPerson)
@@ -979,12 +887,15 @@ namespace FamilyExplorer
 
         public void SelectRelationship(RelationshipView relationship)
         {
-            SelectedRelationship.Selected = false;
-            if (relationship != null)
+            if (SelectedRelationship != null)
             {
-                SelectedRelationship = relationship;
-                SelectedRelationship.Selected = true;                
-            }           
+                SelectedRelationship.Selected = false;
+                if (relationship != null)
+                {
+                    SelectedRelationship = relationship;
+                    SelectedRelationship.Selected = true;
+                }
+            }         
         }
 
         public void SelectPerson(PersonView person)
@@ -993,23 +904,13 @@ namespace FamilyExplorer
             if (person != null)
             {
                 SelectedPerson = person;
-                SelectedPerson.Selected = true;
-                PopulateSelectedPersonsRelationships();
+                SelectedPerson.Selected = true;                
             }
             else
             {
                 SelectedPerson = null;
             }
-        }
-
-        private void PopulateSelectedPersonsRelationships()
-        {
-            SelectedPersonSiblings.Clear();
-            foreach (int id in SelectedPerson.SiblingIds)
-            {                
-                SelectedPersonSiblings.Add(GetPerson(id));
-            }
-        }
+        }        
 
         #endregion Commands
         
@@ -1029,7 +930,7 @@ namespace FamilyExplorer
             int? maxId = Members.Max(m => m.Id) + 1;
             return maxId ?? 1;
         }
-
+        
         private void AddPersonToFamily(PersonView person)
         {
             if (Members == null)
@@ -1039,6 +940,22 @@ namespace FamilyExplorer
             Members.Add(person);
             OrderSiblings(person.GenerationIndex);
             SetTreeLayout();
+        }
+
+        private void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
+        {
+
+            int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
+            RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
+            if (relationship != null)
+            {
+                relationship.ResetAllData();
+            }
+            else
+            {
+                RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
+                FamilyView.Instance.Relationships.Add(newRelationship);
+            }
         }
 
         private void SetPersonPosition(PersonView person)
@@ -1200,7 +1117,7 @@ namespace FamilyExplorer
                     {
                         foreach (RelationshipModel relationshipModel in family.Relationships)
                         {
-                            RelationshipView relationshipView = new RelationshipView();
+                            RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
                             relationshipView.CopyBaseProperties(relationshipModel);
                             Relationships.Add(relationshipView);
                         }

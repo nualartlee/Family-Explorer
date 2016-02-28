@@ -49,33 +49,33 @@ namespace FamilyExplorer
             }
         }
 
-        private int personSourceId;
-        public int PersonSourceId
-        {
-            get { return personSourceId; }
-            set
-            {
-                if (value != personSourceId)
-                {
-                    personSourceId = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private int personSourceId;
+        //public int PersonSourceId
+        //{
+        //    get { return personSourceId; }
+        //    set
+        //    {
+        //        if (value != personSourceId)
+        //        {
+        //            personSourceId = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
-        private int personDestinationId;
-        public int PersonDestinationId
-        {
-            get { return personDestinationId; }
-            set
-            {
-                if (value != personDestinationId)
-                {
-                    personDestinationId = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private int personDestinationId;
+        //public int PersonDestinationId
+        //{
+        //    get { return personDestinationId; }
+        //    set
+        //    {
+        //        if (value != personDestinationId)
+        //        {
+        //            personDestinationId = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private DateTime startDate;
         public DateTime StartDate
@@ -104,19 +104,7 @@ namespace FamilyExplorer
             }
         }
 
-        private bool ended = false;
-        public bool Ended
-        {
-            get { return ended; }
-            set
-            {
-                if (value != ended)
-                {
-                    ended = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        
 
         private string notes;
         public string Notes

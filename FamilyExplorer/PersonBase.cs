@@ -102,110 +102,110 @@ namespace FamilyExplorer
             }
         }
 
-        private int motherId;
-        public int MotherId
-        {
-            get { return motherId; }
-            set
-            {
-                if (value != motherId)
-                {
-                    motherId = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private int fatherId;
-        public int FatherId
-        {
-            get { return fatherId; }
-            set
-            {
-                if (value != fatherId)
-                {
-                    fatherId = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }       
-        private List<int> siblingIds;
-        public List<int> SiblingIds
-        {
-            get { return siblingIds; }
-            set
-            {
-                if (value != siblingIds)
-                {
-                    siblingIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private List<int> friendIds;
-        public List<int> FriendIds
-        {
-            get { return friendIds; }
-            set
-            {
-                if (value != friendIds)
-                {
-                    friendIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private List<int> partnerIds;
-        public List<int> PartnerIds
-        {
-            get { return partnerIds; }
-            set
-            {
-                if (value != partnerIds)
-                {
-                    partnerIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }        
-        private List<int> childrenIds;
-        public List<int> ChildrenIds
-        {
-            get { return childrenIds; }
-            set
-            {
-                if (value != childrenIds)
-                {
-                    childrenIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private List<int> abuserIds;
-        public List<int> AbuserIds
-        {
-            get { return abuserIds; }
-            set
-            {
-                if (value != abuserIds)
-                {
-                    abuserIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private List<int> victimIds;
-        public List<int> VictimIds
-        {
-            get { return victimIds; }
-            set
-            {
-                if (value != victimIds)
-                {
-                    victimIds = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private int motherId;
+        //public int MotherId
+        //{
+        //    get { return motherId; }
+        //    set
+        //    {
+        //        if (value != motherId)
+        //        {
+        //            motherId = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        //private int fatherId;
+        //public int FatherId
+        //{
+        //    get { return fatherId; }
+        //    set
+        //    {
+        //        if (value != fatherId)
+        //        {
+        //            fatherId = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}       
+        //private List<int> siblingIds;
+        //public List<int> SiblingIds
+        //{
+        //    get { return siblingIds; }
+        //    set
+        //    {
+        //        if (value != siblingIds)
+        //        {
+        //            siblingIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        //private List<int> friendIds;
+        //public List<int> FriendIds
+        //{
+        //    get { return friendIds; }
+        //    set
+        //    {
+        //        if (value != friendIds)
+        //        {
+        //            friendIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        //private List<int> partnerIds;
+        //public List<int> PartnerIds
+        //{
+        //    get { return partnerIds; }
+        //    set
+        //    {
+        //        if (value != partnerIds)
+        //        {
+        //            partnerIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}        
+        //private List<int> childrenIds;
+        //public List<int> ChildrenIds
+        //{
+        //    get { return childrenIds; }
+        //    set
+        //    {
+        //        if (value != childrenIds)
+        //        {
+        //            childrenIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        //private List<int> abuserIds;
+        //public List<int> AbuserIds
+        //{
+        //    get { return abuserIds; }
+        //    set
+        //    {
+        //        if (value != abuserIds)
+        //        {
+        //            abuserIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        //private List<int> victimIds;
+        //public List<int> VictimIds
+        //{
+        //    get { return victimIds; }
+        //    set
+        //    {
+        //        if (value != victimIds)
+        //        {
+        //            victimIds = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private string notes;
         public string Notes
