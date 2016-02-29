@@ -292,6 +292,8 @@ namespace FamilyExplorer
             SetPersonDescriptions();
             SetDateDescriptions();
             SetPath();
+            PathThickness = Settings.Instance.Relationship.PathThickness;
+            PathColor = Settings.Instance.Relationship.PathColor(Type);
         }
 
         private void SetHeaderDescription()

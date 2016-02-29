@@ -889,13 +889,13 @@ namespace FamilyExplorer
         {
             if (SelectedRelationship != null)
             {
-                SelectedRelationship.Selected = false;
-                if (relationship != null)
-                {
-                    SelectedRelationship = relationship;
-                    SelectedRelationship.Selected = true;
-                }
-            }         
+                SelectedRelationship.Selected = false;                
+            }
+            if (relationship != null)
+            {
+                SelectedRelationship = relationship;
+                SelectedRelationship.Selected = true;
+            }
         }
 
         public void SelectPerson(PersonView person)
@@ -1095,6 +1095,7 @@ namespace FamilyExplorer
             if (result == true)
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));
+
                 using (StreamReader reader = new StreamReader(openfile.FileName))
                 {
                     FamilyModel family = new FamilyModel();
