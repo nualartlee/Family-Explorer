@@ -385,9 +385,9 @@
                                 <Label Margin="4" Content="Birthdate: " />
                                 <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
                             </StackPanel>
-                            <ComboBox ItemsSource="{Binding SelectedPersonSiblings}" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext}"
-                                      DisplayMemberPath="FirstName">
-                            </ComboBox>
+                            <ListBox ItemsSource="{Binding SiblingRelationships}" DisplayMemberPath="Reciprocal">
+                                                                      
+                            </ListBox>
                         </StackPanel>
                     </Border>
 
@@ -396,7 +396,7 @@
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
                 
                 <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationship}"
-                  Visibility="{Binding Relationship, Converter={StaticResource IsItemSelected}}"
+                  Visibility="{Binding Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -410,7 +410,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="3"
-                        BorderBrush="{Binding Relationship.PathColor}" Background="White" Margin="4,20,4,4">
+                        BorderBrush="{Binding PathColor}" Background="White" Margin="4,20,4,4">
                         <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
@@ -418,17 +418,17 @@
                         <StackPanel>
                             <Label Margin="4" Content="{Binding SourceDescription}" />
                             <Label Margin="4" Content="{Binding DestinationDescription}" />
-                            <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
+                            <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
                                 <Label Margin="4" Content="{Binding StartDateDescription}"/>
-                                <DatePicker Margin="4" SelectedDate="{Binding Relationship.StartDate}"/>
+                                <DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>
                             </StackPanel>
                             <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
-                                <CheckBox Margin="4" IsChecked="{Binding Relationship.Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Label Margin="4" Content="{Binding EndDateDescription}" />
-                                <DatePicker Margin="4" SelectedDate="{Binding Relationship.EndDate}" Visibility="{Binding Relationship.Ended, Converter={StaticResource IsItemVisible}}"/>
+                                <DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>
                             </StackPanel>
                             <Label Margin="4" Content="Notes:" />
-                            <TextBox Margin="4" Text="{Binding Relationship.Notes}" AcceptsReturn="True"/>
+                            <TextBox Margin="4" Text="{Binding Notes}" AcceptsReturn="True"/>
                         </StackPanel>
                     </Border>
                 </Grid>

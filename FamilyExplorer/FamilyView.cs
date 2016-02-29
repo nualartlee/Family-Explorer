@@ -308,20 +308,33 @@ namespace FamilyExplorer
             AddPersonToFamily(newSibling);
 
             // Create new relationships
-            PersonView mom = person.MotherRelationship.PersonSource;
-            foreach (RelationshipView childRelationship in mom.ChildRelationships)
-            {                
-                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
-            }
-            CreateRelationship(1, mom, newSibling, newSibling.DOB, null);
+            CreateRelationship(3, person, newSibling, newSibling.DOB, null);
 
-            PersonView dad = person.FatherRelationship.PersonSource;
-            foreach (RelationshipView childRelationship in dad.ChildRelationships)
+            foreach (RelationshipView siblingRelationship in person.SiblingRelationships)
             {
-                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                if (person != siblingRelationship.PersonDestination) { CreateRelationship(3, siblingRelationship.PersonDestination, newSibling, newSibling.DOB, null); }
+                else {  }
             }
-            CreateRelationship(2, dad, newSibling, newSibling.DOB, null);                        
 
+            if (person.MotherRelationship != null)
+            {
+                PersonView mom = person.MotherRelationship.PersonSource;
+                foreach (RelationshipView childRelationship in mom.ChildRelationships)
+                {
+                    CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                }
+                CreateRelationship(1, mom, newSibling, newSibling.DOB, null);
+            }
+
+            if (person.FatherRelationship != null)
+            {
+                PersonView dad = person.FatherRelationship.PersonSource;
+                foreach (RelationshipView childRelationship in dad.ChildRelationships)
+                {
+                    CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                }
+                CreateRelationship(2, dad, newSibling, newSibling.DOB, null);
+            }
         }
 
         public void AddSiblingByMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -346,13 +359,15 @@ namespace FamilyExplorer
             AddPersonToFamily(newSibling);
 
             // Create new relationships
-            PersonView mom = person.MotherRelationship.PersonSource;
-            foreach (RelationshipView childRelationship in mom.ChildRelationships)
+            if (person.MotherRelationship != null)
             {
-                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                PersonView mom = person.MotherRelationship.PersonSource;
+                foreach (RelationshipView childRelationship in mom.ChildRelationships)
+                {
+                    CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                }
+                CreateRelationship(1, mom, newSibling, newSibling.DOB, null);
             }
-            CreateRelationship(1, mom, newSibling, newSibling.DOB, null);           
-
         }
 
         public void AddSiblingByFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -377,14 +392,16 @@ namespace FamilyExplorer
             newSibling.GenerationIndex = person.GenerationIndex;
             AddPersonToFamily(newSibling);
 
-            // Create new relationships           
-            PersonView dad = person.FatherRelationship.PersonSource;
-            foreach (RelationshipView childRelationship in dad.ChildRelationships)
+            // Create new relationships   
+            if (person.FatherRelationship != null)
             {
-                CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                PersonView dad = person.FatherRelationship.PersonSource;
+                foreach (RelationshipView childRelationship in dad.ChildRelationships)
+                {
+                    CreateRelationship(3, childRelationship.PersonDestination, newSibling, newSibling.DOB, null);
+                }
+                CreateRelationship(2, dad, newSibling, newSibling.DOB, null);
             }
-            CreateRelationship(2, dad, newSibling, newSibling.DOB, null);
-
         }
 
         public void AddFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -895,6 +912,10 @@ namespace FamilyExplorer
             {
                 SelectedRelationship = relationship;
                 SelectedRelationship.Selected = true;
+            }
+            else
+            {
+                SelectedRelationship = null;
             }
         }
 

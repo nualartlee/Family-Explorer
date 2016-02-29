@@ -165,17 +165,37 @@ namespace FamilyExplorer
                 }
             }
         }
+        
+        public string Reciprocal
+        {
+            get
+            {
+                PersonView selected = FamilyView.Instance.SelectedPerson;
+                if (selected != null)
+                {
+                    if (selected == PersonSource) { return PersonDestination.FirstName; }
+                    else { return PersonSource.FirstName; }
+                }
+                else
+                {
+                    return null;
+                }
+                
+            }
+            set { }           
+        }
 
         private bool ended = false;
         public bool Ended
         {
-            get { return EndDate == null; }
+            get { return ended; }
             set
             {
                 if (value != ended)
                 {
                     if (ended == true) { EndDate = DateTime.Now; }
                     else { EndDate = null; }
+                    ended = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -280,10 +300,12 @@ namespace FamilyExplorer
             int destinationId = id % 1000;
             int sourceId = ((id - destinationId) / 1000) % 1000;
             int tp = (id - sourceId * 1000 - destinationId) / 1000000;
-
-            PersonDestination = FamilyView.Instance.GetPerson(destinationId);
-            PersonSource = FamilyView.Instance.GetPerson(sourceId);
             Type = tp;
+            PersonDestination = FamilyView.Instance.GetPerson(destinationId);
+            PersonDestination.AddRelationship(this);
+            PersonSource = FamilyView.Instance.GetPerson(sourceId);
+            PersonSource.AddRelationship(this);
+            
         }
 
         public void ResetAllData()
