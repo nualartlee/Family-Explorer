@@ -165,24 +165,19 @@ namespace FamilyExplorer
                 }
             }
         }
-        
+
+        private string reciprocal;
         public string Reciprocal
         {
-            get
+            get { return reciprocal; }
+            set
             {
-                PersonView selected = FamilyView.Instance.SelectedPerson;
-                if (selected != null)
+                if (value != reciprocal)
                 {
-                    if (selected == PersonSource) { return PersonDestination.FirstName; }
-                    else { return PersonSource.FirstName; }
+                    reciprocal = value;
+                    NotifyPropertyChanged();
                 }
-                else
-                {
-                    return null;
-                }
-                
             }
-            set { }           
         }
 
         private bool ended = false;
@@ -247,44 +242,32 @@ namespace FamilyExplorer
         public RelationshipView(int id)
         {
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
+            FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);           
         }
 
         public RelationshipView(int id, DateTime? start, DateTime? end)
         {
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
+            FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);
             if (start != null) { StartDate = (DateTime)start; }
             if (end != null) { EndDate = (DateTime)end; }                        
         }        
         
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-           //if (e.PropertyName == "PersonSourceId") { PersonSource = FamilyView.Instance.GetPerson(PersonSourceId); }
-           //if (e.PropertyName == "PersonDestinationId") { PersonDestination = FamilyView.Instance.GetPerson(PersonDestinationId); }
+        {          
             if (e.PropertyName == "PersonSource")
             {
-                SubscribeToSourcePersonEvents();
-                //PersonSourceId = PersonSource.Id;
+                PersonSource.PropertyChanged += new PropertyChangedEventHandler(SourcePersonPropertyChangedHandler);
             }
             if (e.PropertyName == "PersonDestination")
             {
-                SubscribeToDestinationPersonEvents();
-                //PersonDestinationId = personDestination.Id;
+                PersonDestination.PropertyChanged += new PropertyChangedEventHandler(DestinationPersonPropertyChangedHandler);
             }
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }           
-        }
-
-        private void SubscribeToSourcePersonEvents()
-        {
-            PersonSource.PropertyChanged += new PropertyChangedEventHandler(SourcePersonPropertyChangedHandler);
-        }
-
-        private void SubscribeToDestinationPersonEvents()
-        {
-            PersonDestination.PropertyChanged += new PropertyChangedEventHandler(DestinationPersonPropertyChangedHandler);
-        }
-
+        }       
+      
         private void SourcePersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
@@ -295,8 +278,14 @@ namespace FamilyExplorer
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
         }
 
+        private void FamilyViewPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            //if (e.PropertyName == "SelectedPerson") { SetReciprocal(); }
+        }
+
         private void GetDataFromId(int id)
-        {           
+        {
+            if (id < 1000000) { return; }
             int destinationId = id % 1000;
             int sourceId = ((id - destinationId) / 1000) % 1000;
             int tp = (id - sourceId * 1000 - destinationId) / 1000000;
@@ -313,6 +302,7 @@ namespace FamilyExplorer
             SetHeaderDescription();
             SetPersonDescriptions();
             SetDateDescriptions();
+            SetReciprocal();
             SetPath();
             PathThickness = Settings.Instance.Relationship.PathThickness;
             PathColor = Settings.Instance.Relationship.PathColor(Type);
@@ -487,6 +477,22 @@ namespace FamilyExplorer
                     EndDateDescription = "";
                     break;
 
+            }
+        }
+
+        private void SetReciprocal()
+        {
+            PersonView selected = FamilyView.Instance.SelectedPerson;
+            if (selected != null)
+            {
+                if (PersonSource != null)
+                {
+                    if (selected == PersonSource) { Reciprocal = PersonDestination.FirstName; }                    
+                }
+                if (PersonDestination != null)
+                {
+                    if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }                    
+                }
             }
         }
 

@@ -38,7 +38,7 @@ namespace FamilyExplorer
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
+        }        
 
         private static FamilyView instance = null;
         private static readonly object padlock = new object();
@@ -308,14 +308,18 @@ namespace FamilyExplorer
             AddPersonToFamily(newSibling);
 
             // Create new relationships
+
+            // With Person
             CreateRelationship(3, person, newSibling, newSibling.DOB, null);
 
+            // With person's existing siblings
             foreach (RelationshipView siblingRelationship in person.SiblingRelationships)
             {
                 if (person != siblingRelationship.PersonDestination) { CreateRelationship(3, siblingRelationship.PersonDestination, newSibling, newSibling.DOB, null); }
-                else {  }
+                else { CreateRelationship(3, siblingRelationship.PersonSource, newSibling, newSibling.DOB, null); }
             }
 
+            // With person's mother & her children
             if (person.MotherRelationship != null)
             {
                 PersonView mom = person.MotherRelationship.PersonSource;
@@ -326,6 +330,7 @@ namespace FamilyExplorer
                 CreateRelationship(1, mom, newSibling, newSibling.DOB, null);
             }
 
+            // With person's father & his children
             if (person.FatherRelationship != null)
             {
                 PersonView dad = person.FatherRelationship.PersonSource;
@@ -966,6 +971,7 @@ namespace FamilyExplorer
         private void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
         {
 
+            if (personSource == personDestination) { return; }
             int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
             RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
             if (relationship != null)
