@@ -973,6 +973,7 @@ namespace FamilyExplorer
 
             if (personSource == personDestination) { return; }
             int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
+            
             RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
             if (relationship != null)
             {

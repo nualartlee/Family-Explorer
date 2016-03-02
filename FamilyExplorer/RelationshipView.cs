@@ -49,7 +49,7 @@ namespace FamilyExplorer
                 if (value != path)
                 {
                     path = value;
-                    NotifyPropertyChanged();                    
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -151,7 +151,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        
+
         private string endDateDescription;
         public string EndDateDescription
         {
@@ -200,20 +200,20 @@ namespace FamilyExplorer
         {
 
             get
-            {                
-                    switch (Type)
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                            return false;
-                        case 4:
-                        case 5:
-                        case 6:
-                            return true;
-                        default:
-                            return false;
-                    }               
+            {
+                switch (Type)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        return false;
+                    case 4:
+                    case 5:
+                    case 6:
+                        return true;
+                    default:
+                        return false;
+                }
             }
         }
 
@@ -221,21 +221,21 @@ namespace FamilyExplorer
         {
             get
             {
-               
-                    switch (Type)
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                            return false;
-                        case 4:
-                        case 5:
-                        case 6:
-                            return true;
-                        default:
-                            return false;
-                    }
-               
+
+                switch (Type)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        return false;
+                    case 4:
+                    case 5:
+                    case 6:
+                        return true;
+                    default:
+                        return false;
+                }
+
             }
         }
 
@@ -243,7 +243,7 @@ namespace FamilyExplorer
         {
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
-            GetDataFromId(id);           
+            GetDataFromId(id);
         }
 
         public RelationshipView(int id, DateTime? start, DateTime? end)
@@ -252,11 +252,11 @@ namespace FamilyExplorer
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);
             if (start != null) { StartDate = (DateTime)start; }
-            if (end != null) { EndDate = (DateTime)end; }                        
-        }        
-        
+            if (end != null) { EndDate = (DateTime)end; }
+        }
+
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {          
+        {
             if (e.PropertyName == "PersonSource")
             {
                 PersonSource.PropertyChanged += new PropertyChangedEventHandler(SourcePersonPropertyChangedHandler);
@@ -265,9 +265,9 @@ namespace FamilyExplorer
             {
                 PersonDestination.PropertyChanged += new PropertyChangedEventHandler(DestinationPersonPropertyChangedHandler);
             }
-            if (PersonSource != null && PersonDestination != null) { ResetAllData(); }           
-        }       
-      
+            if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
+        }
+
         private void SourcePersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
@@ -286,6 +286,7 @@ namespace FamilyExplorer
         private void GetDataFromId(int id)
         {
             if (id < 1000000) { return; }
+            Id = id;
             int destinationId = id % 1000;
             int sourceId = ((id - destinationId) / 1000) % 1000;
             int tp = (id - sourceId * 1000 - destinationId) / 1000000;
@@ -294,7 +295,7 @@ namespace FamilyExplorer
             PersonDestination.AddRelationship(this);
             PersonSource = FamilyView.Instance.GetPerson(sourceId);
             PersonSource.AddRelationship(this);
-            
+
         }
 
         public void ResetAllData()
@@ -306,6 +307,8 @@ namespace FamilyExplorer
             SetPath();
             PathThickness = Settings.Instance.Relationship.PathThickness;
             PathColor = Settings.Instance.Relationship.PathColor(Type);
+            PersonSource.AddRelationship(this);
+            PersonDestination.AddRelationship(this);
         }
 
         private void SetHeaderDescription()
@@ -478,7 +481,7 @@ namespace FamilyExplorer
                     break;
 
             }
-        }
+        }       
 
         private void SetReciprocal()
         {
@@ -487,11 +490,11 @@ namespace FamilyExplorer
             {
                 if (PersonSource != null)
                 {
-                    if (selected == PersonSource) { Reciprocal = PersonDestination.FirstName; }                    
+                    if (selected == PersonSource) { Reciprocal = PersonDestination.FirstName; }
                 }
                 if (PersonDestination != null)
                 {
-                    if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }                    
+                    if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }
                 }
             }
         }
@@ -500,7 +503,7 @@ namespace FamilyExplorer
 
         public void SetPath()
         {
-            
+            if (PersonSource.X == PersonSource.Y && PersonSource.Y == PersonDestination.X && PersonDestination.X == PersonDestination.Y) { return; }
             double width = Settings.Instance.Person.Width;
             double height = Settings.Instance.Person.Height;
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
@@ -508,9 +511,11 @@ namespace FamilyExplorer
             double offset = Settings.Instance.Relationship.PathOffset(Type);
             double margin = Settings.Instance.Person.Margin;
             double radius = Settings.Instance.Relationship.PathCornerRadius;
-            
+
             Point origin = new Point(PersonSource.X + width / 2, PersonSource.Y + height / 2);
             Point destination = new Point(PersonDestination.X + width / 2, PersonDestination.Y + height / 2);
+
+            if (origin == destination) { return; }
 
             int generationCrossings = PersonDestination.GenerationIndex - PersonSource.GenerationIndex;
             bool descending = (generationCrossings > 0);
@@ -563,9 +568,10 @@ namespace FamilyExplorer
                 if (descending) { points.Add(GetNextDownwardsPoint(points.Last(), destination, offset)); }
                 else if (level) { points.Add(GetNextLevelPoint(points.Last(), destination, offset)); }
                 else { { points.Add(GetNextUpwardsPoint(points.Last(), destination, offset)); } }
+                if (points.Count() > 500) { return; }
             }
 
-            Path = SmoothenPath(points);           
+            Path = SmoothenPath(points);
         }
 
         private string SmoothenPath(List<Point> points)
@@ -786,7 +792,7 @@ namespace FamilyExplorer
             double space = Settings.Instance.Person.VerticalSpace;
             double margin = Settings.Instance.Person.Margin;
             double location = point.Y % (height + space);
-            bool positive = location >= 0;
+            bool positive = location >= -margin;
             if (positive)
             {
                 if (location == height + margin) { return 1; } // Person bottom

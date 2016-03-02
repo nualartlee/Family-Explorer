@@ -354,152 +354,156 @@
                     <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="PersonDataGrid" Grid.Row="0" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}"
+                <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}"
                   Visibility="{Binding ElementName=PersonListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
-                  HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="300"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                  HorizontalAlignment="Center" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
                         BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,20,4,4">
-                        <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
-                    </Border>
-                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                            <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="4,10,4,4" >
-                        <StackPanel>
-                            <Label Margin="4" Content="First Name: " />
-                            <TextBox Margin="4" Text="{Binding FirstName}" AcceptsReturn="False"/>
-                            <Label Margin="4" Content="Last Name: " />
-                            <TextBox Margin="4" Text="{Binding LastName}" AcceptsReturn="False"/>
-                            <StackPanel Margin="4" Orientation="Horizontal">
-                                <Label Margin="4" Content="Gender: " />
-                                <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
+                            <StackPanel>
+                                <Label Margin="4" Content="First Name: " />
+                                <TextBox Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                                <Label Margin="4" Content="Last Name: " />
+                                <TextBox Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                                <StackPanel Margin="4" Orientation="Horizontal">
+                                    <Label Margin="4" Content="Gender: " />
+                                    <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
+                                </StackPanel>
+                                <StackPanel Margin="4" Orientation="Horizontal">
+                                    <Label Margin="4" Content="Birthdate: " />
+                                    <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Margin="4,0,0,0" Content="Mother:" />
+                                    <Label DataContext="{Binding MotherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Margin="4,0,0,0" Content="Father:" />
+                                    <Label DataContext="{Binding FatherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <Label Margin="4,0,0,0" Content="Siblings:" />
+                                    <ItemsControl ItemsSource="{Binding SiblingRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Margin="4">
+                                    <Label Margin="4" Content="Friends:" />
+                                    <ItemsControl ItemsSource="{Binding FriendRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Margin="4">
+                                    <Label Margin="4" Content="Partners:" />
+                                    <ItemsControl ItemsSource="{Binding PartnerRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Margin="4">
+                                    <Label Margin="4" Content="Children:" />
+                                    <ItemsControl ItemsSource="{Binding ChildRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Margin="4">
+                                    <Label Margin="4" Content="Abusers:" />
+                                    <ItemsControl ItemsSource="{Binding AbuserRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Margin="4">
+                                    <Label Margin="4" Content="Victims:" />
+                                    <ItemsControl ItemsSource="{Binding VictimRelationships}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel Margin="4" Orientation="Horizontal">
-                                <Label Margin="4" Content="Birthdate: " />
-                                <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Margin="4" Content="Mother:" />
-                                <Label Margin="4"  DataContext="{Binding MotherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Margin="4" Content="Father:" />
-                                <Label Margin="4"  DataContext="{Binding FatherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Siblings:" />
-                                <ItemsControl ItemsSource="{Binding SiblingRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Friends:" />
-                                <ItemsControl ItemsSource="{Binding FriendRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Partners:" />
-                                <ItemsControl ItemsSource="{Binding PartnerRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Children:" />
-                                <ItemsControl ItemsSource="{Binding ChildRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Abusers:" />
-                                <ItemsControl ItemsSource="{Binding AbuserRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="4">
-                                <Label Margin="4" Content="Victims:" />
-                                <ItemsControl ItemsSource="{Binding VictimRelationships}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
 
-                </Grid>
+                    </Grid>
+                </ScrollViewer>
 
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch"/>
 
-                <Grid x:Name="RelationshipDataGrid" Grid.Row="2" Background="Azure" DataContext="{Binding SelectedRelationship}"
+                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="RelationshipDataGrid" Background="Azure" DataContext="{Binding SelectedRelationship}"
                   Visibility="{Binding Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="300"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="3"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="3"
                         BorderBrush="{Binding PathColor}" Background="White" Margin="4,20,4,4">
-                        <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
-                    </Border>
-                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                            <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
                         BorderBrush="Gray" Background="White" Margin="4,10,4,4" >
-                        <StackPanel>
-                            <Label Margin="4" Content="{Binding SourceDescription}" />
-                            <Label Margin="4" Content="{Binding DestinationDescription}" />
-                            <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
-                                <Label Margin="4" Content="{Binding StartDateDescription}"/>
-                                <DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>
+                            <StackPanel>
+                                <Label Margin="4" Content="{Binding SourceDescription}" />
+                                <Label Margin="4" Content="{Binding DestinationDescription}" />
+                                <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
+                                    <Label Margin="4" Content="{Binding StartDateDescription}"/>
+                                    <DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>
+                                </StackPanel>
+                                <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
+                                    <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Label Margin="4" Content="{Binding EndDateDescription}" />
+                                    <DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>
+                                </StackPanel>
+                                <Label Margin="4" Content="Notes:" />
+                                <TextBox Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
                             </StackPanel>
-                            <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
-                                <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label Margin="4" Content="{Binding EndDateDescription}" />
-                                <DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>
-                            </StackPanel>
-                            <Label Margin="4" Content="Notes:" />
-                            <TextBox Margin="4" Text="{Binding Notes}" AcceptsReturn="True"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
+                        </Border>
+                    </Grid>
+                </ScrollViewer >
+                
             </Grid>
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
