@@ -222,6 +222,7 @@ namespace FamilyExplorer
 
         #region Commands
 
+
         public void AddMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             PersonView person = (PersonView)e.Parameter;
@@ -241,7 +242,7 @@ namespace FamilyExplorer
             AddMotherToPerson(person);
         }
 
-        private void AddMotherToPerson(PersonView child)
+        public void AddMotherToPerson(PersonView child)
         {
             PersonView mom = new PersonView(GetNextID());
             
@@ -926,16 +927,31 @@ namespace FamilyExplorer
 
         public void SelectPerson(PersonView person)
         {
-            SelectedPerson.Selected = false;
+
+            if (SelectedPerson != null)
+            {
+                SelectedPerson.Selected = false;
+            }
             if (person != null)
             {
                 SelectedPerson = person;
-                SelectedPerson.Selected = true;                
+                SelectedPerson.Selected = true;
             }
             else
             {
                 SelectedPerson = null;
             }
+
+            //SelectedPerson.Selected = false;
+            //if (person != null)
+            //{
+            //    SelectedPerson = person;
+            //    SelectedPerson.Selected = true;                
+            //}
+            //else
+            //{
+            //    SelectedPerson = null;
+            //}
         }        
 
         #endregion Commands

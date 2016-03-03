@@ -9,104 +9,6 @@
 
     <Window.Resources>
 
-        <Style TargetType="{x:Type ListBox}" x:Key="PersonListBoxStyle">
-            <Style.Resources>
-                <!-- Style used if item is selected and listbox has keyboard focus -->
-                <Style x:Key="NoFocusVisualStyle" TargetType="Control">
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                </Style>
-                <!-- Apply this style -->
-                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
-                    <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
-                </Style>
-                <!-- Color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                <!-- Color used if item is selected and listbox does not have focus -->
-                <SolidColorBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
-                <!-- Font color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-            </Style.Resources>
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBox}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-                            </Trigger>
-                            <Trigger Property="IsGrouping" Value="true">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type ListBox}" x:Key="RelationshipListBoxStyle">
-            <Style.Resources>
-                <!-- Style used if item is selected and listbox has keyboard focus -->
-                <Style x:Key="NoFocusVisualStyle" TargetType="Control">
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Background" Value="{x:Null}"/>
-                </Style>
-                <!-- Apply this style -->
-                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
-                    <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Background" Value="{x:Null}"/>
-                </Style>
-                <!-- Color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                <!-- Color used if item is selected and listbox does not have focus -->
-                <SolidColorBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
-                <!-- Font color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-            </Style.Resources>
-            <Setter Property="Background" Value="{x:Null}"/>
-            <!--<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>-->
-            <Setter Property="BorderBrush" Value="{x:Null}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="{x:Null}"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBox}">
-                        <Border x:Name="Bd" BorderBrush="{x:Null}" Background="{x:Null}" Padding="1" SnapsToDevicePixels="true">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" Value="{x:Null}"/>
-                                <Setter Property="Background" TargetName="Bd" Value="{x:Null}"/>
-                                -->
-            <!--<Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>-->
-            <!--
-                            </Trigger>
-                            <Trigger Property="IsGrouping" Value="true">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
-        </Style>
-
         <DataTemplate x:Key="PersonItem">
             <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="2" BorderBrush="Transparent" Background="Transparent" 
                     Width="{Binding Width}" Height="{Binding Height}">
@@ -118,7 +20,7 @@
                             <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Add">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                <MenuItem Header="Mother" Command="{Binding AddMother}" />
                                 <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                                 <MenuItem Header="Sibling">
                                     <MenuItem Header="Same Parents" Command="self:CustomCommands.AddSiblingEqualParents" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
@@ -215,89 +117,12 @@
             </Border>
         </DataTemplate>
 
-        <Style TargetType="{x:Type ListBoxItem}" x:Key="PersonContainerStyle">
-            <Setter Property="ContentTemplate" Value="{StaticResource PersonItem}" />
-            <Setter Property="Canvas.Left" Value="{Binding X}" />
-            <Setter Property="Canvas.Top" Value="{Binding Y}" />
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource PersonItemSelected}" />
-                    <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
-                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        
-            <DataTemplate x:Key="RelationshipItem">
-                <!--<Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" Panel.ZIndex="{Binding ZIndex}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown">
-                -->
-                <!--<Path.Style>
-                    <Style TargetType="{x:Type ContentPresenter}">
-                        <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}" />
-                            </Trigger>
-                        </Style.Triggers>
-                       </Style>
-                </Path.Style>-->
-                <!--
-            </Path>-->
-           
-        <Canvas Background="{x:Null}">
-                    <Path Data="{Binding Path}" StrokeThickness="{Binding SelectedPathThickness}" Stroke="{Binding SelectedPathColor}" Fill="{x:Null}"  MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                    <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                </Canvas>
-            </DataTemplate>
-       
-
-        <DataTemplate x:Key="RelationshipItemSelected">
-            
-                <Grid Background="{x:Null}">
-                <Path Data="{Binding Path}" StrokeThickness="8" Stroke="LightGreen" Fill="{x:Null}"/>
-                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}"/>
-            </Grid>
+        <DataTemplate x:Key="RelationshipItem">
+            <Canvas Background="{x:Null}">
+                <Path Data="{Binding Path}" StrokeThickness="{Binding SelectedPathThickness}" Stroke="{Binding SelectedPathColor}" Fill="{x:Null}"  MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+            </Canvas>
         </DataTemplate>
-
-        <Style TargetType="{x:Type ListBoxItem}" x:Key="RelationshipContainerStyle">
-            <Style.Resources>
-                <!-- Style used if item is selected and listbox has keyboard focus -->
-                <Style x:Key="NoFocusVisualStyle" TargetType="Control">
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Background" Value="{x:Null}"/>
-                </Style>
-                <!-- Apply this style -->
-                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
-                    <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Background" Value="{x:Null}"/>
-                </Style>
-                <!-- Color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                <!-- Color used if item is selected and listbox does not have focus -->
-                <SolidColorBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
-                <!-- Font color used if item is selected and listbox has focus -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-
-            </Style.Resources>
-            <Setter Property="Background" Value="{x:Null}"/>
-            <Setter Property="BorderBrush" Value="{x:Null}" />
-            <Setter Property="ContentTemplate" Value="{StaticResource RelationshipItem}" />
-            <!--<Setter Property="FocusVisualStyle" Value="{x:Null}" />-->
-            <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{x:Null}"/>
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                    <Setter Property="ContentTemplate" Value="{StaticResource RelationshipItemSelected}" />
-                    <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
-                    <!--<Setter Property="FocusVisualStyle" Value="{x:Null}" />-->
-                    <Setter Property="FocusVisualStyle" Value="{StaticResource NoFocusVisualStyle}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
 
         <converters:IsItemSelected x:Key="IsItemSelected"/>
         <converters:IsItemVisible x:Key="IsItemVisible"/>
@@ -376,8 +201,8 @@
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                    <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding ElementName=PersonListBox, Path=SelectedItem}"
-                  Visibility="{Binding ElementName=PersonListBox, Path=SelectedItem, Converter={StaticResource IsItemSelected}}"
+                    <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding SelectedPerson}"
+                   Visibility="{Binding Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -531,10 +356,12 @@
 
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                           MouseMove="TreeScrollViewer_MouseMove" >
+                
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
-                    <Canvas Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
+                    
+                    <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
 
-                        <ItemsControl Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                        <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Relationships}"
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource RelationshipItem}" >
                             <ItemsControl.ItemsPanel>
@@ -548,24 +375,27 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
-                        <ListBox x:Name="PersonListBox" Style="{StaticResource PersonListBoxStyle}" BorderBrush="Black" Background="{x:Null}"                               
-                         Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"                         
-                         ItemsSource="{Binding Members}" ItemContainerStyle="{StaticResource PersonContainerStyle}"                              
-                         Cursor="{Binding FamilyTreeCursor}" SelectionMode="Single">
-                            <ListBox.ItemsPanel>
+
+                        <ItemsControl x:Name="PersonItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                                      ItemsSource="{Binding Members}"
+                                      Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource PersonItem}" >
+                            <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas x:Name="PersonListBoxCanvas" IsItemsHost="True" Background="{x:Null}"/>
+                                    <Canvas IsItemsHost="True" Background="{x:Null}"/>
                                 </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-
-                        </ListBox>
-
-
-
-
-
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                        
                     </Canvas>
+                    
                 </Border>
+                
             </ScrollViewer>
 
             <Popup x:Name="SetCommandPopup" Grid.Column="2" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=TreeScrollViewer}" >

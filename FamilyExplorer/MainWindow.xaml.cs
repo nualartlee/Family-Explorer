@@ -242,7 +242,7 @@ namespace FamilyExplorer
 
             FrameworkElement personItem = (FrameworkElement)sender;
             family.SelectPerson((PersonView)personItem.DataContext);
-            //e.Handled = true;
+            e.Handled = true;
         }
 
         #endregion Person Commands
@@ -294,8 +294,9 @@ namespace FamilyExplorer
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Canvas ItemCanvas = FindChild<Canvas>(PersonListBox, "PersonListBoxCanvas");
-            PrintPreview(ItemCanvas, PersonListBox.ActualWidth, PersonListBox.ActualHeight);
+            //Canvas TreeCanvas = FindChild<Canvas>(PersonItemsControl, "PersonListBoxCanvas");
+            //PrintPreview(ItemCanvas, PersonListBox.ActualWidth, PersonListBox.ActualHeight);
+            PrintPreview(TreeCanvas, TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);
         }
 
         private void PrintView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -444,7 +445,8 @@ namespace FamilyExplorer
         private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //RelationshipListBox.SelectedItem = null;
-            PersonListBox.SelectedItem = null;
+            //PersonListBox.SelectedItem = null;
+            family.SelectPerson(null);
             family.SelectRelationship(null);
         }
 
