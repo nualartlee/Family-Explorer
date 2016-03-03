@@ -68,6 +68,20 @@ namespace FamilyExplorer
             }
         }
 
+        private double selectedPathThickness = 8;
+        public double SelectedPathThickness
+        {
+            get { return selectedPathThickness; }
+            set
+            {
+                if (value != selectedPathThickness)
+                {
+                    selectedPathThickness = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private string pathColor;
         public string PathColor
         {
@@ -77,6 +91,34 @@ namespace FamilyExplorer
                 if (value != pathColor)
                 {
                     pathColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string selectedPathColor;
+        public string SelectedPathColor
+        {
+            get { return selectedPathColor; }
+            set
+            {
+                if (value != selectedPathColor)
+                {
+                    selectedPathColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private int zIndex;
+        public int ZIndex
+        {
+            get { return zIndex; }
+            set
+            {
+                if (value != zIndex)
+                {
+                    zIndex = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -260,11 +302,19 @@ namespace FamilyExplorer
             if (e.PropertyName == "PersonSource")
             {
                 PersonSource.PropertyChanged += new PropertyChangedEventHandler(SourcePersonPropertyChangedHandler);
+                PersonSource.AddRelationship(this);
             }
             if (e.PropertyName == "PersonDestination")
             {
                 PersonDestination.PropertyChanged += new PropertyChangedEventHandler(DestinationPersonPropertyChangedHandler);
+                PersonDestination.AddRelationship(this);
             }
+
+            if (e.PropertyName == "Selected")
+            {
+                SetZIndex();
+            }
+
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
         }
 
@@ -306,9 +356,9 @@ namespace FamilyExplorer
             SetReciprocal();
             SetPath();
             PathThickness = Settings.Instance.Relationship.PathThickness;
-            PathColor = Settings.Instance.Relationship.PathColor(Type);
-            PersonSource.AddRelationship(this);
-            PersonDestination.AddRelationship(this);
+            SelectedPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
+            PathColor = Settings.Instance.Relationship.PathColor(Type);            
+            SelectedPathColor = Selected ? Settings.Instance.Relationship.SelectedPathColor : "Transparent";           
         }
 
         private void SetHeaderDescription()
@@ -497,6 +547,14 @@ namespace FamilyExplorer
                     if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }
                 }
             }
+        }
+
+        private void SetZIndex()
+        {
+            ZIndex = 1;
+            if (PersonSource.Selected) { ZIndex = 2; }
+            if (PersonDestination.Selected) { ZIndex = 2; }
+            if (Selected) { ZIndex = 3; }
         }
 
         #region Path

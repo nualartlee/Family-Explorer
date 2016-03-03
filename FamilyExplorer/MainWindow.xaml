@@ -229,12 +229,33 @@
             </Style.Triggers>
         </Style>
 
-        <DataTemplate x:Key="RelationshipItem">
-            <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-        </DataTemplate>
+        
+            <DataTemplate x:Key="RelationshipItem">
+                <!--<Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" Panel.ZIndex="{Binding ZIndex}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown">
+                -->
+                <!--<Path.Style>
+                    <Style TargetType="{x:Type ContentPresenter}">
+                        <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}" />
+                            </Trigger>
+                        </Style.Triggers>
+                       </Style>
+                </Path.Style>-->
+                <!--
+            </Path>-->
+           
+        <Canvas Background="{x:Null}">
+                    <Path Data="{Binding Path}" StrokeThickness="{Binding SelectedPathThickness}" Stroke="{Binding SelectedPathColor}" Fill="{x:Null}"  MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                    <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                </Canvas>
+            </DataTemplate>
+       
 
         <DataTemplate x:Key="RelationshipItemSelected">
-            <Grid Background="{x:Null}">
+            
+                <Grid Background="{x:Null}">
                 <Path Data="{Binding Path}" StrokeThickness="8" Stroke="LightGreen" Fill="{x:Null}"/>
                 <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}"/>
             </Grid>
@@ -521,6 +542,11 @@
                                     <Canvas x:Name="RelationshipCanvas" IsItemsHost="True" Background="{x:Null}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
                         <ListBox x:Name="PersonListBox" Style="{StaticResource PersonListBoxStyle}" BorderBrush="Black" Background="{x:Null}"                               
                          Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"                         

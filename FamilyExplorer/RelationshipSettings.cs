@@ -32,6 +32,21 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private double selectedPathThickness = 8;
+        public double SelectedPathThickness
+        {
+            get { return selectedPathThickness; }
+            set
+            {
+                if (value != selectedPathThickness)
+                {
+                    selectedPathThickness = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private double pathCornerRadius = 5;
         public double PathCornerRadius
         {
@@ -247,6 +262,20 @@ namespace FamilyExplorer
                     return PathColorAbuse;
                 default:
                     return "";
+            }
+        }
+
+        private string selectedPathColor = "Green";
+        public string SelectedPathColor
+        {
+            get { return selectedPathColor; }
+            set
+            {
+                if (value != selectedPathColor)
+                {
+                    selectedPathColor = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
