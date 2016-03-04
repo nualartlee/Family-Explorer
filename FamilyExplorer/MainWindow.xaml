@@ -21,17 +21,17 @@
                             <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
                             <MenuItem Header="Add">
                                 <MenuItem Header="Mother" Command="{Binding AddMother}" />
-                                <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                <MenuItem Header="Father" Command="{Binding AddFather}"/>
                                 <MenuItem Header="Sibling">
-                                    <MenuItem Header="Same Parents" Command="self:CustomCommands.AddSiblingEqualParents" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                    <MenuItem Header="Same Mother" Command="self:CustomCommands.AddSiblingByMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                    <MenuItem Header="Same Father" Command="self:CustomCommands.AddSiblingByFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                    <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}"/>
+                                    <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}"/>
+                                    <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}"/>
                                 </MenuItem>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                <MenuItem Header="Friend" Command="{Binding AddFriend}" />
+                                <MenuItem Header="Partner" Command="{Binding AddPartner}"/>
+                                <MenuItem Header="Child" Command="{Binding AddChild}"/>
+                                <MenuItem Header="Abuser" Command="{Binding AddAbuser}"/>
+                                <MenuItem Header="Victim"  Command="{Binding AddVictim}"/>
                             </MenuItem>
                             <MenuItem Header="Set">
                                 <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
@@ -137,16 +137,7 @@
         <CommandBinding Command="self:CustomCommands.CenterTree" CanExecute="CenterTree_CanExecute" Executed="CenterTree_Executed"/>
         <CommandBinding Command="self:CustomCommands.Edit" />
         <CommandBinding Command="self:CustomCommands.Delete" />
-        <CommandBinding Command="self:CustomCommands.AddMother" CanExecute="AddMother_CanExecute" Executed="AddMother_Executed" />
-        <CommandBinding Command="self:CustomCommands.AddFather" CanExecute="AddFather_CanExecute" Executed="AddFather_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddSiblingEqualParents" CanExecute="AddSiblingEqualParents_CanExecute" Executed="AddSiblingEqualParents_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddSiblingByMother" CanExecute="AddSiblingByMother_CanExecute" Executed="AddSiblingByMother_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddSiblingByFather" CanExecute="AddSiblingByFather_CanExecute" Executed="AddSiblingByFather_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddFriend" CanExecute="AddFriend_CanExecute" Executed="AddFriend_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddPartner" CanExecute="AddPartner_CanExecute" Executed="AddPartner_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddChild" CanExecute="AddChild_CanExecute" Executed="AddChild_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddAbuser" CanExecute="AddAbuser_CanExecute" Executed="AddAbuser_Executed"/>
-        <CommandBinding Command="self:CustomCommands.AddVictim" CanExecute="AddVictim_CanExecute" Executed="AddVictim_Executed"/>
+                    
         <CommandBinding Command="self:CustomCommands.SetMother" CanExecute="SetMother_CanExecute" Executed="SetMother_Executed"/>
         <CommandBinding Command="self:CustomCommands.SetFather" CanExecute="SetFather_CanExecute" Executed="SetFather_Executed"/>
         <CommandBinding Command="self:CustomCommands.SetFriend" CanExecute="SetFriend_CanExecute" Executed="SetFriend_Executed"/>
