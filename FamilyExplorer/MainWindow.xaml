@@ -34,13 +34,13 @@
                                 <MenuItem Header="Victim"  Command="{Binding AddVictim}"/>
                             </MenuItem>
                             <MenuItem Header="Set">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                                <MenuItem Header="Mother" Command="{Binding SetMother}"/>
+                                <MenuItem Header="Father" Command="{Binding SetFather}"/>
+                                <MenuItem Header="Friend" Command="{Binding SetFriend}"/>
+                                <MenuItem Header="Partner" Command="{Binding SetPartner}"/>
+                                <MenuItem Header="Child" Command="{Binding SetChild}"/>
+                                <MenuItem Header="Abuser" Command="{Binding SetAbuser}"/>
+                                <MenuItem Header="Victim" Command="{Binding SetVictim}"/>
                             </MenuItem>
                         </ContextMenu>
                     </Border.ContextMenu>
@@ -137,14 +137,6 @@
         <CommandBinding Command="self:CustomCommands.CenterTree" CanExecute="CenterTree_CanExecute" Executed="CenterTree_Executed"/>
         <CommandBinding Command="self:CustomCommands.Edit" />
         <CommandBinding Command="self:CustomCommands.Delete" />
-                    
-        <CommandBinding Command="self:CustomCommands.SetMother" CanExecute="SetMother_CanExecute" Executed="SetMother_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetFather" CanExecute="SetFather_CanExecute" Executed="SetFather_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetFriend" CanExecute="SetFriend_CanExecute" Executed="SetFriend_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetPartner" CanExecute="SetPartner_CanExecute" Executed="SetPartner_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetChild" CanExecute="SetChild_CanExecute" Executed="SetChild_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetAbuser" CanExecute="SetAbuser_CanExecute" Executed="SetAbuser_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SetVictim" CanExecute="SetVictim_CanExecute" Executed="SetVictim_Executed"/>
     </Window.CommandBindings>
 
     <Grid>

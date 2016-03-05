@@ -54,77 +54,7 @@ namespace FamilyExplorer
             this.DataContext = family;
         }
 
-        #region Person Commands       
-       
-        private void SetMother_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetMother_CanExecute(sender, e);
-        }
-
-        private void SetMother_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetMother_Executed(sender, e);
-        }
-
-        private void SetFather_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetFather_CanExecute(sender, e);
-        }
-
-        private void SetFather_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetFather_Executed(sender, e);
-        }
-
-        private void SetFriend_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetFriend_CanExecute(sender, e);
-        }
-
-        private void SetFriend_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetFriend_Executed(sender, e);
-        }
-
-        private void SetPartner_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetPartner_CanExecute(sender, e);
-        }
-
-        private void SetPartner_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetPartner_Executed(sender, e);
-        }
-
-        private void SetChild_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetChild_CanExecute(sender, e);
-        }
-
-        private void SetChild_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetChild_Executed(sender, e);
-        }
-
-        private void SetAbuser_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetAbuser_CanExecute(sender, e);
-        }
-
-        private void SetAbuser_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetAbuser_Executed(sender, e);
-        }
-
-        private void SetVictim_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            family.SetVictim_CanExecute(sender, e);
-        }
-
-        private void SetVictim_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.SetVictim_Executed(sender, e);
-        }
+        #region Person Commands              
 
         private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
         {            
@@ -138,10 +68,10 @@ namespace FamilyExplorer
 
         private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            family.FinalizeSetCommand((PersonView)((FrameworkElement)sender).DataContext);
 
-            FrameworkElement personItem = (FrameworkElement)sender;
-            family.SelectPerson((PersonView)personItem.DataContext);
+            PersonView clickedPerson = (PersonView)((FrameworkElement)sender).DataContext;
+            family.FinalizeSetCommand(clickedPerson);            
+            family.SelectPerson(clickedPerson);
             e.Handled = true;
         }
 
