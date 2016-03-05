@@ -265,7 +265,7 @@ namespace FamilyExplorer
             }
         }
 
-        private string selectedPathColor = "Green";
+        private string selectedPathColor = "LightGreen";
         public string SelectedPathColor
         {
             get { return selectedPathColor; }
@@ -279,7 +279,19 @@ namespace FamilyExplorer
             }
         }
 
-
+        private string highlightedPathColor = "Orange";
+        public string HighlightedPathColor
+        {
+            get { return highlightedPathColor; }
+            set
+            {
+                if (value != highlightedPathColor)
+                {
+                    highlightedPathColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }     
 
     }
 }

@@ -57,25 +57,27 @@ namespace FamilyExplorer
         #region Person Commands              
 
         private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
-        {            
-            family.EnterSetCommandRelation((PersonView)((FrameworkElement)sender).DataContext);
+        {
+            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+            person.MouseEnter();           
         }
 
         private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
         {
-            family.ExitSetCommandRelation();
+            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+            person.MouseLeave();
         }
 
         private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
-            PersonView clickedPerson = (PersonView)((FrameworkElement)sender).DataContext;
-            family.FinalizeSetCommand(clickedPerson);            
-            family.SelectPerson(clickedPerson);
+            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+            person.MouseLeftButtonDown();
             e.Handled = true;
         }
 
         #endregion Person Commands
+
+
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -282,10 +284,21 @@ namespace FamilyExplorer
 
         private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrameworkElement path = (FrameworkElement)sender;
-            family.SelectRelationship((RelationshipView)path.DataContext);
+            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+            relationship.MouseLeftButtonDown();
             e.Handled = true;
         }
-        
+
+        private void RelationshipItem_MouseEnter(object sender, MouseEventArgs e)
+        {
+            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+            relationship.MouseEnter();
+        }
+
+        private void RelationshipItem_MouseLeave(object sender, MouseEventArgs e)
+        {
+            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+            relationship.MouseLeave();
+        }
     }
 }

@@ -10,10 +10,10 @@
     <Window.Resources>
 
         <DataTemplate x:Key="PersonItem">
-            <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="2" BorderBrush="Transparent" Background="Transparent" 
+            <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
                     Width="{Binding Width}" Height="{Binding Height}">
                 <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
-                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}"
                     MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown">
                     <Border.ContextMenu>
                         <ContextMenu>
@@ -63,64 +63,12 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate x:Key="PersonItemSelected">
-            <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="2" BorderBrush="LightGreen" Background="LightGreen" 
-                    Width="{Binding Width}" Height="{Binding Height}">
-                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
-                        Background="{Binding Background}" CornerRadius="10" BorderThickness="5"
-                    MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown">
-                    <Border.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Add">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.AddMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.AddFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Sibling">
-                                    <MenuItem Header="Same Parents" Command="self:CustomCommands.AddSiblingEqualParents" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                    <MenuItem Header="Same Mother" Command="self:CustomCommands.AddSiblingByMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                    <MenuItem Header="Same Father" Command="self:CustomCommands.AddSiblingByFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                </MenuItem>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.AddFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.AddPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.AddChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.AddAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.AddVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                            <MenuItem Header="Set">
-                                <MenuItem Header="Mother" Command="self:CustomCommands.SetMother" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Father" Command="self:CustomCommands.SetFather" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Friend" Command="self:CustomCommands.SetFriend" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Partner" Command="self:CustomCommands.SetPartner" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Child" Command="self:CustomCommands.SetChild" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Abuser" Command="self:CustomCommands.SetAbuser" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                                <MenuItem Header="Victim" Command="self:CustomCommands.SetVictim" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Border.ContextMenu>
-                    <Viewbox Width="Auto" Height="Auto">
-                        <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="2*" />
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}" Foreground="{Binding TextColor}"/>
-                            <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
-                        </Grid>
-                    </Viewbox>
-                </Border>
-            </Border>
-        </DataTemplate>
-
         <DataTemplate x:Key="RelationshipItem">
             <Canvas Background="{x:Null}">
-                <Path Data="{Binding Path}" StrokeThickness="{Binding SelectedPathThickness}" Stroke="{Binding SelectedPathColor}" Fill="{x:Null}"  MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
-                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}"
+                      MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave"/>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}"
+                      MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave"/>
             </Canvas>
         </DataTemplate>
 
@@ -240,7 +188,7 @@
                                     <ItemsControl ItemsSource="{Binding FriendRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -250,7 +198,7 @@
                                     <ItemsControl ItemsSource="{Binding PartnerRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -260,7 +208,7 @@
                                     <ItemsControl ItemsSource="{Binding ChildRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -270,7 +218,7 @@
                                     <ItemsControl ItemsSource="{Binding AbuserRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                <Label Margin="15,0,0,0" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -280,7 +228,7 @@
                                     <ItemsControl ItemsSource="{Binding VictimRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="2"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                <Label Margin="15,0,0,0" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>

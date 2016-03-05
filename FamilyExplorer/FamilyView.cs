@@ -526,7 +526,6 @@ namespace FamilyExplorer
 
         public void SelectPerson(PersonView person)
         {
-
             if (SelectedPerson != null)
             {
                 SelectedPerson.Selected = false;
@@ -539,18 +538,7 @@ namespace FamilyExplorer
             else
             {
                 SelectedPerson = null;
-            }
-
-            //SelectedPerson.Selected = false;
-            //if (person != null)
-            //{
-            //    SelectedPerson = person;
-            //    SelectedPerson.Selected = true;                
-            //}
-            //else
-            //{
-            //    SelectedPerson = null;
-            //}
+            }            
         }        
 
         #endregion Commands

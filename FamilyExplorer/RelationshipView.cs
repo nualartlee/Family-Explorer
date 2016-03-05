@@ -68,15 +68,15 @@ namespace FamilyExplorer
             }
         }
 
-        private double selectedPathThickness = 8;
-        public double SelectedPathThickness
+        private double highlightPathThickness = 8;
+        public double HighlightPathThickness
         {
-            get { return selectedPathThickness; }
+            get { return highlightPathThickness; }
             set
             {
-                if (value != selectedPathThickness)
+                if (value != highlightPathThickness)
                 {
-                    selectedPathThickness = value;
+                    highlightPathThickness = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -96,15 +96,15 @@ namespace FamilyExplorer
             }
         }
 
-        private string selectedPathColor;
-        public string SelectedPathColor
+        private string highlightPathColor;
+        public string HighlightPathColor
         {
-            get { return selectedPathColor; }
+            get { return highlightPathColor; }
             set
             {
-                if (value != selectedPathColor)
+                if (value != highlightPathColor)
                 {
-                    selectedPathColor = value;
+                    highlightPathColor = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -133,6 +133,20 @@ namespace FamilyExplorer
                 if (value != selected)
                 {
                     selected = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private bool mouseOver;
+        public bool MouseOver
+        {
+            get { return mouseOver; }
+            set
+            {
+                if (value != mouseOver)
+                {
+                    mouseOver = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -355,10 +369,9 @@ namespace FamilyExplorer
             SetDateDescriptions();
             SetReciprocal();
             SetPath();
+            SetColors();
             PathThickness = Settings.Instance.Relationship.PathThickness;
-            SelectedPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
-            PathColor = Settings.Instance.Relationship.PathColor(Type);            
-            SelectedPathColor = Selected ? Settings.Instance.Relationship.SelectedPathColor : "Transparent";           
+            HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;                     
         }
 
         private void SetHeaderDescription()
@@ -547,6 +560,16 @@ namespace FamilyExplorer
                     if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }
                 }
             }
+        }
+
+        private void SetColors()
+        {
+
+            PathColor = Settings.Instance.Relationship.PathColor(Type);
+
+            if (Selected) { HighlightPathColor = Settings.Instance.Relationship.SelectedPathColor; }
+            else if (MouseOver) { HighlightPathColor = Settings.Instance.Relationship.HighlightedPathColor; }
+            else { HighlightPathColor = "Transparent"; }
         }
 
         private void SetZIndex()
@@ -899,6 +922,25 @@ namespace FamilyExplorer
         }
 
         #endregion Path
+
+        
+
+
+
+        public void MouseEnter()
+        {
+            MouseOver = true;            
+        }
+
+        public void MouseLeave()
+        {
+            MouseOver = false;            
+        }
+
+        public void MouseLeftButtonDown()
+        {            
+            FamilyView.Instance.SelectRelationship(this);
+        }
 
     }
 }
