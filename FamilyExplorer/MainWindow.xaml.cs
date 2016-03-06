@@ -88,27 +88,7 @@ namespace FamilyExplorer
         {
             family.EndSetCommand();
         }
-
-        private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.Save();
-        }
-
-        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.Open();
-        }
-
+        
         private void CenterTree_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;

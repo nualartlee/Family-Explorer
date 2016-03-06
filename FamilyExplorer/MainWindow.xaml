@@ -75,11 +75,44 @@
         <converters:IsItemSelected x:Key="IsItemSelected"/>
         <converters:IsItemVisible x:Key="IsItemVisible"/>
 
+        <Style x:Key="RelationshipListBorder" TargetType="Border">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+
+        <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
+            <Border Background="{TemplateBinding Background}"
+                x:Name="Bd" BorderBrush="Gray"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                <ScrollViewer x:Name="PART_ContentHost" Margin="4"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Bd"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="Width" Value="Auto">
+                    <Setter Property="MinWidth" Value="100"/>
+                </Trigger>
+                <Trigger Property="Height" Value="Auto">
+                    <Setter Property="MinHeight" Value="20"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="RelationshipListText" TargetType="Label">
+            <Setter Property="Content" Value="{Binding Reciprocal}"/>
+            <Setter Property="Foreground" Value="{Binding HighlightTextColor}"/>
+            <EventSetter Event="MouseLeftButtonDown" Handler="RelationshipItem_MouseLeftButtonDown" />
+            <EventSetter Event="MouseEnter" Handler="RelationshipItem_MouseEnter" />
+            <EventSetter Event="MouseLeave" Handler="RelationshipItem_MouseLeave" />
+        </Style>
+        
     </Window.Resources>
 
     <Window.CommandBindings>
-        <CommandBinding Command="self:CustomCommands.Save" CanExecute="Save_CanExecute" Executed="Save_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
         <CommandBinding Command="self:CustomCommands.CenterTree" CanExecute="CenterTree_CanExecute" Executed="CenterTree_Executed"/>
@@ -98,8 +131,8 @@
             x:Name="MainMenu" Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" />
-                <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
-                <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
+                <MenuItem Header="_Open" Command="{Binding OpenFile}"/>
+                <MenuItem Header="_Save" Command="{Binding SaveFile}"/>
                 <Separator />
                 <MenuItem Header="_Print" Command="self:CustomCommands.Print" />
                 <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" />
@@ -118,7 +151,7 @@
         <Grid x:Name="MainGrid" Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -128,7 +161,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
@@ -147,16 +180,16 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="4,20,4,4">
+                        BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
                             <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
                         </Border>
                         <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="4,10,4,4" >
+                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                             <StackPanel>
                                 <Label Margin="4" Content="First Name: " />
-                                <TextBox Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
                                 <Label Margin="4" Content="Last Name: " />
-                                <TextBox Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
                                 <StackPanel Margin="4" Orientation="Horizontal">
                                     <Label Margin="4" Content="Gender: " />
                                     <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
@@ -165,74 +198,91 @@
                                     <Label Margin="4" Content="Birthdate: " />
                                     <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
                                 </StackPanel>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Margin="4,0,0,0" Content="Mother:" />
-                                    <Label DataContext="{Binding MotherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                    <Label DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListText}"
+                                           />
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Margin="4,0,0,0" Content="Father:" />
-                                    <Label DataContext="{Binding FatherRelationship}" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                        <Label DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListText}"/>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel>
                                     <Label Margin="4,0,0,0" Content="Siblings:" />
                                     <ItemsControl ItemsSource="{Binding SiblingRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Margin="4">
                                     <Label Margin="4" Content="Friends:" />
                                     <ItemsControl ItemsSource="{Binding FriendRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Margin="4">
                                     <Label Margin="4" Content="Partners:" />
                                     <ItemsControl ItemsSource="{Binding PartnerRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Margin="4">
                                     <Label Margin="4" Content="Children:" />
                                     <ItemsControl ItemsSource="{Binding ChildRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0"  Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Margin="4">
                                     <Label Margin="4" Content="Abusers:" />
                                     <ItemsControl ItemsSource="{Binding AbuserRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource RelationshipListBorder}">
                                 <StackPanel Margin="4">
                                     <Label Margin="4" Content="Victims:" />
                                     <ItemsControl ItemsSource="{Binding VictimRelationships}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Margin="15,0,0,0" Content="{Binding Reciprocal}" MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown"/>
+                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
 
@@ -257,11 +307,11 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="3"
-                        BorderBrush="{Binding PathColor}" Background="White" Margin="4,20,4,4">
+                        BorderBrush="{Binding PathColor}" Background="White" Margin="10,20,10,10">
                             <TextBlock Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
                         </Border>
                         <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
-                        BorderBrush="Gray" Background="White" Margin="4,10,4,4" >
+                        BorderBrush="Gray" Background="White" Margin="10" >
                             <StackPanel>
                                 <Label Margin="4" Content="{Binding SourceDescription}" />
                                 <Label Margin="4" Content="{Binding DestinationDescription}" />
@@ -275,7 +325,7 @@
                                     <DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>
                                 </StackPanel>
                                 <Label Margin="4" Content="Notes:" />
-                                <TextBox Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
                             </StackPanel>
                         </Border>
                     </Grid>

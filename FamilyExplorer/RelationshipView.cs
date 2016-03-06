@@ -110,6 +110,20 @@ namespace FamilyExplorer
             }
         }
 
+        private string highlightTextColor;
+        public string HighlightTextColor
+        {
+            get { return highlightTextColor; }
+            set
+            {
+                if (value != highlightTextColor)
+                {
+                    highlightTextColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private int zIndex;
         public int ZIndex
         {
@@ -300,15 +314,17 @@ namespace FamilyExplorer
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);
+            SetHighlight();
         }
 
         public RelationshipView(int id, DateTime? start, DateTime? end)
         {
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
-            GetDataFromId(id);
+            GetDataFromId(id);           
             if (start != null) { StartDate = (DateTime)start; }
             if (end != null) { EndDate = (DateTime)end; }
+            SetHighlight();
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -327,6 +343,12 @@ namespace FamilyExplorer
             if (e.PropertyName == "Selected")
             {
                 SetZIndex();
+                SetHighlight();
+            }
+
+            if (e.PropertyName == "MouseOver")
+            {                
+                SetHighlight();
             }
 
             if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
@@ -369,7 +391,7 @@ namespace FamilyExplorer
             SetDateDescriptions();
             SetReciprocal();
             SetPath();
-            SetColors();
+            SetColors();            
             PathThickness = Settings.Instance.Relationship.PathThickness;
             HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;                     
         }
@@ -564,12 +586,26 @@ namespace FamilyExplorer
 
         private void SetColors()
         {
+            PathColor = Settings.Instance.Relationship.PathColor(Type);         
+        }
 
-            PathColor = Settings.Instance.Relationship.PathColor(Type);
-
-            if (Selected) { HighlightPathColor = Settings.Instance.Relationship.SelectedPathColor; }
-            else if (MouseOver) { HighlightPathColor = Settings.Instance.Relationship.HighlightedPathColor; }
-            else { HighlightPathColor = "Transparent"; }
+        private void SetHighlight()
+        {
+            if (Selected)
+            {
+                HighlightPathColor = Settings.Instance.Relationship.SelectedPathColor;
+                HighlightTextColor = Settings.Instance.Relationship.SelectedPathColor;
+            }
+            else if (MouseOver)
+            {
+                HighlightPathColor = Settings.Instance.Relationship.HighlightedPathColor;
+                HighlightTextColor = Settings.Instance.Relationship.HighlightedPathColor;
+            }
+            else
+            {
+                HighlightPathColor = "Transparent";
+                HighlightTextColor = "Black";
+            }
         }
 
         private void SetZIndex()
@@ -922,11 +958,7 @@ namespace FamilyExplorer
         }
 
         #endregion Path
-
         
-
-
-
         public void MouseEnter()
         {
             MouseOver = true;            
