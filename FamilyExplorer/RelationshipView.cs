@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FamilyExplorer
 {
@@ -967,12 +968,61 @@ namespace FamilyExplorer
 
         private void InitiateCommands()
         {
+            MouseEnter = new RelayCommand(MouseEnter_Executed, MouseEnter_CanExecute);
+            MouseLeave = new RelayCommand(MouseLeave_Executed, MouseLeave_CanExecute);
+            MouseLeftButtonDown = new RelayCommand<MouseEventArgs>(MouseLeftButtonDown_Executed, MouseLeftButtonDown_CanExecute);
             Delete = new RelayCommand(Delete_Executed, Delete_CanExecute);
         }
 
         private void RefreshCommandsCanExecute()
         {
+            MouseEnter.RaiseCanExecuteChanged();
+            MouseLeave.RaiseCanExecuteChanged();
+            MouseLeftButtonDown.RaiseCanExecuteChanged();
             Delete.RaiseCanExecuteChanged();
+        }
+
+        public RelayCommand MouseEnter
+        {
+            get;
+            private set;
+        }
+        private bool MouseEnter_CanExecute()
+        {
+            return true;
+        }
+        private void MouseEnter_Executed()
+        {
+            MouseOver = true;            
+        }
+
+        public RelayCommand MouseLeave
+        {
+            get;
+            private set;
+        }
+        private bool MouseLeave_CanExecute()
+        {
+            return true;
+        }
+        private void MouseLeave_Executed()
+        {
+            MouseOver = false;           
+        }
+
+        public RelayCommand<MouseEventArgs> MouseLeftButtonDown
+        {
+            get;
+            private set;
+        }
+        private bool MouseLeftButtonDown_CanExecute(MouseEventArgs e)
+        {
+            return true;
+        }
+        private void MouseLeftButtonDown_Executed(MouseEventArgs e)
+        {
+            FamilyView.Instance.SelectRelationship(this);
+            e.Handled = true;
         }
 
         public RelayCommand Delete
@@ -1019,20 +1069,22 @@ namespace FamilyExplorer
             FamilyView.Instance.Relationships.Remove(this);
         }
       
-        public void MouseEnter()
-        {
-            MouseOver = true;            
-        }
 
-        public void MouseLeave()
-        {
-            MouseOver = false;            
-        }
 
-        public void MouseLeftButtonDown()
-        {            
-            FamilyView.Instance.SelectRelationship(this);
-        }
+        //public void MouseEnter()
+        //{
+        //    MouseOver = true;            
+        //}
+
+        //public void MouseLeave()
+        //{
+        //    MouseOver = false;            
+        //}
+
+        //public void MouseLeftButtonDown()
+        //{            
+        //    FamilyView.Instance.SelectRelationship(this);
+        //}
 
     }
 }

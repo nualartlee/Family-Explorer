@@ -259,24 +259,24 @@ namespace FamilyExplorer
             family.SelectRelationship(null);
         }
 
-        private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-            relationship.MouseLeftButtonDown();
-            e.Handled = true;
-        }
+        //private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+        //    relationship.MouseLeftButtonDown();
+        //    e.Handled = true;
+        //}
 
-        private void RelationshipItem_MouseEnter(object sender, MouseEventArgs e)
-        {
-            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-            if (relationship != null) { relationship.MouseEnter(); }            
-        }
+        //private void RelationshipItem_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+        //    if (relationship != null) { relationship.MouseEnter(); }            
+        //}
 
-        private void RelationshipItem_MouseLeave(object sender, MouseEventArgs e)
-        {
-            RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-            if (relationship != null) { relationship.MouseLeave(); }
+        //private void RelationshipItem_MouseLeave(object sender, MouseEventArgs e)
+        //{
+        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
+        //    if (relationship != null) { relationship.MouseLeave(); }
             
-        }
+        //}
     }
 }

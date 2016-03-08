@@ -6,10 +6,22 @@
         xmlns:self="clr-namespace:FamilyExplorer"  
         xmlns:converters="clr-namespace:FamilyExplorer.XamlConverters"        
         Title="{Binding Title}" WindowState="Maximized" x:Name="FamilyExplorerWindow"
-        Icon="./Resources/FEX.ico"
+        Icon="./Resources/Icons/FEX.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
 
     <Window.Resources>
+
+        <Style x:Key="AddPersonIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/AddPerson.png" />
+        </Style>
+
+        <Style x:Key="SelectPersonIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/SelectPerson.png" />
+        </Style>
+
+        <Style x:Key="DeleteIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/Delete.png" />
+        </Style>
 
         <DataTemplate x:Key="PersonItem">
             <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
@@ -30,9 +42,16 @@
                     </i:Interaction.Triggers>
                     <Border.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Delete" Command="{Binding Delete}"/>
+                            <MenuItem Header="Delete" Command="{Binding Delete}">
+                                <MenuItem.Icon>
+                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
                             <Separator/>
                             <MenuItem Header="Add">
+                                <MenuItem.Icon>
+                                    <Image Style="{StaticResource AddPersonIcon}" />
+                                </MenuItem.Icon>
                                 <MenuItem Header="Mother" Command="{Binding AddMother}" />
                                 <MenuItem Header="Father" Command="{Binding AddFather}"/>
                                 <MenuItem Header="Sibling">
@@ -47,6 +66,9 @@
                                 <MenuItem Header="Victim"  Command="{Binding AddVictim}"/>
                             </MenuItem>
                             <MenuItem Header="Set">
+                                <MenuItem.Icon>
+                                    <Image Style="{StaticResource SelectPersonIcon}" />
+                                </MenuItem.Icon>
                                 <MenuItem Header="Mother" Command="{Binding SetMother}"/>
                                 <MenuItem Header="Father" Command="{Binding SetFather}"/>
                                 <MenuItem Header="Friend" Command="{Binding SetFriend}"/>
@@ -78,13 +100,37 @@
 
         <DataTemplate x:Key="RelationshipItem">
             <Canvas Background="{x:Null}">
-                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}"
-                      MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave"/>
-                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}"
-                      MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave"/>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}">
+                    <!--MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave">-->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Path>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Path>
             </Canvas>
         </DataTemplate>
 
+        <converters:IsItemNull x:Key="IsItemNull"/>
         <converters:IsItemSelected x:Key="IsItemSelected"/>
         <converters:IsItemVisible x:Key="IsItemVisible"/>
 
@@ -115,14 +161,34 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <ControlTemplate x:Key="RelationshipLabelTemplate" TargetType="{x:Type Label}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Reciprocal}" Foreground="{Binding HighlightTextColor}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Label>
+            </StackPanel>
+        </ControlTemplate>
+        
         <Style x:Key="RelationshipListText" TargetType="Label">
             <Setter Property="Content" Value="{Binding Reciprocal}"/>
             <Setter Property="Foreground" Value="{Binding HighlightTextColor}"/>
-            <EventSetter Event="MouseLeftButtonDown" Handler="RelationshipItem_MouseLeftButtonDown" />
-            <EventSetter Event="MouseEnter" Handler="RelationshipItem_MouseEnter" />
-            <EventSetter Event="MouseLeave" Handler="RelationshipItem_MouseLeave" />
+            <!--<EventSetter Event="MouseEnter" Handler="{Binding MouseEnter}" />
+            <EventSetter Event="MouseLeave" Handler="{Binding MouseLeave}" />
+            <EventSetter Event="MouseLeftButtonDown" Handler="{Binding MouseLeftButtonDown}" />-->
         </Style>
 
+      
+        
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -212,13 +278,31 @@
                                         <Border Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel Orientation="Horizontal">
                                                 <Label Margin="4,0,0,0" Content="Mother:" />
-                                                <Label DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListText}"/>
+                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipLabelTemplate}"/>
+                                                <Button Width="15" Height="15" Command="{Binding AddMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource AddPersonIcon}"/>
+                                                </Button>
+                                                <Button Width="15" Height="15" Command="{Binding SelectMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                </Button>
+                                                <Button Width="15" Height="15" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                                </Button>
                                             </StackPanel>
                                         </Border>
                                         <Border Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel Orientation="Horizontal">
                                                 <Label Margin="4,0,0,0" Content="Father:" />
-                                                <Label DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListText}"/>
+                                                <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipLabelTemplate}"/>
+                                                <Button Width="15" Height="15" Command="{Binding AddFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource AddPersonIcon}"/>
+                                                </Button>
+                                                <Button Width="15" Height="15" Command="{Binding SelectFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                </Button>
+                                                <Button Width="15" Height="15" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                                </Button>
                                             </StackPanel>
                                         </Border>
                                         <Border Style="{StaticResource RelationshipListBorder}">

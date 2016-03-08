@@ -37,7 +37,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\FEX.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icons\FEX.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">
@@ -92,6 +92,7 @@
     <Compile Include="ScrollZoomBorder.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="XamlConverters\IsItemNull.cs" />
     <Compile Include="XamlConverters\IsItemSelected.cs" />
     <Compile Include="XamlConverters\IsItemVisible.cs" />
     <Compile Include="ZoomBorder.cs" />
@@ -148,12 +149,16 @@
     <Resource Include="Resources\License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\FEX.ico" />
+    <Resource Include="Resources\Icons\FEX.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\FamilyExplorerLogo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AddPerson.png" />
+    <Resource Include="Resources\Icons\Delete.png" />
+    <Resource Include="Resources\Icons\SelectPerson.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
