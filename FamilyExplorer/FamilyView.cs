@@ -532,6 +532,7 @@ namespace FamilyExplorer
         }
 
         public void SelectPerson(PersonView person)
+
         {
             if (SelectedPerson != null)
             {

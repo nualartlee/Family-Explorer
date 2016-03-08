@@ -13,6 +13,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.If not, see<http://www.gnu.org/licenses/> */
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -56,28 +57,27 @@ namespace FamilyExplorer
 
         #region Person Commands              
 
-        private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
-        {
-            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-            person.MouseEnter();           
-        }
+        //private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+        //    person.MouseEnter();           
+        //}
 
-        private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
-        {
-            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-            person.MouseLeave();
-        }
+        //private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
+        //{
+        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+        //    person.MouseLeave();
+        //}
 
-        private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-            person.MouseLeftButtonDown();
-            e.Handled = true;
-        }
+        //private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
+        //    person.MouseLeftButtonDown();
+        //    e.Handled = true;
+        //}
 
         #endregion Person Commands
-
-
+      
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -251,13 +251,10 @@ namespace FamilyExplorer
                 SetCommandPopup.HorizontalOffset = currentPos.X + 20;
                 SetCommandPopup.VerticalOffset = currentPos.Y + 40;
             }
-        }
-        
+        }        
 
         private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            //RelationshipListBox.SelectedItem = null;
-            //PersonListBox.SelectedItem = null;
+        {           
             family.SelectPerson(null);
             family.SelectRelationship(null);
         }
@@ -272,13 +269,14 @@ namespace FamilyExplorer
         private void RelationshipItem_MouseEnter(object sender, MouseEventArgs e)
         {
             RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-            relationship.MouseEnter();
+            if (relationship != null) { relationship.MouseEnter(); }            
         }
 
         private void RelationshipItem_MouseLeave(object sender, MouseEventArgs e)
         {
             RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-            relationship.MouseLeave();
+            if (relationship != null) { relationship.MouseLeave(); }
+            
         }
     }
 }

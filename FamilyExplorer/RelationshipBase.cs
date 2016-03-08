@@ -103,9 +103,7 @@ namespace FamilyExplorer
                 }
             }
         }
-
         
-
         private string notes;
         public string Notes
         {

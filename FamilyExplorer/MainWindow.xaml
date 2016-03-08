@@ -1,5 +1,7 @@
 ﻿<Window x:Class="FamilyExplorer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:self="clr-namespace:FamilyExplorer"  
         xmlns:converters="clr-namespace:FamilyExplorer.XamlConverters"        
@@ -13,12 +15,23 @@
             <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
                     Width="{Binding Width}" Height="{Binding Height}">
                 <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
-                        Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}"
-                    MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown">
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}">
+                    <!--MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown"-->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <Border.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Edit" Command="self:CustomCommands.Edit" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
-                            <MenuItem Header="Delete" Command="self:CustomCommands.Delete" CommandParameter="{Binding}" CommandTarget="{Binding}"/>
+                            <MenuItem Header="Delete" Command="{Binding Delete}"/>
+                            <Separator/>
                             <MenuItem Header="Add">
                                 <MenuItem Header="Mother" Command="{Binding AddMother}" />
                                 <MenuItem Header="Father" Command="{Binding AddFather}"/>
@@ -109,7 +122,7 @@
             <EventSetter Event="MouseEnter" Handler="RelationshipItem_MouseEnter" />
             <EventSetter Event="MouseLeave" Handler="RelationshipItem_MouseLeave" />
         </Style>
-        
+
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -159,7 +172,7 @@
             <Grid x:Name="DataGrid" Grid.Column="0" Background="Azure">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -168,124 +181,122 @@
                     <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding SelectedPerson}"
                    Visibility="{Binding Converter={StaticResource IsItemSelected}}"
                   HorizontalAlignment="Center" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="300"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                        <StackPanel Orientation="Vertical">
+                            <Border CornerRadius="5" BorderThickness="1"
                         BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
-                            <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
-                        </Border>
-                        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1"
+                                <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal">
+                                <Border CornerRadius="5" BorderThickness="1"
                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
-                            <StackPanel>
-                                <Label Margin="4" Content="First Name: " />
-                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
-                                <Label Margin="4" Content="Last Name: " />
-                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
-                                <StackPanel Margin="4" Orientation="Horizontal">
-                                    <Label Margin="4" Content="Gender: " />
-                                    <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
-                                </StackPanel>
-                                <StackPanel Margin="4" Orientation="Horizontal">
-                                    <Label Margin="4" Content="Birthdate: " />
-                                    <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
-                                </StackPanel>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Margin="4,0,0,0" Content="Mother:" />
-                                    <Label DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListText}"
-                                           />
-                                </StackPanel>
+                                    <StackPanel>
+                                        <Label Margin="4" Content="First Name: " />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                                        <Label Margin="4" Content="Last Name: " />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                                        <StackPanel Margin="4" Orientation="Horizontal">
+                                            <Label Margin="4" Content="Gender: " />
+                                            <ComboBox Margin="4" SelectedItem="{Binding Gender, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="4" Orientation="Horizontal">
+                                            <Label Margin="4" Content="Birthdate: " />
+                                            <DatePicker Margin="4" SelectedDate="{Binding DOB}"/>
+                                        </StackPanel>
+                                        <Label Margin="4" Content="Notes:" />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                                    </StackPanel>
                                 </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Margin="4,0,0,0" Content="Father:" />
-                                        <Label DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListText}"/>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel>
-                                    <Label Margin="4,0,0,0" Content="Siblings:" />
-                                    <ItemsControl ItemsSource="{Binding SiblingRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Margin="4">
-                                    <Label Margin="4" Content="Friends:" />
-                                    <ItemsControl ItemsSource="{Binding FriendRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Margin="4">
-                                    <Label Margin="4" Content="Partners:" />
-                                    <ItemsControl ItemsSource="{Binding PartnerRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Margin="4">
-                                    <Label Margin="4" Content="Children:" />
-                                    <ItemsControl ItemsSource="{Binding ChildRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Margin="4">
-                                    <Label Margin="4" Content="Abusers:" />
-                                    <ItemsControl ItemsSource="{Binding AbuserRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource RelationshipListBorder}">
-                                <StackPanel Margin="4">
-                                    <Label Margin="4" Content="Victims:" />
-                                    <ItemsControl ItemsSource="{Binding VictimRelationships}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                    <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
+                                <Border CornerRadius="5" BorderThickness="1" MinWidth="200"
+                                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
+                                    <StackPanel>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Margin="4,0,0,0" Content="Mother:" />
+                                                <Label DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListText}"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Margin="4,0,0,0" Content="Father:" />
+                                                <Label DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListText}"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Label Margin="4,0,0,0" Content="Siblings:" />
+                                                <ItemsControl ItemsSource="{Binding SiblingRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Margin="4">
+                                                <Label Margin="4" Content="Friends:" />
+                                                <ItemsControl ItemsSource="{Binding FriendRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Margin="4">
+                                                <Label Margin="4" Content="Partners:" />
+                                                <ItemsControl ItemsSource="{Binding PartnerRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Margin="4">
+                                                <Label Margin="4" Content="Children:" />
+                                                <ItemsControl ItemsSource="{Binding ChildRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Margin="4">
+                                                <Label Margin="4" Content="Abusers:" />
+                                                <ItemsControl ItemsSource="{Binding AbuserRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Margin="4">
+                                                <Label Margin="4" Content="Victims:" />
+                                                <ItemsControl ItemsSource="{Binding VictimRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
                                 </Border>
                             </StackPanel>
-                        </Border>
-
+                        </StackPanel>
                     </Grid>
                 </ScrollViewer>
 
@@ -330,16 +341,16 @@
                         </Border>
                     </Grid>
                 </ScrollViewer >
-                
+
             </Grid>
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                           MouseMove="TreeScrollViewer_MouseMove" >
-                
+
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
-                    
+
                     <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
 
                         <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
@@ -372,11 +383,11 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
-                        
+
                     </Canvas>
-                    
+
                 </Border>
-                
+
             </ScrollViewer>
 
             <Popup x:Name="SetCommandPopup" Grid.Column="2" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=TreeScrollViewer}" >

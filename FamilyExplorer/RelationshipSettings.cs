@@ -19,7 +19,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathThickness = 4;
+        private double pathThickness = 3;
         public double PathThickness
         {
             get { return pathThickness; }
@@ -33,7 +33,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double selectedPathThickness = 8;
+        private double selectedPathThickness = 5;
         public double SelectedPathThickness
         {
             get { return selectedPathThickness; }
@@ -47,7 +47,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathCornerRadius = 5;
+        private double pathCornerRadius = 10;
         public double PathCornerRadius
         {
             get { return pathCornerRadius; }
@@ -74,7 +74,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFather = 0;
+        private double pathOffsetFather = 4;
         public double PathOffsetFather
         {
             get { return pathOffsetFather; }
@@ -87,7 +87,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetSibling = 0;
+        private double pathOffsetSibling = 7;
         public double PathOffsetSibling
         {
             get { return pathOffsetSibling; }
@@ -100,7 +100,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFriend = 8;
+        private double pathOffsetFriend = 10;
         public double PathOffsetFriend
         {
             get { return pathOffsetFriend; }
@@ -113,7 +113,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetPartner = 4;
+        private double pathOffsetPartner = 13;
         public double PathOffsetPartner
         {
             get { return pathOffsetPartner; }
@@ -126,7 +126,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetAbuse = 12;
+        private double pathOffsetAbuse = 15;
         public double PathOffsetAbuse
         {
             get { return pathOffsetAbuse; }

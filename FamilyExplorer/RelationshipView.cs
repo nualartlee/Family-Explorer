@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -311,20 +312,24 @@ namespace FamilyExplorer
 
         public RelationshipView(int id)
         {
+            InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);
             SetHighlight();
+            
         }
 
         public RelationshipView(int id, DateTime? start, DateTime? end)
         {
+            InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);           
             if (start != null) { StartDate = (DateTime)start; }
             if (end != null) { EndDate = (DateTime)end; }
             SetHighlight();
+            InitiateCommands();
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -367,7 +372,7 @@ namespace FamilyExplorer
         private void FamilyViewPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             //if (e.PropertyName == "SelectedPerson") { SetReciprocal(); }
-        }
+        }       
 
         private void GetDataFromId(int id)
         {
@@ -393,7 +398,8 @@ namespace FamilyExplorer
             SetPath();
             SetColors();            
             PathThickness = Settings.Instance.Relationship.PathThickness;
-            HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;                     
+            HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
+            RefreshCommandsCanExecute();               
         }
 
         private void SetHeaderDescription()
@@ -958,7 +964,61 @@ namespace FamilyExplorer
         }
 
         #endregion Path
-        
+
+        private void InitiateCommands()
+        {
+            Delete = new RelayCommand(Delete_Executed, Delete_CanExecute);
+        }
+
+        private void RefreshCommandsCanExecute()
+        {
+            Delete.RaiseCanExecuteChanged();
+        }
+
+        public RelayCommand Delete
+        {
+            get;
+            private set;
+        }
+        private bool Delete_CanExecute()
+        {
+            return true;
+        }
+        private void Delete_Executed()
+        {
+            switch (Type)
+            {
+                case 1: // Mother
+                    PersonSource.ChildRelationships.Remove(this);
+                    PersonDestination.MotherRelationship = null;
+                    break;
+                case 2: // Father
+                    PersonSource.ChildRelationships.Remove(this);
+                    PersonDestination.FatherRelationship = null;
+                    break;
+                case 3: // Sibling
+                    PersonSource.SiblingRelationships.Remove(this);
+                    PersonDestination.SiblingRelationships.Remove(this);
+                    break;
+                case 4: // Friend
+                    PersonSource.FriendRelationships.Remove(this);
+                    PersonDestination.FriendRelationships.Remove(this);
+                    break;
+                case 5: // Partner
+                    PersonSource.PartnerRelationships.Remove(this);
+                    PersonDestination.PartnerRelationships.Remove(this);
+                    break;
+                case 6: // Abuse
+                    PersonSource.VictimRelationships.Remove(this);
+                    PersonDestination.AbuserRelationships.Remove(this);
+                    break;
+                default:
+                    break;
+
+            }
+            FamilyView.Instance.Relationships.Remove(this);
+        }
+      
         public void MouseEnter()
         {
             MouseOver = true;            
