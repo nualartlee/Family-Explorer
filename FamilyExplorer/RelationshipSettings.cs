@@ -61,28 +61,28 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathOffsetMother = 0;
-        public double PathOffsetMother
+        private double pathOffSelectMother = 0;
+        public double PathOffSelectMother
         {
-            get { return pathOffsetMother; }
+            get { return pathOffSelectMother; }
             set
             {
-                if (value != pathOffsetMother)
+                if (value != pathOffSelectMother)
                 {
-                    pathOffsetMother = value;
+                    pathOffSelectMother = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private double pathOffsetFather = 4;
-        public double PathOffsetFather
+        private double pathOffSelectFather = 4;
+        public double PathOffSelectFather
         {
-            get { return pathOffsetFather; }
+            get { return pathOffSelectFather; }
             set
             {
-                if (value != pathOffsetFather)
+                if (value != pathOffSelectFather)
                 {
-                    pathOffsetFather = value;
+                    pathOffSelectFather = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -100,28 +100,28 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetFriend = 10;
-        public double PathOffsetFriend
+        private double pathOffSelectFriend = 10;
+        public double PathOffSelectFriend
         {
-            get { return pathOffsetFriend; }
+            get { return pathOffSelectFriend; }
             set
             {
-                if (value != pathOffsetFriend)
+                if (value != pathOffSelectFriend)
                 {
-                    pathOffsetFriend = value;
+                    pathOffSelectFriend = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private double pathOffsetPartner = 13;
-        public double PathOffsetPartner
+        private double pathOffSelectPartner = 13;
+        public double PathOffSelectPartner
         {
-            get { return pathOffsetPartner; }
+            get { return pathOffSelectPartner; }
             set
             {
-                if (value != pathOffsetPartner)
+                if (value != pathOffSelectPartner)
                 {
-                    pathOffsetPartner = value;
+                    pathOffSelectPartner = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -147,15 +147,15 @@ namespace FamilyExplorer
                 case 0:
                     return 0;
                 case 1:
-                    return PathOffsetMother;
+                    return PathOffSelectMother;
                 case 2:
-                    return PathOffsetFather;
+                    return PathOffSelectFather;
                 case 3:
                     return PathOffsetSibling;
                 case 4:
-                    return PathOffsetFriend;
+                    return PathOffSelectFriend;
                 case 5:
-                    return PathOffsetPartner;
+                    return PathOffSelectPartner;
                 case 6:
                     return PathOffsetAbuse;
                 default:

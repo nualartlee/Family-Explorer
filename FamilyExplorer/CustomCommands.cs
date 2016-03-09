@@ -211,10 +211,10 @@ namespace FamilyExplorer
                                 }
                        );
 
-        public static readonly RoutedUICommand SetMother = new RoutedUICommand
+        public static readonly RoutedUICommand SelectMother = new RoutedUICommand
                        (
-                               "SetMother",
-                               "SetMother",
+                               "SelectMother",
+                               "SelectMother",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                 {
@@ -222,10 +222,10 @@ namespace FamilyExplorer
                                 }
                        );
 
-        public static readonly RoutedUICommand SetFather = new RoutedUICommand
+        public static readonly RoutedUICommand SelectFather = new RoutedUICommand
                         (
-                                "SetFather",
-                                "SetFather",
+                                "SelectFather",
+                                "SelectFather",
                                 typeof(CustomCommands),
                                 new InputGestureCollection()
                                 {
@@ -233,10 +233,10 @@ namespace FamilyExplorer
                                 }
                         );
 
-        public static readonly RoutedUICommand SetFriend = new RoutedUICommand
+        public static readonly RoutedUICommand SelectFriend = new RoutedUICommand
                        (
-                               "SetFriend",
-                               "SetFriend",
+                               "SelectFriend",
+                               "SelectFriend",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                 {
@@ -244,10 +244,10 @@ namespace FamilyExplorer
                                 }
                        );
 
-        public static readonly RoutedUICommand SetPartner = new RoutedUICommand
+        public static readonly RoutedUICommand SelectPartner = new RoutedUICommand
                         (
-                                "SetPartner",
-                                "SetPartner",
+                                "SelectPartner",
+                                "SelectPartner",
                                 typeof(CustomCommands),
                                 new InputGestureCollection()
                                 {
@@ -255,10 +255,10 @@ namespace FamilyExplorer
                                 }
                         );
        
-        public static readonly RoutedUICommand SetChild = new RoutedUICommand
+        public static readonly RoutedUICommand SelectChild = new RoutedUICommand
                        (
-                               "SetChild",
-                               "SetChild",
+                               "SelectChild",
+                               "SelectChild",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                 {
@@ -266,10 +266,10 @@ namespace FamilyExplorer
                                 }
                        );
 
-        public static readonly RoutedUICommand SetAbuser = new RoutedUICommand
+        public static readonly RoutedUICommand SelectAbuser = new RoutedUICommand
                        (
-                               "SetAbuser",
-                               "SetAbuser",
+                               "SelectAbuser",
+                               "SelectAbuser",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                 {
@@ -277,10 +277,10 @@ namespace FamilyExplorer
                                 }
                        );
 
-        public static readonly RoutedUICommand SetVictim = new RoutedUICommand
+        public static readonly RoutedUICommand SelectVictim = new RoutedUICommand
                        (
-                               "SetVictim",
-                               "SetVictim",
+                               "SelectVictim",
+                               "SelectVictim",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                 {

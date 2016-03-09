@@ -253,7 +253,7 @@ namespace FamilyExplorer
 
         #region Commands                
         
-        private bool SetMother_CanFinalize(PersonView person)
+        private bool SelectMother_CanFinalize(PersonView person)
         {
             // Not in previous generation
             if (person.GenerationIndex != SetCommandTargetPerson.GenerationIndex - 1) { return false; }
@@ -261,7 +261,7 @@ namespace FamilyExplorer
             if (person.Gender != "Female") { return false; }
             return true;
         }
-        private void SetMother_Finalized(PersonView person, PersonView mother)
+        private void SelectMother_Finalized(PersonView person, PersonView mother)
         {
 
             if (mother.Gender != "Female") { return; }
@@ -278,7 +278,7 @@ namespace FamilyExplorer
             CreateRelationship(1, mother, person, person.DOB, null);
         }
         
-        private bool SetFather_CanFinalize(PersonView person)
+        private bool SelectFather_CanFinalize(PersonView person)
         {
             // Not in previous generation
             if (person.GenerationIndex != SetCommandTargetPerson.GenerationIndex - 1) { return false; }
@@ -286,7 +286,7 @@ namespace FamilyExplorer
             if (person.Gender != "Male") { return false; }
             return true;
         }
-        private void SetFather_Finalized(PersonView person, PersonView father)
+        private void SelectFather_Finalized(PersonView person, PersonView father)
         {
 
             if (father.Gender != "Male") { return; }           
@@ -303,7 +303,7 @@ namespace FamilyExplorer
             CreateRelationship(2, father, person, person.DOB, null);
         }
         
-        private bool SetFriend_CanFinalize(PersonView person)
+        private bool SelectFriend_CanFinalize(PersonView person)
         {
             // Not itself
             if (person == SetCommandTargetPerson) { return false; }
@@ -316,7 +316,7 @@ namespace FamilyExplorer
                
             return true;
         }
-        private void SetFriend_Finalized(PersonView person, PersonView friend)
+        private void SelectFriend_Finalized(PersonView person, PersonView friend)
         {
             // Create relationship
             if (person.Id < friend.Id)
@@ -325,7 +325,7 @@ namespace FamilyExplorer
             { CreateRelationship(4, friend, person, DateTime.Now, null); }
         }
                 
-        private bool SetPartner_CanFinalize(PersonView person)
+        private bool SelectPartner_CanFinalize(PersonView person)
         {
             // Not itself
             if (person == SetCommandTargetPerson) { return false; }
@@ -337,7 +337,7 @@ namespace FamilyExplorer
             }
             return true;
         }
-        private void SetPartner_Finalized(PersonView person, PersonView partner)
+        private void SelectPartner_Finalized(PersonView person, PersonView partner)
         {
             // Create relationship
             if (person.Id < partner.Id)
@@ -346,7 +346,7 @@ namespace FamilyExplorer
             { CreateRelationship(5, partner, person, DateTime.Now, null); }
         }
         
-        private bool SetChild_CanFinalize(PersonView child)
+        private bool SelectChild_CanFinalize(PersonView child)
         {
             // Not already a child
             foreach (RelationshipView childRelationship in SetCommandTargetPerson.ChildRelationships)
@@ -357,7 +357,7 @@ namespace FamilyExplorer
             if (SetCommandTargetPerson.GenerationIndex + 1 != child.GenerationIndex) { return false; }
             return true;
         }
-        private void SetChild_Finalized(PersonView person, PersonView child)
+        private void SelectChild_Finalized(PersonView person, PersonView child)
         {
             // Create relationships
             foreach (RelationshipView childRelationship in person.ChildRelationships)
@@ -375,7 +375,7 @@ namespace FamilyExplorer
 
         }
         
-        private bool SetAbuser_CanFinalize(PersonView person)
+        private bool SelectAbuser_CanFinalize(PersonView person)
         {
             // Not already an abuser
             foreach (RelationshipView victimRelationship in person.VictimRelationships)
@@ -385,13 +385,13 @@ namespace FamilyExplorer
             
             return true;
         }
-        private void SetAbuser_Finalized(PersonView person, PersonView abuser)
+        private void SelectAbuser_Finalized(PersonView person, PersonView abuser)
         {
             // Create relationship                      
             CreateRelationship(6, abuser, person, DateTime.Now, null);
         }
         
-        private bool SetVictim_CanFinalize(PersonView person)
+        private bool SelectVictim_CanFinalize(PersonView person)
         {
             // Not already a victim
             foreach (RelationshipView abuserRelationship in person.AbuserRelationships)
@@ -400,7 +400,7 @@ namespace FamilyExplorer
             }
             return true;
         }
-        private void SetVictim_Finalized(PersonView person, PersonView victim)
+        private void SelectVictim_Finalized(PersonView person, PersonView victim)
         {
             // Create relationship                      
             CreateRelationship(6, person, victim, DateTime.Now, null);
@@ -413,32 +413,32 @@ namespace FamilyExplorer
                 switch (SetCommandInProgressType)
                 {
                     case 1: // Set mother
-                        if (SetMother_CanFinalize(setCommandRelationPerson))
-                        { SetMother_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectMother_CanFinalize(setCommandRelationPerson))
+                        { SelectMother_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 2: // Set father
-                        if (SetFather_CanFinalize(setCommandRelationPerson))
-                        { SetFather_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectFather_CanFinalize(setCommandRelationPerson))
+                        { SelectFather_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 3: // Set friend
-                        if (SetFriend_CanFinalize(setCommandRelationPerson))
-                        { SetFriend_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectFriend_CanFinalize(setCommandRelationPerson))
+                        { SelectFriend_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 4: // Set partner
-                        if (SetPartner_CanFinalize(setCommandRelationPerson))
-                        { SetPartner_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectPartner_CanFinalize(setCommandRelationPerson))
+                        { SelectPartner_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 5: // Set child
-                        if (SetChild_CanFinalize(setCommandRelationPerson))
-                        { SetChild_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectChild_CanFinalize(setCommandRelationPerson))
+                        { SelectChild_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 6: // Set abuser
-                        if (SetAbuser_CanFinalize(setCommandRelationPerson))
-                        { SetAbuser_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectAbuser_CanFinalize(setCommandRelationPerson))
+                        { SelectAbuser_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 7: // Set victim
-                        if (SetVictim_CanFinalize(setCommandRelationPerson))
-                        { SetVictim_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        if (SelectVictim_CanFinalize(setCommandRelationPerson))
+                        { SelectVictim_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     default:
                         break;
@@ -468,37 +468,37 @@ namespace FamilyExplorer
                     FamilyTreeCursor = Cursors.Arrow;
                     break;
                 case 1: // Set mother
-                    if (SetMother_CanFinalize(person))
+                    if (SelectMother_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 2: // Set father
-                    if (SetFather_CanFinalize(person))
+                    if (SelectFather_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 3: // Set friend
-                    if (SetFriend_CanFinalize(person))
+                    if (SelectFriend_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 4: // Set partner
-                    if (SetPartner_CanFinalize(person))
+                    if (SelectPartner_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 5: // Set child
-                    if (SetChild_CanFinalize(person))
+                    if (SelectChild_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 6: // Set abuser
-                    if (SetAbuser_CanFinalize(person))
+                    if (SelectAbuser_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;
                 case 7: // Set victim
-                    if (SetVictim_CanFinalize(person))
+                    if (SelectVictim_CanFinalize(person))
                     { FamilyTreeCursor = Cursors.Hand; }
                     else { FamilyTreeCursor = Cursors.No; }
                     break;

@@ -384,9 +384,9 @@ namespace FamilyExplorer
             int tp = (id - sourceId * 1000 - destinationId) / 1000000;
             Type = tp;
             PersonDestination = FamilyView.Instance.GetPerson(destinationId);
-            PersonDestination.AddRelationship(this);
+            if (PersonDestination != null) { PersonDestination.AddRelationship(this); }
             PersonSource = FamilyView.Instance.GetPerson(sourceId);
-            PersonSource.AddRelationship(this);
+            if (PersonSource != null) { PersonSource.AddRelationship(this); }
 
         }
 
