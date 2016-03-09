@@ -275,32 +275,32 @@
                                 <Border CornerRadius="5" BorderThickness="1" MinWidth="200"
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                        <Border DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel Orientation="Horizontal">
                                                 <Label Margin="4,0,0,0" Content="Mother:" />
-                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipLabelTemplate}"/>
-                                                <Button Width="15" Height="15" Command="{Binding AddMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Label Template="{StaticResource RelationshipLabelTemplate}"/>
+                                                <Button Width="20" Height="20" Margin="4" Command="{Binding AddMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Command="{Binding SelectMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Button Width="20" Height="20" Margin="4" Command="{Binding SelectMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                <Button Width="20" Height="20" Margin="4" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
                                                     <Image Style="{StaticResource DeleteIcon}"/>
                                                 </Button>
                                             </StackPanel>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Orientation="Horizontal">
+                                        <Border DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel Orientation="Horizontal" >
                                                 <Label Margin="4,0,0,0" Content="Father:" />
-                                                <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipLabelTemplate}"/>
-                                                <Button Width="15" Height="15" Command="{Binding AddFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Label Template="{StaticResource RelationshipLabelTemplate}"/>
+                                                <Button Width="15" Height="15" Margin="4" Command="{Binding AddFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Command="{Binding SelectFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Button Width="15" Height="15" Margin="4" Command="{Binding SelectFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                <Button Width="15" Height="15" Margin="4" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
                                                     <Image Style="{StaticResource DeleteIcon}"/>
                                                 </Button>
                                             </StackPanel>
