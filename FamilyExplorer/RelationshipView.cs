@@ -42,6 +42,20 @@ namespace FamilyExplorer
             }
         }
 
+        private PersonView reciprocal;
+        public PersonView Reciprocal
+        {
+            get { return reciprocal; }
+            set
+            {
+                if (value != reciprocal)
+                {
+                    reciprocal = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private string path;
         public string Path
         {
@@ -237,21 +251,7 @@ namespace FamilyExplorer
                 }
             }
         }
-
-        private string reciprocal;
-        public string Reciprocal
-        {
-            get { return reciprocal; }
-            set
-            {
-                if (value != reciprocal)
-                {
-                    reciprocal = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
+       
         private bool ended = false;
         public bool Ended
         {
@@ -582,11 +582,11 @@ namespace FamilyExplorer
             {
                 if (PersonSource != null)
                 {
-                    if (selected == PersonSource) { Reciprocal = PersonDestination.FirstName; }
+                    if (selected == PersonSource) { Reciprocal = PersonDestination; }
                 }
                 if (PersonDestination != null)
                 {
-                    if (selected == PersonDestination) { Reciprocal = PersonSource.FirstName; }
+                    if (selected == PersonDestination) { Reciprocal = PersonSource; }
                 }
             }
         }

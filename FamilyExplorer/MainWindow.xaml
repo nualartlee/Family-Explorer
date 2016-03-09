@@ -161,9 +161,9 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <ControlTemplate x:Key="RelationshipLabelTemplate" TargetType="{x:Type Label}">
+        <ControlTemplate x:Key="RelationshipNameLabelTemplate" TargetType="{x:Type Label}">
             <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Reciprocal}" Foreground="{Binding HighlightTextColor}">
+                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
@@ -179,8 +179,8 @@
             </StackPanel>
         </ControlTemplate>
         
-        <Style x:Key="RelationshipListText" TargetType="Label">
-            <Setter Property="Content" Value="{Binding Reciprocal}"/>
+        <Style x:Key="RelationshipNameLabelStyle" TargetType="Label">
+            <Setter Property="Content" Value="{Binding Reciprocal.FirstName}"/>
             <Setter Property="Foreground" Value="{Binding HighlightTextColor}"/>
             <!--<EventSetter Event="MouseEnter" Handler="{Binding MouseEnter}" />
             <EventSetter Event="MouseLeave" Handler="{Binding MouseLeave}" />
@@ -275,35 +275,41 @@
                                 <Border CornerRadius="5" BorderThickness="1" MinWidth="200"
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
-                                        <Border DataContext="{Binding MotherRelationship}" Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Label Margin="4,0,0,0" Content="Mother:" />
-                                                <Label Template="{StaticResource RelationshipLabelTemplate}"/>
-                                                <Button Width="20" Height="20" Margin="4" Command="{Binding AddMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <DockPanel HorizontalAlignment="Stretch">
+                                                <Label Margin="4,0,0,0" Content="Mother:" DockPanel.Dock="Left"/>
+                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="20" Height="20" Margin="4" Command="{Binding SelectMother}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding SelectMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="20" Height="20" Margin="4" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding MotherRelationship.Delete}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemSelected}}">
                                                     <Image Style="{StaticResource DeleteIcon}"/>
                                                 </Button>
-                                            </StackPanel>
+                                            </DockPanel>
                                         </Border>
-                                        <Border DataContext="{Binding FatherRelationship}" Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Orientation="Horizontal" >
-                                                <Label Margin="4,0,0,0" Content="Father:" />
-                                                <Label Template="{StaticResource RelationshipLabelTemplate}"/>
-                                                <Button Width="15" Height="15" Margin="4" Command="{Binding AddFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                            <DockPanel HorizontalAlignment="Stretch">
+                                                <Label Margin="4,0,0,0" Content="Father:" DockPanel.Dock="Left"/>
+                                                <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding AddFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Margin="4" Command="{Binding SelectFather}" Visibility="{Binding Converter={StaticResource IsItemNull}}">
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding SelectFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="15" Height="15" Margin="4" Command="{Binding Delete}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                                <Button Width="16" Height="16" Margin="4" DockPanel.Dock="Right"
+                                                        Command="{Binding FatherRelationship.Delete}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemSelected}}">
                                                     <Image Style="{StaticResource DeleteIcon}"/>
                                                 </Button>
-                                            </StackPanel>
+                                            </DockPanel>
                                         </Border>
                                         <Border Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel>
@@ -311,7 +317,7 @@
                                                 <ItemsControl ItemsSource="{Binding SiblingRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
@@ -323,7 +329,7 @@
                                                 <ItemsControl ItemsSource="{Binding FriendRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
@@ -335,7 +341,7 @@
                                                 <ItemsControl ItemsSource="{Binding PartnerRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
@@ -347,7 +353,7 @@
                                                 <ItemsControl ItemsSource="{Binding ChildRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
@@ -359,7 +365,7 @@
                                                 <ItemsControl ItemsSource="{Binding AbuserRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
@@ -371,7 +377,7 @@
                                                 <ItemsControl ItemsSource="{Binding VictimRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipListText}"/>
+                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
