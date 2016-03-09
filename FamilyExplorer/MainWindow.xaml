@@ -162,21 +162,30 @@
         </ControlTemplate>
 
         <ControlTemplate x:Key="RelationshipNameLabelTemplate" TargetType="{x:Type Label}">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}">
+            <Grid>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseEnter">
+                        <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeave">
+                        <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}" Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseEnter">
-                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseLeave">
-                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
-                        </i:EventTrigger>
                         <i:EventTrigger EventName="MouseLeftButtonDown">
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Label>
-            </StackPanel>
+                <Button Width="16" Height="16" Margin="4" Command="{Binding Delete}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                    <Image Style="{StaticResource DeleteIcon}"/>
+                </Button>
+            </Grid>
         </ControlTemplate>
 
         <Style x:Key="RelationshipNameLabelStyle" TargetType="Label">
@@ -275,18 +284,17 @@
                                 <Border CornerRadius="5" BorderThickness="1" MinWidth="200"
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                        <Border x:Name="MotherRelationship" Style="{StaticResource RelationshipListBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 
                                                 <Label Margin="4,0,0,0" Grid.Column="0" Content="Mother:"/>
-                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
+                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
 
                                                 <Button Width="16" Height="16" Margin="4" Grid.Column="2"
                                                         Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
@@ -296,18 +304,13 @@
                                                         Command="{Binding SelectMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="4"
-                                                        Command="{Binding MotherRelationship.Delete}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemSelected}}">
-                                                    <Image Style="{StaticResource DeleteIcon}"/>
-                                                </Button>
                                             </Grid>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                        <Border x:Name="FatherRelationship" Style="{StaticResource RelationshipListBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
@@ -323,13 +326,9 @@
                                                         Command="{Binding SelectFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="4"
-                                                        Command="{Binding FatherRelationship.Delete}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemSelected}}">
-                                                    <Image Style="{StaticResource DeleteIcon}"/>
-                                                </Button>
                                             </Grid>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
+                                        <Border x:Name="SiblingRelationships" Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel>
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
@@ -348,77 +347,117 @@
                                                 <ItemsControl ItemsSource="{Binding SiblingRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*"/>
-                                                                    <ColumnDefinition Width="Auto"/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="0"/>
-                                                                <Button Width="16" Height="16" Margin="4" Command="{Binding Delete}" Grid.Column="1" >
-                                                                    <Image Style="{StaticResource DeleteIcon}"/>
-                                                                </Button>
-                                                            </Grid>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </StackPanel>
                                         </Border>
-                                        
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Margin="4">
-                                                <Label Margin="4" Content="Friends:" />
+                                        <Border x:Name="FriendRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Friends:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddFriend}" >
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectFriend}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <ItemsControl ItemsSource="{Binding FriendRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </StackPanel>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Margin="4">
-                                                <Label Margin="4" Content="Partners:" />
+                                        <Border x:Name="PartnerRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Partners:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddPartner}" >
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectPartner}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <ItemsControl ItemsSource="{Binding PartnerRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </StackPanel>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Margin="4">
-                                                <Label Margin="4" Content="Children:" />
+                                        <Border x:Name="ChildRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Children:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddChild}" >
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectChild}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <ItemsControl ItemsSource="{Binding ChildRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </StackPanel>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Margin="4">
-                                                <Label Margin="4" Content="Abusers:" />
+                                        <Border x:Name="AbuserRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Abusers:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddAbuser}" >
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectAbuser}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <ItemsControl ItemsSource="{Binding AbuserRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </StackPanel>
                                         </Border>
-                                        <Border Style="{StaticResource RelationshipListBorder}">
-                                            <StackPanel Margin="4">
-                                                <Label Margin="4" Content="Victims:" />
+                                        <Border x:Name="VictimRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Victims:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddVictim}" >
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectVictim}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <ItemsControl ItemsSource="{Binding VictimRelationships}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="15,0,0,0"  Style="{StaticResource RelationshipNameLabelStyle}"/>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
