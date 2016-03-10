@@ -317,7 +317,7 @@ namespace FamilyExplorer
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);
-            SetHighlight();
+            RefreshHighlight();
             
         }
 
@@ -329,7 +329,7 @@ namespace FamilyExplorer
             GetDataFromId(id);           
             if (start != null) { StartDate = (DateTime)start; }
             if (end != null) { EndDate = (DateTime)end; }
-            SetHighlight();
+            RefreshHighlight();
             InitiateCommands();
         }
 
@@ -348,26 +348,27 @@ namespace FamilyExplorer
 
             if (e.PropertyName == "Selected")
             {
-                SetZIndex();
-                SetHighlight();
+                RefreshZIndex();
+                RefreshHighlight();
             }
 
             if (e.PropertyName == "MouseOver")
-            {                
-                SetHighlight();
+            {
+                RefreshZIndex();
+                RefreshHighlight();
             }
 
-            if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
+            if (PersonSource != null && PersonDestination != null) { Refresh(); }
         }
 
         private void SourcePersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
+            if (PersonSource != null && PersonDestination != null) { Refresh(); }
         }
 
         private void DestinationPersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if (PersonSource != null && PersonDestination != null) { ResetAllData(); }
+            if (PersonSource != null && PersonDestination != null) { Refresh(); }
         }
 
         private void FamilyViewPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -390,20 +391,20 @@ namespace FamilyExplorer
 
         }
 
-        public void ResetAllData()
+        public void Refresh()
         {
-            SetHeaderDescription();
-            SetPersonDescriptions();
-            SetDateDescriptions();
-            SetReciprocal();
+            RefreshHeaderDescription();
+            RefreshPersonDescriptions();
+            RefreshDateDescriptions();
+            RefreshReciprocal();
             SetPath();
-            SetColors();            
+            RefreshColors();            
             PathThickness = Settings.Instance.Relationship.PathThickness;
             HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
             RefreshCommandsCanExecute();               
         }
 
-        private void SetHeaderDescription()
+        private void RefreshHeaderDescription()
         {
             string source = (PersonSource != null) ? PersonSource.FirstName : "";
             string destination = (PersonDestination != null) ? PersonDestination.FirstName : "";
@@ -441,7 +442,7 @@ namespace FamilyExplorer
             Description = source + "'s " + header + " " + destination;
         }
 
-        private void SetPersonDescriptions()
+        private void RefreshPersonDescriptions()
         {
             string sourceFirstName = PersonSource.FirstName;
             string sourceLastName = PersonSource.LastName;
@@ -544,7 +545,7 @@ namespace FamilyExplorer
             else { return ""; }
         }
 
-        private void SetDateDescriptions()
+        private void RefreshDateDescriptions()
         {
             switch (Type)
             {
@@ -575,7 +576,7 @@ namespace FamilyExplorer
             }
         }       
 
-        private void SetReciprocal()
+        private void RefreshReciprocal()
         {
             PersonView selected = FamilyView.Instance.SelectedPerson;
             if (selected != null)
@@ -591,12 +592,12 @@ namespace FamilyExplorer
             }
         }
 
-        private void SetColors()
+        private void RefreshColors()
         {
             PathColor = Settings.Instance.Relationship.PathColor(Type);         
         }
 
-        private void SetHighlight()
+        private void RefreshHighlight()
         {
             if (Selected)
             {
@@ -615,12 +616,13 @@ namespace FamilyExplorer
             }
         }
 
-        private void SetZIndex()
+        private void RefreshZIndex()
         {
             ZIndex = 1;
             if (PersonSource.Selected) { ZIndex = 2; }
-            if (PersonDestination.Selected) { ZIndex = 2; }
+            if (PersonDestination.Selected) { ZIndex = 2; }            
             if (Selected) { ZIndex = 3; }
+            if (MouseOver) { ZIndex = 4; }
         }
 
         #region Path
@@ -1069,22 +1071,5 @@ namespace FamilyExplorer
             FamilyView.Instance.Relationships.Remove(this);
         }
       
-
-
-        //public void MouseEnter()
-        //{
-        //    MouseOver = true;            
-        //}
-
-        //public void MouseLeave()
-        //{
-        //    MouseOver = false;            
-        //}
-
-        //public void MouseLeftButtonDown()
-        //{            
-        //    FamilyView.Instance.SelectRelationship(this);
-        //}
-
     }
 }

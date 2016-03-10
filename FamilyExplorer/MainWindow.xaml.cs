@@ -40,11 +40,7 @@ namespace FamilyExplorer
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        //private bool isMouseCaptured;
-        //private double mouseVerticalPosition;
-        //private double mouseHorizontalPosition;
-
+        
         public FamilyView family;        
 
         public MainWindow()
@@ -54,30 +50,7 @@ namespace FamilyExplorer
             family.CreateNewFamily();
             this.DataContext = family;
         }
-
-        #region Person Commands              
-
-        //private void PersonItem_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-        //    person.MouseEnter();           
-        //}
-
-        //private void PersonItem_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-        //    person.MouseLeave();
-        //}
-
-        //private void PersonItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    PersonView person = (PersonView)((FrameworkElement)sender).DataContext;
-        //    person.MouseLeftButtonDown();
-        //    e.Handled = true;
-        //}
-
-        #endregion Person Commands
-      
+        
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -258,25 +231,6 @@ namespace FamilyExplorer
             family.SelectPerson(null);
             family.SelectRelationship(null);
         }
-
-        //private void RelationshipItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-        //    relationship.MouseLeftButtonDown();
-        //    e.Handled = true;
-        //}
-
-        //private void RelationshipItem_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-        //    if (relationship != null) { relationship.MouseEnter(); }            
-        //}
-
-        //private void RelationshipItem_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    RelationshipView relationship = (RelationshipView)((FrameworkElement)sender).DataContext;
-        //    if (relationship != null) { relationship.MouseLeave(); }
-            
-        //}
+        
     }
 }

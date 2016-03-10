@@ -244,6 +244,7 @@ namespace FamilyExplorer
         {
             PersonView person = new PersonView(GetNextID());
             AddPersonToFamily(person);
+            SelectPerson(person);
             Tree.Scale = 1;
             CenterTreeInWindow();
             FamilyTreeCursor = Cursors.Arrow;
@@ -465,7 +466,7 @@ namespace FamilyExplorer
             switch (SetCommandInProgressType)
             {
                 case 0: // No command in progress
-                    FamilyTreeCursor = Cursors.Arrow;
+                    FamilyTreeCursor = Cursors.Arrow;                    
                     break;
                 case 1: // Set mother
                     if (SelectMother_CanFinalize(person))
@@ -707,12 +708,12 @@ namespace FamilyExplorer
         {
 
             if (personSource == personDestination) { return; }
-            int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
+            int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;           
             
             RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
             if (relationship != null)
             {
-                relationship.ResetAllData();
+                relationship.Refresh();
             }
             else
             {

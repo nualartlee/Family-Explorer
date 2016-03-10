@@ -161,6 +161,12 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <Style x:Key="RelationshipListButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+
         <ControlTemplate x:Key="RelationshipNameLabelTemplate" TargetType="{x:Type Label}">
             <Grid>
                 <i:Interaction.Triggers>
@@ -182,12 +188,14 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Label>
-                <Button Width="16" Height="16" Margin="4" Command="{Binding Delete}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
                     <Image Style="{StaticResource DeleteIcon}"/>
                 </Button>
             </Grid>
         </ControlTemplate>
 
+      
+        
         <Style x:Key="RelationshipNameLabelStyle" TargetType="Label">
             <Setter Property="Content" Value="{Binding Reciprocal.FirstName}"/>
             <Setter Property="Foreground" Value="{Binding HighlightTextColor}"/>
@@ -196,6 +204,7 @@
             <EventSetter Event="MouseLeftButtonDown" Handler="{Binding MouseLeftButtonDown}" />-->
         </Style>
 
+        
 
 
     </Window.Resources>
@@ -236,8 +245,8 @@
             </MenuItem>
         </Menu>
 
-        <Grid x:Name="MainGrid" Grid.Row="1">
-
+        <Grid x:Name="MainGrid" Grid.Row="1" MouseMove="TreeScrollViewer_MouseMove">
+           
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="Auto"/>
@@ -281,7 +290,7 @@
                                         <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
                                     </StackPanel>
                                 </Border>
-                                <Border CornerRadius="5" BorderThickness="1" MinWidth="200"
+                                <Border CornerRadius="5" BorderThickness="1" MinWidth="250"
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
                                         <Border x:Name="MotherRelationship" Style="{StaticResource RelationshipListBorder}">
@@ -296,11 +305,11 @@
                                                 <Label Margin="4,0,0,0" Grid.Column="0" Content="Mother:"/>
                                                 <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
 
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="2"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2"
                                                         Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="3"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3"
                                                         Command="{Binding SelectMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
@@ -318,11 +327,11 @@
                                                 <Label Margin="4,0,0,0" Content="Father:" Grid.Column="0"/>
                                                 <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
 
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="2"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2"
                                                         Command="{Binding AddFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Width="16" Height="16" Margin="4" Grid.Column="3"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3"
                                                         Command="{Binding SelectFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
@@ -333,13 +342,13 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                    <Button Width="16" Height="16" Margin="4" Command="{Binding AddSiblingEqualParents}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingEqualParents}" >
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
-                                                    <Button Width="16" Height="16" Margin="4" Command="{Binding AddSiblingByMother}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByMother}" >
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
-                                                    <Button Width="16" Height="16" Margin="4" Command="{Binding AddSiblingByFather}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByFather}" >
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
                                                     </StackPanel>
@@ -358,10 +367,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Friends:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddFriend}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddFriend}" >
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectFriend}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectFriend}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -380,10 +389,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Partners:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddPartner}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddPartner}" >
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectPartner}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectPartner}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -402,10 +411,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Children:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddChild}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddChild}" >
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectChild}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectChild}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -424,10 +433,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Abusers:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddAbuser}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddAbuser}" >
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectAbuser}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectAbuser}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -446,10 +455,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Victims:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding AddVictim}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddVictim}" >
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Width="16" Height="16" Margin="4" Command="{Binding SelectVictim}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectVictim}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -517,7 +526,7 @@
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                          MouseMove="TreeScrollViewer_MouseMove" >
+                           >
 
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
 
@@ -553,18 +562,18 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
-
+                       
                     </Canvas>
-
+                  
                 </Border>
-
+               
             </ScrollViewer>
-
-            <Popup x:Name="SetCommandPopup" Grid.Column="2" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=TreeScrollViewer}" >
+            <Popup x:Name="SetCommandPopup" Grid.Column="2" IsOpen="{Binding SetCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" >
                 <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
                     <TextBlock x:Name="ToolTipTextBox" Text="{Binding SetCommandInProgressDescription}" Background="Azure"/>
                 </Border>
             </Popup>
+
 
         </Grid>
 
