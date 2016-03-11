@@ -161,6 +161,10 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <ControlTemplate x:Key="DatePickerBaseControlTemplate" TargetType="{x:Type DatePicker}">
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" />
+        </ControlTemplate>
+        
         <Style x:Key="RelationshipListButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
@@ -292,8 +296,41 @@
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
                                             <Label  Grid.Column="0" Margin="4" HorizontalAlignment="Left" Content="Birthdate: " />
-                                            <DatePicker x:Name="BirthDatePicker" Grid.Column="1" Margin="4" HorizontalAlignment="Right" SelectedDate="{Binding DOB}"/>
-                                        </Grid>
+                                            <Border Grid.Column="1" Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
+                                                <DatePicker x:Name="BirthDatePicker" SelectedDate="{Binding DOB}" >
+                                                    <DatePicker.Resources>
+                                                    <Style TargetType="{x:Type DatePicker}">
+                                                        <Setter Property="BorderBrush" Value="Transparent">
+                                                            <!--<Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <Border>
+                                                                        <Grid x:Name="Part_Root">
+                                                                       
+                                                                            <TextBox x:Name="PART_TextBox"/>
+                                                                            <Button x:Name="PART_Button"/>
+                                                                       
+                                                                    </Grid>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>-->
+                                                        </Setter>
+                                                    </Style>
+                                                    <Style TargetType="{x:Type DatePickerTextBox}">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                            <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                        </Grid>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </DatePicker.Resources>
+                                            </DatePicker>
+                                </Border>
+                    </Grid>
                                         <Label Margin="4" Content="Notes:" />
                                         <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
                                     </StackPanel>
