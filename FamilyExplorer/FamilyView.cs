@@ -156,54 +156,54 @@ namespace FamilyExplorer
             }
         }
 
-        private string setCommandInProgressDescription;
-        public string SetCommandInProgressDescription
+        private string selectCommandInProgressDescription;
+        public string SelectCommandInProgressDescription
         {
-            get { return setCommandInProgressDescription; }
+            get { return selectCommandInProgressDescription; }
             set
             {
-                if (value != setCommandInProgressDescription)
+                if (value != selectCommandInProgressDescription)
                 {
-                    setCommandInProgressDescription = value;
+                    selectCommandInProgressDescription = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private bool setCommandInProgress;
-        public bool SetCommandInProgress
+        private bool selectCommandInProgress;
+        public bool SelectCommandInProgress
         {
-            get { return setCommandInProgress; }
+            get { return selectCommandInProgress; }
             set
             {
-                if (value != setCommandInProgress)
+                if (value != selectCommandInProgress)
                 {
-                    setCommandInProgress = value;
+                    selectCommandInProgress = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private int setCommandInProgressType;
-        public int SetCommandInProgressType
+        private int selectCommandInProgressType;
+        public int SelectCommandInProgressType
         {
-            get { return setCommandInProgressType; }
+            get { return selectCommandInProgressType; }
             set
             {
-                if (value != setCommandInProgressType)
+                if (value != selectCommandInProgressType)
                 {
-                    setCommandInProgressType = value;
+                    selectCommandInProgressType = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private PersonView setCommandTargetPerson;
-        public PersonView SetCommandTargetPerson
+        private PersonView selectCommandTargetPerson;
+        public PersonView SelectCommandTargetPerson
         {
-            get { return setCommandTargetPerson; }
+            get { return selectCommandTargetPerson; }
             set
             {
-                if (value != setCommandTargetPerson)
+                if (value != selectCommandTargetPerson)
                 {
-                    setCommandTargetPerson = value;
+                    selectCommandTargetPerson = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -248,7 +248,7 @@ namespace FamilyExplorer
             Tree.Scale = 1;
             CenterTreeInWindow();
             FamilyTreeCursor = Cursors.Arrow;
-            SetCommandInProgressType = 0;
+            SelectCommandInProgressType = 0;
             Title = "Family Explorer - NewFamily.fex";
         }
 
@@ -257,7 +257,7 @@ namespace FamilyExplorer
         private bool SelectMother_CanFinalize(PersonView person)
         {
             // Not in previous generation
-            if (person.GenerationIndex != SetCommandTargetPerson.GenerationIndex - 1) { return false; }
+            if (person.GenerationIndex != SelectCommandTargetPerson.GenerationIndex - 1) { return false; }
             // Not female
             if (person.Gender != "Female") { return false; }
             return true;
@@ -282,7 +282,7 @@ namespace FamilyExplorer
         private bool SelectFather_CanFinalize(PersonView person)
         {
             // Not in previous generation
-            if (person.GenerationIndex != SetCommandTargetPerson.GenerationIndex - 1) { return false; }
+            if (person.GenerationIndex != SelectCommandTargetPerson.GenerationIndex - 1) { return false; }
             // Not male
             if (person.Gender != "Male") { return false; }
             return true;
@@ -307,12 +307,12 @@ namespace FamilyExplorer
         private bool SelectFriend_CanFinalize(PersonView person)
         {
             // Not itself
-            if (person == SetCommandTargetPerson) { return false; }
+            if (person == SelectCommandTargetPerson) { return false; }
             // Not already a friend
             foreach (RelationshipView friendRelationship in person.FriendRelationships)
             {
-                if (friendRelationship.PersonSource == SetCommandTargetPerson) { return false; }
-                if (friendRelationship.PersonDestination == SetCommandTargetPerson) { return false; }
+                if (friendRelationship.PersonSource == SelectCommandTargetPerson) { return false; }
+                if (friendRelationship.PersonDestination == SelectCommandTargetPerson) { return false; }
             }        
                
             return true;
@@ -329,12 +329,12 @@ namespace FamilyExplorer
         private bool SelectPartner_CanFinalize(PersonView person)
         {
             // Not itself
-            if (person == SetCommandTargetPerson) { return false; }
+            if (person == SelectCommandTargetPerson) { return false; }
             // Not already a partner
             foreach (RelationshipView partnerRelationship in person.PartnerRelationships)
             {
-                if (partnerRelationship.PersonSource == SetCommandTargetPerson) { return false; }
-                if (partnerRelationship.PersonDestination == SetCommandTargetPerson) { return false; }
+                if (partnerRelationship.PersonSource == SelectCommandTargetPerson) { return false; }
+                if (partnerRelationship.PersonDestination == SelectCommandTargetPerson) { return false; }
             }
             return true;
         }
@@ -350,12 +350,12 @@ namespace FamilyExplorer
         private bool SelectChild_CanFinalize(PersonView child)
         {
             // Not already a child
-            foreach (RelationshipView childRelationship in SetCommandTargetPerson.ChildRelationships)
+            foreach (RelationshipView childRelationship in SelectCommandTargetPerson.ChildRelationships)
             {                
                 if (childRelationship.PersonDestination == child) { return false; }
             }
             // Not in the next generation
-            if (SetCommandTargetPerson.GenerationIndex + 1 != child.GenerationIndex) { return false; }
+            if (SelectCommandTargetPerson.GenerationIndex + 1 != child.GenerationIndex) { return false; }
             return true;
         }
         private void SelectChild_Finalized(PersonView person, PersonView child)
@@ -381,7 +381,7 @@ namespace FamilyExplorer
             // Not already an abuser
             foreach (RelationshipView victimRelationship in person.VictimRelationships)
             {               
-                if (victimRelationship.PersonDestination == SetCommandTargetPerson) { return false; }
+                if (victimRelationship.PersonDestination == SelectCommandTargetPerson) { return false; }
             }
             
             return true;
@@ -397,7 +397,7 @@ namespace FamilyExplorer
             // Not already a victim
             foreach (RelationshipView abuserRelationship in person.AbuserRelationships)
             {
-                if (abuserRelationship.PersonSource == SetCommandTargetPerson) { return false; }
+                if (abuserRelationship.PersonSource == SelectCommandTargetPerson) { return false; }
             }
             return true;
         }
@@ -409,37 +409,37 @@ namespace FamilyExplorer
 
         public void FinalizeSetCommand(PersonView setCommandRelationPerson)
         {
-            if (SetCommandInProgress)
+            if (SelectCommandInProgress)
             {
-                switch (SetCommandInProgressType)
+                switch (SelectCommandInProgressType)
                 {
                     case 1: // Set mother
                         if (SelectMother_CanFinalize(setCommandRelationPerson))
-                        { SelectMother_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectMother_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 2: // Set father
                         if (SelectFather_CanFinalize(setCommandRelationPerson))
-                        { SelectFather_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectFather_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 3: // Set friend
                         if (SelectFriend_CanFinalize(setCommandRelationPerson))
-                        { SelectFriend_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectFriend_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 4: // Set partner
                         if (SelectPartner_CanFinalize(setCommandRelationPerson))
-                        { SelectPartner_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectPartner_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 5: // Set child
                         if (SelectChild_CanFinalize(setCommandRelationPerson))
-                        { SelectChild_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectChild_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 6: // Set abuser
                         if (SelectAbuser_CanFinalize(setCommandRelationPerson))
-                        { SelectAbuser_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectAbuser_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     case 7: // Set victim
                         if (SelectVictim_CanFinalize(setCommandRelationPerson))
-                        { SelectVictim_Finalized(SetCommandTargetPerson, setCommandRelationPerson); }
+                        { SelectVictim_Finalized(SelectCommandTargetPerson, setCommandRelationPerson); }
                         break;
                     default:
                         break;
@@ -450,12 +450,12 @@ namespace FamilyExplorer
 
         public void EndSetCommand()
         {
-            if (SetCommandInProgress)
+            if (SelectCommandInProgress)
             {
-                SetCommandTargetPerson = null;
-                SetCommandInProgressType = 0;
-                SetCommandInProgressDescription = "";
-                SetCommandInProgress = false;
+                SelectCommandTargetPerson = null;
+                SelectCommandInProgressType = 0;
+                SelectCommandInProgressDescription = "";
+                SelectCommandInProgress = false;
                 FamilyTreeCursor = Cursors.Arrow;                
             }            
         }
@@ -463,7 +463,7 @@ namespace FamilyExplorer
         public void EnterSetCommandRelation(PersonView person)
         {
 
-            switch (SetCommandInProgressType)
+            switch (SelectCommandInProgressType)
             {
                 case 0: // No command in progress
                     FamilyTreeCursor = Cursors.Arrow;                    
@@ -511,7 +511,7 @@ namespace FamilyExplorer
 
         public void ExitSetCommandRelation()
         {
-            if (SetCommandInProgress) { FamilyTreeCursor = Cursors.Arrow; }
+            if (SelectCommandInProgress) { FamilyTreeCursor = Cursors.Arrow; }
             else { FamilyTreeCursor = Cursors.Arrow; }
         }
 
