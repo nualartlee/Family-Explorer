@@ -42,7 +42,7 @@
                     </i:Interaction.Triggers>
                     <Border.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Delete" Command="{Binding Delete}">
+                            <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
                                 <MenuItem.Icon>
                                     <Image Style="{StaticResource DeleteIcon}"/>
                                 </MenuItem.Icon>
@@ -52,30 +52,30 @@
                                 <MenuItem.Icon>
                                     <Image Style="{StaticResource AddPersonIcon}" />
                                 </MenuItem.Icon>
-                                <MenuItem Header="Mother" Command="{Binding AddMother}" />
-                                <MenuItem Header="Father" Command="{Binding AddFather}"/>
+                                <MenuItem Header="Mother" Command="{Binding AddMother}" ToolTip="{Binding AddMother_ToolTip}"/>
+                                <MenuItem Header="Father" Command="{Binding AddFather}" ToolTip="{Binding AddFather_ToolTip}"/>
                                 <MenuItem Header="Sibling">
-                                    <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}"/>
-                                    <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}"/>
-                                    <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}"/>
+                                    <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}"/>
+                                    <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}"/>
+                                    <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}"/>
                                 </MenuItem>
-                                <MenuItem Header="Friend" Command="{Binding AddFriend}" />
-                                <MenuItem Header="Partner" Command="{Binding AddPartner}"/>
-                                <MenuItem Header="Child" Command="{Binding AddChild}"/>
-                                <MenuItem Header="Abuser" Command="{Binding AddAbuser}"/>
-                                <MenuItem Header="Victim"  Command="{Binding AddVictim}"/>
+                                <MenuItem Header="Friend" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}"/>
+                                <MenuItem Header="Partner" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}"/>
+                                <MenuItem Header="Child" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}"/>
+                                <MenuItem Header="Abuser" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}"/>
+                                <MenuItem Header="Victim"  Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}"/>
                             </MenuItem>
                             <MenuItem Header="Select">
                                 <MenuItem.Icon>
                                     <Image Style="{StaticResource SelectPersonIcon}" />
                                 </MenuItem.Icon>
-                                <MenuItem Header="Mother" Command="{Binding SelectMother}"/>
-                                <MenuItem Header="Father" Command="{Binding SelectFather}"/>
-                                <MenuItem Header="Friend" Command="{Binding SelectFriend}"/>
-                                <MenuItem Header="Partner" Command="{Binding SelectPartner}"/>
-                                <MenuItem Header="Child" Command="{Binding SelectChild}"/>
-                                <MenuItem Header="Abuser" Command="{Binding SelectAbuser}"/>
-                                <MenuItem Header="Victim" Command="{Binding SelectVictim}"/>
+                                <MenuItem Header="Mother" Command="{Binding SelectMother}" ToolTip="{Binding SelectMother_ToolTip}"/>
+                                <MenuItem Header="Father" Command="{Binding SelectFather}" ToolTip="{Binding SelectFather_ToolTip}"/>
+                                <MenuItem Header="Friend" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}"/>
+                                <MenuItem Header="Partner" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}"/>
+                                <MenuItem Header="Child" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}"/>
+                                <MenuItem Header="Abuser" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}"/>
+                                <MenuItem Header="Victim" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}"/>
                             </MenuItem>
                         </ContextMenu>
                     </Border.ContextMenu>
@@ -188,7 +188,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Label>
-                <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
                     <Image Style="{StaticResource DeleteIcon}"/>
                 </Button>
             </Grid>
@@ -305,11 +305,11 @@
                                                 <Label Margin="4,0,0,0" Grid.Column="0" Content="Mother:"/>
                                                 <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
 
-                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2" ToolTip="{Binding AddMother_ToolTip}"
                                                         Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3" ToolTip="{Binding SelectMother_ToolTip}"
                                                         Command="{Binding SelectMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
@@ -327,11 +327,11 @@
                                                 <Label Margin="4,0,0,0" Content="Father:" Grid.Column="0"/>
                                                 <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
 
-                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2" ToolTip="{Binding AddFather_ToolTip}"
                                                         Command="{Binding AddFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource AddPersonIcon}"/>
                                                 </Button>
-                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3"
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3" ToolTip="{Binding SelectFather_ToolTip}"
                                                         Command="{Binding SelectFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
                                                     <Image Style="{StaticResource SelectPersonIcon}"/>
                                                 </Button>
@@ -342,13 +342,13 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingEqualParents}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}" >
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByMother}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}">
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByFather}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}">
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                     </Button>
                                                     </StackPanel>
@@ -367,10 +367,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Friends:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddFriend}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}">
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectFriend}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}">
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -389,10 +389,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Partners:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddPartner}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}">
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectPartner}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}">
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -411,10 +411,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Children:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddChild}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}">
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectChild}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}" >
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -433,10 +433,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Abusers:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddAbuser}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}">
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectAbuser}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}">
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
@@ -455,10 +455,10 @@
                                                 <Grid>
                                                     <Label Margin="4,0,0,0" Content="Victims:" HorizontalAlignment="Left"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddVictim}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}">
                                                             <Image Style="{StaticResource AddPersonIcon}"/>
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectVictim}" >
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}">
                                                             <Image Style="{StaticResource SelectPersonIcon}"/>
                                                         </Button>
                                                     </StackPanel>
