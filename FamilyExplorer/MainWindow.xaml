@@ -303,7 +303,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 
                                                 <Label Margin="4,0,0,0" Grid.Column="0" Content="Mother:"/>
-                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
+                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
 
                                                 <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2" ToolTip="{Binding AddMother_ToolTip}"
                                                         Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">

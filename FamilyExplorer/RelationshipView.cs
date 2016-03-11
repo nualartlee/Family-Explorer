@@ -401,7 +401,8 @@ namespace FamilyExplorer
             RefreshColors();            
             PathThickness = Settings.Instance.Relationship.PathThickness;
             HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
-            RefreshCommandsCanExecute();               
+            RefreshCommandsCanExecute();
+            RefreshTooltips();          
         }
 
         private void RefreshHeaderDescription()
@@ -623,6 +624,11 @@ namespace FamilyExplorer
             if (PersonDestination.Selected) { ZIndex = 2; }            
             if (Selected) { ZIndex = 3; }
             if (MouseOver) { ZIndex = 4; }
+        }
+
+        private void RefreshTooltips()
+        {
+            Delete_ToolTip = "Delete this relationship between " + PersonSource.FirstName + " and " + PersonDestination.FirstName;
         }
 
         #region Path
@@ -1070,6 +1076,18 @@ namespace FamilyExplorer
             }
             FamilyView.Instance.Relationships.Remove(this);
         }
-      
+        private string delete_ToolTip;
+        public string Delete_ToolTip
+        {
+            get { return delete_ToolTip; }
+            set
+            {
+                if (value != delete_ToolTip)
+                {
+                    delete_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
     }
 }
