@@ -244,8 +244,8 @@ namespace FamilyExplorer
         private void Place_SelectCommandPopup()
         {
             Point currentPos = Mouse.GetPosition(Application.Current.MainWindow);
-            SelectCommandPopup.HorizontalOffset = currentPos.X + 20;
-            SelectCommandPopup.VerticalOffset = currentPos.Y + 40;
+            SelectCommandPopup.HorizontalOffset = currentPos.X + 10;
+            SelectCommandPopup.VerticalOffset = currentPos.Y + 15;
         }
     }
 }

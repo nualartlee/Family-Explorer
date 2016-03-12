@@ -195,6 +195,19 @@ namespace FamilyExplorer
                 }
             }
         }
+        private string selectCommandInProgressColor;
+        public string SelectCommandInProgressColor
+        {
+            get { return selectCommandInProgressColor; }
+            set
+            {
+                if (value != selectCommandInProgressColor)
+                {
+                    selectCommandInProgressColor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         private PersonView selectCommandTargetPerson;
         public PersonView SelectCommandTargetPerson
         {

@@ -26,9 +26,9 @@
         <DataTemplate x:Key="PersonItem">
             <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
                     Width="{Binding Width}" Height="{Binding Height}">
-                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
+               
+                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}" 
                         Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}">
-                    <!--MouseEnter="PersonItem_MouseEnter" MouseLeave="PersonItem_MouseLeave" MouseLeftButtonDown="PersonItem_MouseLeftButtonDown"-->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
@@ -40,6 +40,9 @@
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <!--<Border.Effect>
+                        <DropShadowEffect/>
+                    </Border.Effect>-->
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
@@ -181,7 +184,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}" Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
+                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}" Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontWeight="DemiBold">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonDown">
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
@@ -193,18 +196,7 @@
                 </Button>
             </Grid>
         </ControlTemplate>
-
-        <Style x:Key="RelationshipNameLabelStyle" TargetType="Label">
-            <Setter Property="Content" Value="{Binding Reciprocal.FirstName}"/>
-            <Setter Property="Foreground" Value="{Binding HighlightTextColor}"/>
-            <!--<EventSetter Event="MouseEnter" Handler="{Binding MouseEnter}" />
-            <EventSetter Event="MouseLeave" Handler="{Binding MouseLeave}" />
-            <EventSetter Event="MouseLeftButtonDown" Handler="{Binding MouseLeftButtonDown}" />-->
-        </Style>
-
-
-
-
+        
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -538,7 +530,6 @@
                                 <Label Margin="4" Content="{Binding DestinationDescription}" />
                                 <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
                                     <Label Margin="4" Content="{Binding StartDateDescription}"/>
-                                    <!--<DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>-->
                                     <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
                                         <DatePicker x:Name="RelationshipStartDatePicker" SelectedDate="{Binding StartDate}" >
                                             <DatePicker.Resources>
@@ -564,7 +555,6 @@
                                 <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
                                     <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Label Margin="4" Content="{Binding EndDateDescription}" />
-                                    <!--<DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>-->
                                     <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}">
                                         <DatePicker x:Name="RelationshipEndDatePicker" SelectedDate="{Binding EndDate}" >
                                             <DatePicker.Resources>
@@ -642,8 +632,8 @@
 
             </ScrollViewer>
             <Popup x:Name="SelectCommandPopup" Grid.Column="2" IsOpen="{Binding SelectCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" Opened="SelectCommandPopup_Opened" >
-                <Border CornerRadius="4" Padding="1" Background="Gainsboro" BorderThickness="1" BorderBrush="DimGray">
-                    <TextBlock x:Name="ToolTipTextBox" Text="{Binding SelectCommandInProgressDescription}" Background="Azure"/>
+                <Border CornerRadius="4" Padding="1" Background="Azure" BorderThickness="3" BorderBrush="{Binding SelectCommandInProgressColor}">
+                    <TextBlock x:Name="ToolTipTextBox" Margin="4" Text="{Binding SelectCommandInProgressDescription}" Background="Azure" FontWeight="DemiBold"/>
                 </Border>
             </Popup>
 
