@@ -518,7 +518,7 @@
                     </Grid>
                 </ScrollViewer>
 
-                <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" />
+                <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch" />
 
                 <ScrollViewer x:Name="RelationshipDataScrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Grid x:Name="RelationshipDataGrid" Background="Azure" DataContext="{Binding SelectedRelationship}"
@@ -538,12 +538,54 @@
                                 <Label Margin="4" Content="{Binding DestinationDescription}" />
                                 <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
                                     <Label Margin="4" Content="{Binding StartDateDescription}"/>
-                                    <DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>
+                                    <!--<DatePicker Margin="4" SelectedDate="{Binding StartDate}"/>-->
+                                    <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
+                                        <DatePicker x:Name="RelationshipStartDatePicker" SelectedDate="{Binding StartDate}" >
+                                            <DatePicker.Resources>
+                                                <Style TargetType="{x:Type DatePicker}">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Style>
+                                                <Style TargetType="{x:Type DatePickerTextBox}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                    <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DatePicker.Resources>
+                                        </DatePicker>
+                                    </Border>
                                 </StackPanel>
                                 <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
                                     <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Label Margin="4" Content="{Binding EndDateDescription}" />
-                                    <DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>
+                                    <!--<DatePicker Margin="4" SelectedDate="{Binding EndDate}" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}"/>-->
+                                    <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}">
+                                        <DatePicker x:Name="RelationshipEndDatePicker" SelectedDate="{Binding EndDate}" >
+                                            <DatePicker.Resources>
+                                                <Style TargetType="{x:Type DatePicker}">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Style>
+                                                <Style TargetType="{x:Type DatePickerTextBox}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                    <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DatePicker.Resources>
+                                        </DatePicker>
+                                    </Border>
                                 </StackPanel>
                                 <Label Margin="4" Content="Notes:" />
                                 <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>

@@ -328,7 +328,11 @@ namespace FamilyExplorer
             FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
             GetDataFromId(id);           
             if (start != null) { StartDate = (DateTime)start; }
-            if (end != null) { EndDate = (DateTime)end; }
+            if (end != null)
+            {
+                Ended = true;
+                EndDate = (DateTime)end;                
+            }
             RefreshHighlight();
             InitiateCommands();
         }
@@ -535,7 +539,7 @@ namespace FamilyExplorer
                     double months = days / 30;                   
                     if (months <= 1)
                     {
-                        if (Math.Floor(days) == 0) { return "from birth"; }
+                        if (Math.Floor(days) == 0) { return "birth"; }
                         return Math.Floor(days).ToString() + " Days";
                     }
                     return "~" + Math.Floor(months).ToString() + " Months";

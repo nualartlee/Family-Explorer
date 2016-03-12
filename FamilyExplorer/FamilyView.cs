@@ -389,7 +389,7 @@ namespace FamilyExplorer
         private void SelectAbuser_Finalized(PersonView person, PersonView abuser)
         {
             // Create relationship                      
-            CreateRelationship(6, abuser, person, DateTime.Now, null);
+            CreateRelationship(6, abuser, person, DateTime.Now, DateTime.Now);
         }
         
         private bool SelectVictim_CanFinalize(PersonView person)
@@ -404,7 +404,7 @@ namespace FamilyExplorer
         private void SelectVictim_Finalized(PersonView person, PersonView victim)
         {
             // Create relationship                      
-            CreateRelationship(6, person, victim, DateTime.Now, null);
+            CreateRelationship(6, person, victim, DateTime.Now, DateTime.Now);
         }
 
         public void FinalizeSetCommand(PersonView setCommandRelationPerson)
