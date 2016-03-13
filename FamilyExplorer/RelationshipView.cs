@@ -251,18 +251,16 @@ namespace FamilyExplorer
                 }
             }
         }
-       
-        private bool ended = false;
+              
         public bool Ended
         {
-            get { return ended; }
+            get { return (EndDate != null); }
             set
             {
-                if (value != ended)
+                if (value != (EndDate != null))
                 {
-                    if (ended == true) { EndDate = DateTime.Now; }
-                    else { EndDate = null; }
-                    ended = value;
+                    if (value == true) { EndDate = DateTime.Now; }
+                    else { EndDate = null; }                   
                     NotifyPropertyChanged();
                 }
             }

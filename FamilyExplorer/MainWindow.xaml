@@ -556,7 +556,6 @@
                                     </Border>
                                 </StackPanel>
                                 <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
-                                    <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Label Margin="4" Content="{Binding EndDateDescription}" />
                                     <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}">
                                         <DatePicker x:Name="RelationshipEndDatePicker" SelectedDate="{Binding EndDate}" >
@@ -579,6 +578,7 @@
                                             </DatePicker.Resources>
                                         </DatePicker>
                                     </Border>
+                                    <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <Label Margin="4" Content="Notes:" />
                                 <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
