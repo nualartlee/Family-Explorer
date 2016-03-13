@@ -31,6 +31,12 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        // TODO: Settings window
+        // TODO: Save handling & FamilyView command binding
+        // TODO: Generation refresh after person DOB change
+        // TODO: Review & comment
+        // TODO: Unit tests
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

@@ -427,7 +427,7 @@ namespace FamilyExplorer
             RefreshPersonDescriptions();
             RefreshDateDescriptions();
             RefreshReciprocal();
-            SetPath();
+            RefreshPath();
             RefreshColors();            
             PathThickness = Settings.Instance.Relationship.PathThickness;
             HighlightPathThickness = Settings.Instance.Relationship.SelectedPathThickness;
@@ -708,8 +708,9 @@ namespace FamilyExplorer
 
         #region Path
 
-        public void SetPath()
+        public void RefreshPath()
         {
+            // TODO: Refactor
             if (PersonSource.X == PersonSource.Y && PersonSource.Y == PersonDestination.X && PersonDestination.X == PersonDestination.Y) { return; }
             double width = Settings.Instance.Person.Width;
             double height = Settings.Instance.Person.Height;
@@ -857,8 +858,7 @@ namespace FamilyExplorer
             double height = Settings.Instance.Person.Height;
             double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
             double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-            //double radius = Settings.Instance.Relationship.PathCornerRadius;
+            double margin = Settings.Instance.Person.Margin;            
 
             int location = GetVerticalLocationRelativeToPeople(current, offset);
             bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
