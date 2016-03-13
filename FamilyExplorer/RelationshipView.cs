@@ -768,18 +768,13 @@ namespace FamilyExplorer
 
             #endregion Origin & Destination Points
 
-            List<Point> points = new List<Point> { };
-            points.Add(origin);
-
-            while (points.Last() != destination)
-            {
-                if (descending) { points.Add(GetNextDownwardsPoint(points.Last(), destination, offset)); }
-                else if (level) { points.Add(GetNextLevelPoint(points.Last(), destination, offset)); }
-                else { { points.Add(GetNextUpwardsPoint(points.Last(), destination, offset)); } }
-                if (points.Count() > 500) { return; }
-            }
-
-            Path = SmoothenPath(points);
+            List<Point> pathPoints;
+            
+            if (descending) { pathPoints = CreateDescendingPath(origin, destination, offset); }
+            else if (level) { pathPoints = CreateLevelPath(origin, destination, offset); }
+            else { { pathPoints = CreateAscendingPath(origin, destination, offset); } }
+                
+            Path = SmoothenPath(pathPoints);
             RefreshPathStrokeCapStyle();
         }
 
@@ -850,158 +845,180 @@ namespace FamilyExplorer
             return Points;
         }
 
-        private Point GetNextDownwardsPoint(Point current, Point destination, double offset)
+        private List<Point> CreateDescendingPath(Point origin, Point destination, double offset)
         {
-            Point next = new Point();
-
-            double width = Settings.Instance.Person.Width;
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;            
-
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-            bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
-
-            if (location == 1) // Currently at origin, go down to center line
+            List<Point> points = new List<Point> { };
+            points.Add(origin);
+            while (points.Last() != destination)
             {
-                double Y = current.Y - margin + offset + verticalSpace / 2;
-                next = new Point(current.X, Y);
-                return next;
+                if (points.Count() > 500) { return points; }
+
+                Point current = points.Last();               
+
+                double width = Settings.Instance.Person.Width;
+                double height = Settings.Instance.Person.Height;
+                double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
+                double verticalSpace = Settings.Instance.Person.VerticalSpace;
+                double margin = Settings.Instance.Person.Margin;
+
+                int location = GetVerticalLocationRelativeToPeople(current, offset);
+                bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
+
+                if (points.Count() == 1) // Currently at origin, go down to center line
+                {
+                    double Y = current.Y - margin + offset + verticalSpace / 2;
+                    points.Add(new Point(current.X, Y));
+                    continue;                    
+                }
+
+                if (crossGeneration) // Go down to next level
+                {
+                    int generationIndex = GetGenerationIndex(current.Y);
+                    List<PersonView> peopleBelow = FamilyView.Instance.Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
+
+                    bool spaceBelow = true;
+                    foreach (PersonView person in peopleBelow)
+                    {
+                        if (current.X > person.X && current.X < person.X + width) { spaceBelow = false; break; }
+                    }
+
+
+                    if (spaceBelow) // Space below, go down
+                    {
+                        double Y = current.Y + (height + verticalSpace);
+                        points.Add(new Point(current.X, Y));
+                        continue;
+                    }
+                    else // Move sideways to vertical path opening
+                    {
+                        bool moveRight = current.X <= destination.X;
+                        double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
+                        points.Add(new Point(X, current.Y));
+                        continue;
+                    }
+                }
+                else
+                {
+
+                    if (current.X == destination.X) // Move down to destination
+                    {
+                        points.Add(new Point(current.X, destination.Y));
+                        continue;
+                    }
+                    else // Move sideways over destination
+                    {
+                        points.Add(new Point(destination.X, current.Y));
+                        continue;
+                    }
+                }
             }
-
-            if (crossGeneration) // Go down to next level
-            {
-                int generationIndex = GetGenerationIndex(current.Y);
-                List<PersonView> peopleBelow = FamilyView.Instance.Members.Where(m => m.GenerationIndex == generationIndex + 1).OrderBy(m => m.X).ToList();
-
-                bool spaceBelow = true;
-                foreach (PersonView person in peopleBelow)
-                {
-                    if (current.X > person.X && current.X < person.X + width) { spaceBelow = false; break; }
-                }
-
-
-                if (spaceBelow) // Space below, go down
-                {
-                    double Y = current.Y + (height + verticalSpace);
-                    next = new Point(current.X, Y);
-                    return next;
-                }
-                else // Move sideways to vertical path opening
-                {
-                    bool moveRight = current.X <= destination.X;
-                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
-                    next = new Point(X, current.Y);
-                    return next;
-                }
-            }
-            else
-            {
-
-                if (current.X == destination.X) // Move down to destination
-                {
-                    next = new Point(current.X, destination.Y);
-                    return next;
-                }
-                else // Move sideways over destination
-                {
-                    next = new Point(destination.X, current.Y);
-                    return next;
-                }
-            }
-
+            return points;
         }
 
-        private Point GetNextLevelPoint(Point current, Point destination, double offset)
+        private List<Point> CreateLevelPath(Point origin, Point destination, double offset)
         {
-            Point next = new Point();
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-
-            if (location == 3) // Currently at origin, go up to center line
+            List<Point> points = new List<Point> { };
+            points.Add(origin);
+            while (points.Last() != destination)
             {
-                double Y = current.Y + margin + offset - verticalSpace / 2;
-                next = new Point(current.X, Y);
-                return next;
-            }
-            else
-            {
+                if (points.Count() > 500) { return points; }
 
-                if (current.X == destination.X) // Currently over destination, move down
+                Point current = points.Last();                
+                double verticalSpace = Settings.Instance.Person.VerticalSpace;
+                double margin = Settings.Instance.Person.Margin;
+                int location = GetVerticalLocationRelativeToPeople(current, offset);
+
+                if (points.Count() == 1) // Currently at origin, go up to center line
                 {
-                    next = new Point(current.X, destination.Y);
-                    return next;
+                    double Y = current.Y + margin + offset - verticalSpace / 2;
+                   points.Add(new Point(current.X, Y));
+                    continue;
                 }
-                else // Move sideways over destination
+                else
                 {
-                    next = new Point(destination.X, current.Y);
-                    return next;
+
+                    if (current.X == destination.X) // Currently over destination, move down
+                    {
+                        points.Add(new Point(current.X, destination.Y));
+                        continue;
+                    }
+                    else // Move sideways over destination
+                    {
+                        points.Add(new Point(destination.X, current.Y));
+                        continue;
+                    }
                 }
             }
-
+            return points;
         }
 
-        private Point GetNextUpwardsPoint(Point current, Point destination, double offset)
+        private List<Point> CreateAscendingPath(Point origin, Point destination, double offset)
         {
-            Point next = new Point();
 
-            double width = Settings.Instance.Person.Width;
-            double height = Settings.Instance.Person.Height;
-            double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
-            double verticalSpace = Settings.Instance.Person.VerticalSpace;
-            double margin = Settings.Instance.Person.Margin;
-
-            int location = GetVerticalLocationRelativeToPeople(current, offset);
-            bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
-
-            if (location == 3) // Currently at origin, go up to center line
-            {
-                double Y = current.Y + margin + offset - verticalSpace / 2;
-                next = new Point(current.X, Y);
-                return next;
-            }
-
-            if (crossGeneration) // Go up to next level
-            {
-                int generationIndex = GetGenerationIndex(current.Y);
-                List<PersonView> peopleAbove = FamilyView.Instance.Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();
-                bool spaceAbove = true;
-                foreach (PersonView person in peopleAbove)
-                {
-                    if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
-                }
-
-                if (spaceAbove) // Space above, go up
-                {
-                    double Y = current.Y - (height + verticalSpace);
-                    next = new Point(current.X, Y);
-                    return next;
-                }
-                else // Move sideways to vertical path opening
-                {
-                    bool moveRight = current.X <= destination.X;
-                    double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
-                    next = new Point(X, current.Y);
-                    return next;
-                }
-            }
-            else
+            List<Point> points = new List<Point> { };
+            points.Add(origin);
+            while (points.Last() != destination)
             {
 
-                if (current.X == destination.X) // Move down to destination
+                if (points.Count() > 500) { return points; }
+                Point current = points.Last();                
+
+                double width = Settings.Instance.Person.Width;
+                double height = Settings.Instance.Person.Height;
+                double horizontalSpace = Settings.Instance.Person.HorizontalSpace;
+                double verticalSpace = Settings.Instance.Person.VerticalSpace;
+                double margin = Settings.Instance.Person.Margin;
+
+                int location = GetVerticalLocationRelativeToPeople(current, offset);
+                bool crossGeneration = (Math.Abs(destination.Y - current.Y) >= verticalSpace);
+
+                if (points.Count() == 1) // Currently at origin, go up to center line
                 {
-                    next = new Point(current.X, destination.Y);
-                    return next;
+                    double Y = current.Y + margin + offset - verticalSpace / 2;
+                    points.Add(new Point(current.X, Y));
+                    continue;
                 }
-                else // Move sideways over destination
+
+                if (crossGeneration) // Go up to next level
                 {
-                    next = new Point(destination.X, current.Y);
-                    return next;
+                    int generationIndex = GetGenerationIndex(current.Y);
+                    List<PersonView> peopleAbove = FamilyView.Instance.Members.Where(m => m.GenerationIndex == generationIndex - 1).OrderBy(m => m.X).ToList();
+                    bool spaceAbove = true;
+                    foreach (PersonView person in peopleAbove)
+                    {
+                        if (current.X > person.X && current.X < person.X + width) { spaceAbove = false; break; }
+                    }
+
+                    if (spaceAbove) // Space above, go up
+                    {
+                        double Y = current.Y - (height + verticalSpace);
+                        points.Add(new Point(current.X, Y));
+                        continue;
+                    }
+                    else // Move sideways to vertical path opening
+                    {
+                        bool moveRight = current.X <= destination.X;
+                        double X = moveRight ? current.X + (width + horizontalSpace) / 2 : current.X - (width + horizontalSpace) / 2;
+                        points.Add(new Point(X, current.Y));
+                        continue;
+                    }
+                }
+                else
+                {
+
+                    if (current.X == destination.X) // Move down to destination
+                    {
+                        points.Add(new Point(current.X, destination.Y));
+                        continue;
+                    }
+                    else // Move sideways over destination
+                    {
+                        points.Add(new Point(destination.X, current.Y));
+                        continue;
+                    }
                 }
             }
-
+            return points;
         }
 
         private int GetVerticalLocationRelativeToPeople(Point point, double offset)
