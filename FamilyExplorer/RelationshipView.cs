@@ -790,7 +790,7 @@ namespace FamilyExplorer
                 if (i == points.Count() - 1)
                 {
                     path += " L" + points[i].ToString();
-                    break;
+                    continue;
                 }
 
                 bool startedHorizontal = points[i - 1].X != points[i].X;
@@ -800,7 +800,7 @@ namespace FamilyExplorer
                 bool notCorner = (startedVertical && endedVertical) || (startedHorizontal && endedHorizontal);
 
                 // This point is not a corner
-                if (notCorner) { break; }
+                if (notCorner) { continue; }
 
                 Point tangent1;
                 Point tangent2;
