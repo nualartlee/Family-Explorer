@@ -453,18 +453,64 @@ namespace FamilyExplorer
             string sourceLastName = PersonSource.LastName;
             string sourceAgeStart = GetAgeAtDate(PersonSource, StartDate);
             string sourceAgeEnd = GetAgeAtDate(PersonSource, EndDate);
+            string sourceAgeDescription = "";
             string sourceGender = PersonSource.Gender;
             string destinationFirstName = PersonDestination.FirstName;
             string destinationLastName = PersonDestination.LastName;
             string destinationAgeStart = GetAgeAtDate(PersonDestination, StartDate);
             string destinationAgeEnd = GetAgeAtDate(PersonDestination, EndDate);
+            string destinationAgeDescription = "";
             string destinationGender = PersonDestination.Gender;
-            string ageDescription = "";
 
+            // Description of the source person's age during the relationship
+            if (sourceAgeEnd == "")
+            {
+                if (sourceAgeStart == "") { sourceAgeDescription = ""; }
+                else if (sourceAgeStart == "birth") { sourceAgeDescription = " from birth"; }
+                else { sourceAgeDescription = " from " + sourceAgeStart + " of age"; }
+            }
+            else if (sourceAgeEnd == "birth")
+            {
+                sourceAgeDescription = " while a newborn";               
+            }
+            else
+            {
+                if (sourceAgeStart == "") { sourceAgeDescription = " until " + sourceAgeEnd + " of age"; }
+                else if (sourceAgeStart == "birth") { sourceAgeDescription = " from birth to " + sourceAgeEnd + " of age"; }
+                else
+                {
+                    if (sourceAgeStart == sourceAgeEnd) { sourceAgeDescription = " while " + sourceAgeStart + " of age"; }
+                    else { sourceAgeDescription = " from " + sourceAgeStart + " to " + sourceAgeEnd + " of age"; }
+                }
+            }
+
+            // Description of the destination person's age during the relationship
+            if (destinationAgeEnd == "")
+            {
+                if (destinationAgeStart == "") { destinationAgeDescription = ""; }
+                else if (destinationAgeStart == "birth") { destinationAgeDescription = " from birth"; }
+                else { destinationAgeStart = " from " + destinationAgeStart + " of age"; }
+            }
+            else if (destinationAgeEnd == "birth")
+            {
+                destinationAgeDescription = " while a newborn";
+            }
+            else
+            {
+                if (destinationAgeStart == "") { destinationAgeDescription = " until " + destinationAgeEnd + " of age"; }
+                else if (destinationAgeStart == "birth") { destinationAgeDescription = " from birth to " + destinationAgeEnd + " of age"; }
+                else
+                {
+                    if (destinationAgeStart == destinationAgeEnd) { destinationAgeDescription = " while " + destinationAgeStart + " of age"; }
+                    else { destinationAgeDescription = " from " + destinationAgeStart + " to " + destinationAgeEnd + " of age"; }
+                }
+            }
+
+            // Final description of the peoples's relationship
             switch (Type)
             {
                 case 1: // Mother
-                    SourceDescription = "Mother: " + sourceFirstName + " " + sourceLastName + " at " + sourceAgeStart + " of age";
+                    SourceDescription = "Mother: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription;
 
                     if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
                     else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
@@ -472,50 +518,50 @@ namespace FamilyExplorer
                     break;
 
                 case 2: // Father
-                    SourceDescription = "Father: " + sourceFirstName + " " + sourceLastName + " at " + sourceAgeStart + " of age";
+                    SourceDescription = "Father: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription;
 
                     if (destinationGender == "Female") { DestinationDescription = "Daughter: " + destinationFirstName + " " + destinationLastName; }
                     else if (destinationGender == "Male") { DestinationDescription = "Son: " + destinationFirstName + " " + destinationLastName; }
                     else { DestinationDescription = "Child: " + destinationFirstName + " " + destinationLastName; }
                     break;
 
-                case 3: // Sibling
-                    if (sourceAgeStart != "from birth") { ageDescription = " at " + sourceAgeStart + " of age"; }
-                    else { ageDescription = ""; }
-                    if (sourceGender == "Female") { SourceDescription = "Sister: " + sourceFirstName + " " + sourceLastName + ageDescription; }
-                    else if (sourceGender == "Male") { SourceDescription = "Brother: " + sourceFirstName + " " + sourceLastName + ageDescription; }
-                    else { SourceDescription = "Sibling: " + sourceFirstName + " " + sourceLastName + ageDescription; }
+                case 3: // Sibling                    
+                    if (sourceGender == "Female") { SourceDescription = "Sister: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+                    else if (sourceGender == "Male") { SourceDescription = "Brother: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+                    else { SourceDescription = "Sibling: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
 
-                    if (destinationAgeStart != "from birth") { ageDescription = " at " + sourceAgeStart + " of age"; }
-                    else { ageDescription = ""; }
-                    if (destinationGender == "Female") { DestinationDescription = "Sister: " + destinationFirstName + " " + destinationLastName + ageDescription;}
-                    else if (destinationGender == "Male") { DestinationDescription = "Brother: " + destinationFirstName + " " + destinationLastName + ageDescription; }
-                    else { DestinationDescription = "Sibling: " + destinationFirstName + " " + destinationLastName + ageDescription; }
+                   
+                    if (destinationGender == "Female") { DestinationDescription = "Sister: " + destinationFirstName + " " + destinationLastName + destinationAgeDescription;}
+                    else if (destinationGender == "Male") { DestinationDescription = "Brother: " + destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
+                    else { DestinationDescription = "Sibling: " + destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
                     break;
 
                 case 4: // Friend
                 case 5: // Partner
                     if (Ended)
                     {
-                        if (sourceAgeStart == sourceAgeEnd) { SourceDescription = sourceFirstName + " " + sourceLastName + " at " + sourceAgeStart + " of age"; }
-                        else { SourceDescription = sourceFirstName + " " + sourceLastName + " from " + sourceAgeStart + " to " + sourceAgeEnd + " of age"; }
-                        if (destinationAgeStart == destinationAgeEnd) { DestinationDescription = destinationFirstName + " " + destinationLastName + " at " + destinationAgeStart + " of age"; }
-                        else { DestinationDescription = destinationFirstName + " " + destinationLastName + " from " + destinationAgeStart + " to " + destinationAgeEnd + " of age"; }
+                        if (sourceAgeStart == sourceAgeEnd) { SourceDescription = sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+                        else { SourceDescription = sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+
+                        if (destinationAgeStart == destinationAgeEnd) { DestinationDescription = destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
+                        else { DestinationDescription = destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
                         break;
                     }
                     else
                     {
-                        SourceDescription = sourceFirstName + " " + sourceLastName + " from " + sourceAgeStart + " of age";
-                        DestinationDescription = destinationFirstName + " " + destinationLastName + " from " + destinationAgeStart + " of age";
+                        SourceDescription = sourceFirstName + " " + sourceLastName + sourceAgeDescription;
+
+                        DestinationDescription = destinationFirstName + " " + destinationLastName + destinationAgeDescription;
                         break;
                     }
                
 
                 case 6: // Abuse
-                    if (sourceAgeStart == sourceAgeEnd) { SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + " at " + sourceAgeStart + " of age"; }
-                    else { SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + " from " + sourceAgeStart + " to " + sourceAgeEnd + " of age"; }
-                    if (destinationAgeStart == destinationAgeEnd) { DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + " at " + destinationAgeStart + " of age"; }
-                    else { DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + " from " + destinationAgeStart + " to " + destinationAgeEnd + " of age"; }
+                    if (sourceAgeStart == sourceAgeEnd) { SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+                    else { SourceDescription = "Abuser: " + sourceFirstName + " " + sourceLastName + sourceAgeDescription; }
+
+                    if (destinationAgeStart == destinationAgeEnd) { DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
+                    else { DestinationDescription = "Victim: " + destinationFirstName + " " + destinationLastName + destinationAgeDescription; }
                     break;
 
                 default:
@@ -539,12 +585,12 @@ namespace FamilyExplorer
                     double months = days / 30;                   
                     if (months <= 1)
                     {
-                        if (Math.Floor(days) == 0) { return "birth"; }
-                        return Math.Floor(days).ToString() + " Days";
+                        if (Math.Floor(days) <= 0) { return "birth"; }
+                        return Math.Floor(days).ToString() + " days";
                     }
-                    return "~" + Math.Floor(months).ToString() + " Months";
+                    return "approx " + Math.Floor(months).ToString() + " months";
                 }
-                return age.ToString() + " Years";
+                return age.ToString() + " years";
             }
             else { return ""; }
         }
