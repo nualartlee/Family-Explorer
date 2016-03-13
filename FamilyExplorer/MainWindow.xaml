@@ -24,10 +24,14 @@
         </Style>
 
         <DataTemplate x:Key="PersonItem">
-            <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
+            <Border>
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Color="Gray" Opacity="0.5" BlurRadius="10"/>
+                </Border.Effect>
+                <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
                     Width="{Binding Width}" Height="{Binding Height}">
                
-                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}" 
+                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
                         Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
@@ -40,9 +44,7 @@
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <!--<Border.Effect>
-                        <DropShadowEffect/>
-                    </Border.Effect>-->
+                    
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
@@ -97,6 +99,7 @@
                             <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
                         </Grid>
                     </Viewbox>
+                </Border>
                 </Border>
             </Border>
         </DataTemplate>
@@ -235,7 +238,7 @@
             </MenuItem>
         </Menu>
 
-        <Grid x:Name="MainGrid" Grid.Row="1" MouseMove="TreeScrollViewer_MouseMove">
+        <Grid x:Name="MainGrid" Grid.Row="1" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
