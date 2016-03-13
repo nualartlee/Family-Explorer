@@ -106,7 +106,7 @@
 
         <DataTemplate x:Key="RelationshipItem">
             <Canvas Background="{x:Null}">
-                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}">
+                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}" StrokeStartLineCap="{Binding StrokeStartLineCap}" StrokeEndLineCap="{Binding StrokeEndLineCap}">
                     <!--MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave">-->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
@@ -120,7 +120,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Path>
-                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}">
+                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" StrokeStartLineCap="{Binding StrokeStartLineCap}" StrokeEndLineCap="{Binding StrokeEndLineCap}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnter}"/>

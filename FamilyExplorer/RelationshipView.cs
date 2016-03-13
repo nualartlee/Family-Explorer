@@ -140,6 +140,34 @@ namespace FamilyExplorer
             }
         }
 
+        private string strokeStartLineCap;
+        public string StrokeStartLineCap
+        {
+            get { return strokeStartLineCap; }
+            set
+            {
+                if (value != strokeStartLineCap)
+                {
+                    strokeStartLineCap = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string strokeEndLineCap;
+        public string StrokeEndLineCap
+        {
+            get { return strokeEndLineCap; }
+            set
+            {
+                if (value != strokeEndLineCap)
+                {
+                    strokeEndLineCap = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private int zIndex;
         public int ZIndex
         {
@@ -751,6 +779,7 @@ namespace FamilyExplorer
             }
 
             Path = SmoothenPath(points);
+            RefreshPathStrokeCapStyle();
         }
 
         private string SmoothenPath(List<Point> points)
@@ -808,6 +837,16 @@ namespace FamilyExplorer
             }
 
             return path;
+        }
+
+        private List<Point> GetPersonPositions()
+        {
+            List<Point> Points = new List<Point>();
+            foreach (PersonView person in FamilyView.Instance.Members)
+            {
+                Points.Add(new Point(person.X, person.Y));
+            }
+            return Points;
         }
 
         private Point GetNextDownwardsPoint(Point current, Point destination, double offset)
@@ -984,23 +1023,7 @@ namespace FamilyExplorer
                 if (location == -space / 2 + offset) { return 2; } // On horizontal path
                 if (location == -margin) { return 3; } // Person top
             }
-
-            //if (location == height/2 + margin) { return (positive) ? 1 : 3; } // Person bottom
-            //if (location == (height + space) / 2 + offset) { return 2; } // On horizontal path
-            //if (location == height/2 + space - margin) { return (positive) ? 3 : 1; } // Person top
-
-            //if (positive)
-            //{
-
-            //}
-            //else
-            //{
-            //    if (location == height/2 + margin) { return 1; } // Person bottom
-            //    if (location == (height + space) / 2 + offset) { return 2; } // On horizontal path
-            //    if (location == margin) { return 3; } // Person top
-            //}
-
-
+            
             return 0;
         }
 
@@ -1016,6 +1039,33 @@ namespace FamilyExplorer
             else
             {
                 return (int)Math.Ceiling(currentYPosition / (height + horizontalSpace));
+            }
+        }
+
+        private void RefreshPathStrokeCapStyle()
+        {
+            switch (Type)
+            {
+                case 1:
+                case 2:
+                    StrokeStartLineCap = "Flat";
+                    StrokeEndLineCap = "Round";
+                    break;
+
+                case 3:
+                case 4:
+                case 5:
+                    StrokeStartLineCap = "Round";
+                    StrokeEndLineCap = "Round";
+                    break;                
+                case 6:
+                    StrokeStartLineCap = "Flat";
+                    StrokeEndLineCap = "Triangle";
+                    break;
+                default:
+                    StrokeStartLineCap = "Round";
+                    StrokeEndLineCap = "Round";
+                    break;
             }
         }
 

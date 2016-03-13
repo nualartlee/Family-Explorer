@@ -735,6 +735,8 @@ namespace FamilyExplorer
             }
         }
 
+       
+
         private void SetPersonPosition(PersonView person)
         {
             person.X = Tree.Width / 2 + person.SiblingIndex * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) - Settings.Instance.Person.Width / 2;
