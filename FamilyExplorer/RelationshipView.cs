@@ -487,7 +487,7 @@ namespace FamilyExplorer
             {
                 if (destinationAgeStart == "") { destinationAgeDescription = ""; }
                 else if (destinationAgeStart == "birth") { destinationAgeDescription = " from birth"; }
-                else { destinationAgeStart = " from " + destinationAgeStart + " of age"; }
+                else { destinationAgeDescription = " from " + destinationAgeStart + " of age"; }
             }
             else if (destinationAgeEnd == "birth")
             {
