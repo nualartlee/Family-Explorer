@@ -807,9 +807,10 @@ namespace FamilyExplorer
 
                 if (startedHorizontal)
                 {
-                    var list = new[] { radius, Math.Abs(points[i - 1].X - points[i].X), Math.Abs(points[i].Y - points[i + 1].Y) };
-                    radius = list.Min(); // Reduce corner radius if points are too close
-
+                    // Reduce corner radius if points are too close
+                    var list = new[] { Math.Abs(points[i - 1].X - points[i].X), Math.Abs(points[i].Y - points[i + 1].Y) };
+                    if (radius > list.Min()/2) { radius = list.Min() /2; }
+                    
                     bool startedGoingRight = points[i - 1].X < points[i].X;
                     if (startedGoingRight) { tangent1 = new Point(points[i].X - radius, points[i].Y); }
                     else { tangent1 = new Point(points[i].X + radius, points[i].Y); }
@@ -819,8 +820,9 @@ namespace FamilyExplorer
                 }
                 else
                 {
-                    var list = new[] { radius, Math.Abs(points[i - 1].Y - points[i].Y), Math.Abs(points[i].X - points[i + 1].X) };
-                    radius = list.Min(); // Reduce corner radius if points are too close
+                    // Reduce corner radius if points are too close
+                    var list = new[] { Math.Abs(points[i - 1].Y - points[i].Y), Math.Abs(points[i].X - points[i + 1].X) };                   
+                    if (radius >= list.Min()/2) { radius = list.Min() /2; }
 
                     bool startedGoingDown = points[i - 1].Y < points[i].Y;
                     if (startedGoingDown) { tangent1 = new Point(points[i].X, points[i].Y - radius); }
@@ -833,16 +835,6 @@ namespace FamilyExplorer
             }
 
             return path;
-        }
-
-        private List<Point> GetPersonPositions()
-        {
-            List<Point> Points = new List<Point>();
-            foreach (PersonView person in FamilyView.Instance.Members)
-            {
-                Points.Add(new Point(person.X, person.Y));
-            }
-            return Points;
         }
 
         private List<Point> CreateDescendingPath(Point origin, Point destination, double offset)

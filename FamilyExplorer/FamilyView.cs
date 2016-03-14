@@ -31,6 +31,7 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        // TODO: Add Sibling buttons in person data grid
         // TODO: Settings window
         // TODO: Save handling & FamilyView command binding
         // TODO: Generation refresh after person DOB change
