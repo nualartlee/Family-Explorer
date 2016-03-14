@@ -260,7 +260,16 @@
                   
                         <StackPanel Orientation="Vertical">
                             <Border CornerRadius="5" BorderThickness="1" BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
-                                <TextBlock Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                                <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                </Button>
+                                </Grid>
                             </Border>
                             <StackPanel Orientation="Horizontal">
                                 <Border x:Name="PersonDataBorder" CornerRadius="5" BorderThickness="1"
@@ -289,21 +298,8 @@
                                                 <DatePicker x:Name="BirthDatePicker" SelectedDate="{Binding DOB}" >
                                                     <DatePicker.Resources>
                                                     <Style TargetType="{x:Type DatePicker}">
-                                                        <Setter Property="BorderBrush" Value="Transparent">
-                                                            <!--<Setter.Value>
-                                                                <ControlTemplate>
-                                                                    <Border>
-                                                                        <Grid x:Name="Part_Root">
-                                                                       
-                                                                            <TextBox x:Name="PART_TextBox"/>
-                                                                            <Button x:Name="PART_Button"/>
-                                                                       
-                                                                    </Grid>
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>-->
-                                                        </Setter>
-                                                    </Style>
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        </Style>
                                                     <Style TargetType="{x:Type DatePickerTextBox}">
                                                         <Setter Property="Template">
                                                             <Setter.Value>

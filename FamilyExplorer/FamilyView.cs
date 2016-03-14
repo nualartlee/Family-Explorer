@@ -32,10 +32,11 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {
         
+        // TODO: 
+        // TODO: Disable Add child can execute without gender
         // TODO: Add Sibling buttons in person data grid
         // TODO: Settings window
-        // TODO: Save handling & FamilyView command binding
-        // TODO: Generation refresh after person DOB change
+        // TODO: Save handling & FamilyView command binding       
         // TODO: Review & comment
         // TODO: Unit tests
 
@@ -94,19 +95,19 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<PersonView> selectedPersonSiblings;
-        public ObservableCollection<PersonView> SelectedPersonSiblings
-        {
-            get { return selectedPersonSiblings; }
-            set
-            {
-                if (value != selectedPersonSiblings)
-                {
-                    selectedPersonSiblings = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private ObservableCollection<PersonView> selectedPersonSiblings;
+        //public ObservableCollection<PersonView> SelectedPersonSiblings
+        //{
+        //    get { return selectedPersonSiblings; }
+        //    set
+        //    {
+        //        if (value != selectedPersonSiblings)
+        //        {
+        //            selectedPersonSiblings = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private ObservableCollection<RelationshipView> relationships;
         public ObservableCollection<RelationshipView> Relationships
@@ -236,7 +237,7 @@ namespace FamilyExplorer
             Members = new ObservableCollection<PersonView> { };
             Relationships = new ObservableCollection<RelationshipView> { };            
             SelectedPerson = new PersonView();
-            SelectedPersonSiblings = new ObservableCollection<PersonView> { };
+            //SelectedPersonSiblings = new ObservableCollection<PersonView> { };
             InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
         }
