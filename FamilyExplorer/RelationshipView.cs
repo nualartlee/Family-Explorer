@@ -1180,6 +1180,7 @@ namespace FamilyExplorer
                     break;
 
             }
+            if (FamilyView.Instance.SelectedRelationship == this) { FamilyView.Instance.SelectedRelationship = null; }
             FamilyView.Instance.Relationships.Remove(this);
         }
         private string delete_ToolTip;

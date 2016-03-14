@@ -520,9 +520,17 @@
                         </Grid.RowDefinitions>
                         <Border x:Name="RelationshipDataHeaderBorder" Grid.Row="0" CornerRadius="5" BorderThickness="3"  BorderBrush="{Binding PathColor}"
                                 Background="White" Margin="10,20,10,10" HorizontalAlignment="Stretch">
-
-                                <TextBlock Margin="4" Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
-                            </Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock  Grid.Column="0" Margin="4" Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
+                            <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                <Image Style="{StaticResource DeleteIcon}"/>
+                            </Button>
+                            </Grid>
+                        </Border>
                         <Border x:Name="RelationshipDataContentBorder" Grid.Row="1" CornerRadius="5" BorderThickness="1" BorderBrush="Gray" Background="White" Margin="10" >
                             <StackPanel>
                                 <Label Margin="4" Content="{Binding SourceDescription}" />
