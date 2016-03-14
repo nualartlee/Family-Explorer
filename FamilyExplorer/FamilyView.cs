@@ -31,6 +31,7 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        
         // TODO: Add Sibling buttons in person data grid
         // TODO: Settings window
         // TODO: Save handling & FamilyView command binding
@@ -258,6 +259,21 @@ namespace FamilyExplorer
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             RefreshCommandsCanExecute();
+        }
+
+        private void PersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "DOB")
+            {
+                PersonView person = (PersonView)sender;
+                OrderSiblings(person.GenerationIndex);
+                SetTreeLayout();
+            }
+        }
+
+        private void RelationshipPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+
         }
 
         public void CreateNewFamily()
@@ -722,6 +738,7 @@ namespace FamilyExplorer
             Members.Add(person);
             OrderSiblings(person.GenerationIndex);
             SetTreeLayout();
+            person.PropertyChanged += PersonPropertyChangedHandler;
         }
 
         public void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
@@ -740,9 +757,7 @@ namespace FamilyExplorer
                 RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
                 FamilyView.Instance.Relationships.Add(newRelationship);
             }
-        }
-
-       
+        }      
 
         private void SetPersonPosition(PersonView person)
         {
@@ -770,8 +785,7 @@ namespace FamilyExplorer
             foreach (PersonView person in Members)
             {
                 SetPersonPosition(person);
-            }
-            //ResetAllRelationships();
+            }           
             SetScaledTreeDimensions();
         }
 
