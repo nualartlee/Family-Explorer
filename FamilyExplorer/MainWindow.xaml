@@ -11,6 +11,7 @@
 
     <Window.Resources>
 
+
         <Style x:Key="AddPersonIcon" TargetType="Image">
             <Setter Property="Source" Value="Resources/Icons/AddPerson.png" />
         </Style>
@@ -30,76 +31,76 @@
                 </Border.Effect>
                 <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
                     Width="{Binding Width}" Height="{Binding Height}">
-               
-                <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
+
+                    <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
                         Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseEnter">
-                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseLeave">
-                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseLeftButtonDown">
-                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    
-                    <Border.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
-                                <MenuItem.Icon>
-                                    <Image Style="{StaticResource DeleteIcon}"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <Separator/>
-                            <MenuItem Header="Add">
-                                <MenuItem.Icon>
-                                    <Image Style="{StaticResource AddPersonIcon}" />
-                                </MenuItem.Icon>
-                                <MenuItem Header="Mother" Command="{Binding AddMother}" ToolTip="{Binding AddMother_ToolTip}"/>
-                                <MenuItem Header="Father" Command="{Binding AddFather}" ToolTip="{Binding AddFather_ToolTip}"/>
-                                <MenuItem Header="Sibling">
-                                    <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}"/>
-                                    <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}"/>
-                                    <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}"/>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource DeleteIcon}"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Friend" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}"/>
-                                <MenuItem Header="Partner" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}"/>
-                                <MenuItem Header="Child" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}"/>
-                                <MenuItem Header="Abuser" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}"/>
-                                <MenuItem Header="Victim"  Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}"/>
-                            </MenuItem>
-                            <MenuItem Header="Select">
-                                <MenuItem.Icon>
-                                    <Image Style="{StaticResource SelectPersonIcon}" />
-                                </MenuItem.Icon>
-                                <MenuItem Header="Mother" Command="{Binding SelectMother}" ToolTip="{Binding SelectMother_ToolTip}"/>
-                                <MenuItem Header="Father" Command="{Binding SelectFather}" ToolTip="{Binding SelectFather_ToolTip}"/>
-                                <MenuItem Header="Friend" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}"/>
-                                <MenuItem Header="Partner" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}"/>
-                                <MenuItem Header="Child" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}"/>
-                                <MenuItem Header="Abuser" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}"/>
-                                <MenuItem Header="Victim" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}"/>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Border.ContextMenu>
-                    <Viewbox Width="Auto" Height="Auto">
-                        <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="1*" />
-                                <RowDefinition Height="2*" />
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}" Foreground="{Binding TextColor}"/>
-                            <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
-                        </Grid>
-                    </Viewbox>
-                </Border>
+                                <Separator/>
+                                <MenuItem Header="Add">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource AddPersonIcon}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Mother" Command="{Binding AddMother}" ToolTip="{Binding AddMother_ToolTip}"/>
+                                    <MenuItem Header="Father" Command="{Binding AddFather}" ToolTip="{Binding AddFather_ToolTip}"/>
+                                    <MenuItem Header="Sibling">
+                                        <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}"/>
+                                        <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}"/>
+                                        <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}"/>
+                                    </MenuItem>
+                                    <MenuItem Header="Friend" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}"/>
+                                    <MenuItem Header="Partner" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}"/>
+                                    <MenuItem Header="Child" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}"/>
+                                    <MenuItem Header="Abuser" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}"/>
+                                    <MenuItem Header="Victim"  Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}"/>
+                                </MenuItem>
+                                <MenuItem Header="Select">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource SelectPersonIcon}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Mother" Command="{Binding SelectMother}" ToolTip="{Binding SelectMother_ToolTip}"/>
+                                    <MenuItem Header="Father" Command="{Binding SelectFather}" ToolTip="{Binding SelectFather_ToolTip}"/>
+                                    <MenuItem Header="Friend" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}"/>
+                                    <MenuItem Header="Partner" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}"/>
+                                    <MenuItem Header="Child" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}"/>
+                                    <MenuItem Header="Abuser" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}"/>
+                                    <MenuItem Header="Victim" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}"/>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                        <Viewbox Width="Auto" Height="Auto">
+                            <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="2*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}" Foreground="{Binding TextColor}"/>
+                                <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
+                            </Grid>
+                        </Viewbox>
+                    </Border>
                 </Border>
             </Border>
         </DataTemplate>
@@ -166,7 +167,7 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-      
+
         <Style x:Key="RelationshipListButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
@@ -199,7 +200,7 @@
                 </Button>
             </Grid>
         </ControlTemplate>
-        
+
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -257,7 +258,7 @@
                 <ScrollViewer x:Name="PersonDataScrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding SelectedPerson}"
                             Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Center" >
-                  
+
                         <StackPanel Orientation="Vertical">
                             <Border CornerRadius="5" BorderThickness="1" BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
                                 <Grid>
@@ -265,10 +266,10 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
-                                <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
-                                    <Image Style="{StaticResource DeleteIcon}"/>
-                                </Button>
+                                    <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                                    <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                        <Image Style="{StaticResource DeleteIcon}"/>
+                                    </Button>
                                 </Grid>
                             </Border>
                             <StackPanel Orientation="Horizontal">
@@ -297,25 +298,25 @@
                                             <Border Grid.Column="1" Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
                                                 <DatePicker x:Name="BirthDatePicker" SelectedDate="{Binding DOB}" >
                                                     <DatePicker.Resources>
-                                                    <Style TargetType="{x:Type DatePicker}">
+                                                        <Style TargetType="{x:Type DatePicker}">
                                                             <Setter Property="BorderBrush" Value="Transparent"/>
                                                         </Style>
-                                                    <Style TargetType="{x:Type DatePickerTextBox}">
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate>
-                                                                    <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                        <Style TargetType="{x:Type DatePickerTextBox}">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate>
+                                                                        <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                                                                             <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
                                                                             <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                                                         </Grid>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </DatePicker.Resources>
-                                            </DatePicker>
-                                </Border>
-                    </Grid>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </DatePicker.Resources>
+                                                </DatePicker>
+                                            </Border>
+                                        </Grid>
                                         <Label Margin="4" Content="Notes:" />
                                         <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
                                     </StackPanel>
@@ -370,18 +371,54 @@
                                         <Border x:Name="SiblingRelationships" Style="{StaticResource RelationshipListBorder}">
                                             <StackPanel>
                                                 <Grid>
-                                                    <Label Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}" >
-                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
+                                                    <Button x:Name="AddSiblingButton" ToolTip="Add a sibling..." 
+                                                                Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        <Button.Style >
+                                                            <Style TargetType="Button"  BasedOn="{StaticResource RelationshipListButtonStyle}">
+                                                                <Style.Triggers>
+                                                                    <EventTrigger RoutedEvent="Click">
+                                                                        <EventTrigger.Actions>
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
+                                                                                        <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
+                                                                                    </BooleanAnimationUsingKeyFrames>
+
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </EventTrigger.Actions>
+                                                                    </EventTrigger>
+                                                                </Style.Triggers>
+                                                                <Style.Setters>
+                                                                    <Setter Property="ContextMenu">
+                                                                        <Setter.Value>
+                                                                            <ContextMenu x:Name="AddSiblingButtonContextMenu" DataContext="{Binding PlacementTarget.Tag.
+                                                                                DataContext, RelativeSource={RelativeSource Self}}" >
+                                                                                <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
+                                                                                <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
+                                                                                <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
+                                                                            </ContextMenu>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style.Setters>
+                                                            </Style>
+                                                        </Button.Style>
+                                                        <!--<Button.ContextMenu>
+                                                                <ContextMenu x:Name="AddSiblingButtonContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
+                                                                    <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
+                                                                    <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
+                                                                    <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
+                                                                </ContextMenu>
+                                                            </Button.ContextMenu>-->
+                                                       
                                                         </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}">
-                                                            <Image Style="{StaticResource AddPersonIcon}"/>
-                                                        </Button>
-                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}">
-                                                            <Image Style="{StaticResource AddPersonIcon}"/>
-                                                        </Button>
-                                                    </StackPanel>
+                                                    
                                                 </Grid>
                                                 <ItemsControl ItemsSource="{Binding SiblingRelationships}">
                                                     <ItemsControl.ItemTemplate>
@@ -526,9 +563,9 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock  Grid.Column="0" Margin="4" Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
-                            <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
-                                <Image Style="{StaticResource DeleteIcon}"/>
-                            </Button>
+                                <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                </Button>
                             </Grid>
                         </Border>
                         <Border x:Name="RelationshipDataContentBorder" Grid.Row="1" CornerRadius="5" BorderThickness="1" BorderBrush="Gray" Background="White" Margin="10" >

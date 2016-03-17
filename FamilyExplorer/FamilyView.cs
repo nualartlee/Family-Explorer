@@ -93,21 +93,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
-
-        //private ObservableCollection<PersonView> selectedPersonSiblings;
-        //public ObservableCollection<PersonView> SelectedPersonSiblings
-        //{
-        //    get { return selectedPersonSiblings; }
-        //    set
-        //    {
-        //        if (value != selectedPersonSiblings)
-        //        {
-        //            selectedPersonSiblings = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
+        }        
 
         private ObservableCollection<RelationshipView> relationships;
         public ObservableCollection<RelationshipView> Relationships

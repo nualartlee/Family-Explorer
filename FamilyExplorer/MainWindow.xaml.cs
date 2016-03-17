@@ -247,5 +247,6 @@ namespace FamilyExplorer
             SelectCommandPopup.HorizontalOffset = currentPos.X + 10;
             SelectCommandPopup.VerticalOffset = currentPos.Y + 15;
         }
+      
     }
 }
