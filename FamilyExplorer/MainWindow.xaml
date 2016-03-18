@@ -11,6 +11,34 @@
 
     <Window.Resources>
 
+        <Style x:Key="ToolbarIcons" TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.3" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="OpenFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/OpenFile.png" />
+        </Style>
+
+        <Style x:Key="SaveFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/SaveFile.png" />
+        </Style>
+
+        <Style x:Key="UndoIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Undo.png" />
+        </Style>
+
+        <Style x:Key="RedoIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Redo.png" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style x:Key="AddPersonIcon" TargetType="Image">
             <Setter Property="Source" Value="Resources/Icons/AddPerson.png" />
@@ -172,6 +200,11 @@
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Margin" Value="4"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.7" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <ControlTemplate x:Key="RelationshipNameLabelTemplate" TargetType="{x:Type Label}">
@@ -215,6 +248,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -238,8 +272,28 @@
             <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
         </Menu>
-
-        <Grid x:Name="MainGrid" Grid.Row="1" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
+        
+        <DockPanel Grid.Row="1">
+            <ToolBarTray>
+                <ToolBar>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding OpenFile_ToolTip}" Command="{Binding OpenFile}">
+                        <Image Style="{StaticResource OpenFileIcon}"/>
+                    </Button>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding SaveFile_ToolTip}" Command="{Binding SaveFile}">
+                        <Image Style="{StaticResource SaveFileIcon}"/>
+                    </Button>
+                    <Separator Margin="12"/>
+                    <Button Margin="4" Width="24" Height="24">
+                        <Image Style="{StaticResource UndoIcon}"/>
+                    </Button>
+                    <Button Margin="4" Width="24" Height="24">
+                        <Image Style="{StaticResource RedoIcon}"/>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
+        
+        <Grid x:Name="MainGrid" Grid.Row="2" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>

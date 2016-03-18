@@ -159,6 +159,12 @@
     <Resource Include="Resources\Icons\Delete.png" />
     <Resource Include="Resources\Icons\SelectPerson.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\OpenFile.png" />
+    <Resource Include="Resources\Icons\Redo.png" />
+    <Resource Include="Resources\Icons\SaveFile.png" />
+    <Resource Include="Resources\Icons\Undo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
