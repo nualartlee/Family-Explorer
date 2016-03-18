@@ -95,6 +95,34 @@ namespace FamilyExplorer
             }
         }
 
+        private ObservableCollection<FamilyModel> doneFamilyModels;
+        public ObservableCollection<FamilyModel> DoneFamilyModels
+        {
+            get { return doneFamilyModels; }
+            set
+            {
+                if (value != doneFamilyModels)
+                {
+                    doneFamilyModels = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<FamilyModel> undoneFamilyModels;
+        public ObservableCollection<FamilyModel> UndoneFamilyModels
+        {
+            get { return undoneFamilyModels; }
+            set
+            {
+                if (value != undoneFamilyModels)
+                {
+                    undoneFamilyModels = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private bool hasChanges = false;
         public bool HasChanges
         {
@@ -293,7 +321,8 @@ namespace FamilyExplorer
             Members = new ObservableCollection<PersonView> { };
             Relationships = new ObservableCollection<RelationshipView> { };            
             SelectedPerson = new PersonView();
-            //SelectedPersonSiblings = new ObservableCollection<PersonView> { };
+            DoneFamilyModels = new ObservableCollection<FamilyModel> { };
+            UndoneFamilyModels = new ObservableCollection<FamilyModel> { };
             InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
         }
@@ -335,6 +364,7 @@ namespace FamilyExplorer
 
         private void BasePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
+            DoneFamilyModels.Add(CurrentFamilyModel);
             UpdateCurrentFamilyModel();
             if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
             else { HasChanges = true; }
@@ -655,6 +685,7 @@ namespace FamilyExplorer
             OpenFile = new RelayCommand(OpenFile_Executed, OpenFile_CanExecute);
             SaveFile = new RelayCommand(SaveFile_Executed, SaveFile_CanExecute);
             SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
+            Undo = new RelayCommand(Undo_Executed, Undo_CanExecute);
         }
 
         private void RefreshCommandsCanExecute()
@@ -662,6 +693,7 @@ namespace FamilyExplorer
             OpenFile.RaiseCanExecuteChanged();
             SaveFile.RaiseCanExecuteChanged();
             SaveFileAs.RaiseCanExecuteChanged();
+            Undo.RaiseCanExecuteChanged();
         }
 
         public RelayCommand OpenFile
@@ -812,6 +844,36 @@ namespace FamilyExplorer
             }
         }
 
+        public RelayCommand Undo
+        {
+            get;
+            private set;
+        }
+        public bool Undo_CanExecute()
+        {            
+            if (DoneFamilyModels.Count() > 0) { return true; }
+            else { return false; }
+        }
+        public void Undo_Executed()
+        {
+            CurrentFamilyModel = DoneFamilyModels.Last();
+            DoneFamilyModels.Remove(CurrentFamilyModel);
+            SetCurrentFamilyModel();
+        }
+        private string undo_ToolTip = "Undo...";
+        public string Undo_ToolTip
+        {
+            get { return undo_ToolTip; }
+            set
+            {
+                if (value != undo_ToolTip)
+                {
+                    undo_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private void Open(string filename)
         {            
             // Close handle to old file
@@ -826,6 +888,16 @@ namespace FamilyExplorer
             CurrentFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
             SavedFamilyModel = CurrentFamilyModel;
 
+            SetCurrentFamilyModel();
+
+            Title = "Family Explorer - " + filename;
+            SelectedPerson = null;
+            SelectedRelationship = null;
+            SetTreeLayout();            
+        }
+        
+        private void SetCurrentFamilyModel()
+        {
             if (CurrentFamilyModel.PersonSettings != null) { Settings.Instance.Person = CurrentFamilyModel.PersonSettings; }
             if (CurrentFamilyModel.RelationshipSettings != null) { Settings.Instance.Relationship = CurrentFamilyModel.RelationshipSettings; }
             if (CurrentFamilyModel.Tree != null) { Tree = CurrentFamilyModel.Tree; }
@@ -851,12 +923,8 @@ namespace FamilyExplorer
                     relationshipView.BasePropertyChanged += BasePropertyChangedHandler;
                 }
             }
-            Title = "Family Explorer - " + filename;
-            SelectedPerson = null;
-            SelectedRelationship = null;
-            SetTreeLayout();            
         }
-        
+
         private MessageBoxResult SaveChangesDialog()
         {           
             string msg = "Save changes to " + CurrentFile.Name + "?";

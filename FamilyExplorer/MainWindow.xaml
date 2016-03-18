@@ -283,7 +283,7 @@
                         <Image Style="{StaticResource SaveFileIcon}"/>
                     </Button>
                     <Separator Margin="12"/>
-                    <Button Margin="4" Width="24" Height="24">
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding Undo_ToolTip}" Command="{Binding Undo}">
                         <Image Style="{StaticResource UndoIcon}"/>
                     </Button>
                     <Button Margin="4" Width="24" Height="24">
