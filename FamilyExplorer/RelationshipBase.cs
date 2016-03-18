@@ -13,11 +13,19 @@ namespace FamilyExplorer
 
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler BasePropertyChanged;
         public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        public void NotifyBasePropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (BasePropertyChanged != null)
+            {
+                BasePropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -31,6 +39,7 @@ namespace FamilyExplorer
                 {
                     id = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -45,38 +54,11 @@ namespace FamilyExplorer
                 {
                     type = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
-
-        //private int personSourceId;
-        //public int PersonSourceId
-        //{
-        //    get { return personSourceId; }
-        //    set
-        //    {
-        //        if (value != personSourceId)
-        //        {
-        //            personSourceId = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-
-        //private int personDestinationId;
-        //public int PersonDestinationId
-        //{
-        //    get { return personDestinationId; }
-        //    set
-        //    {
-        //        if (value != personDestinationId)
-        //        {
-        //            personDestinationId = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-
+        
         private DateTime startDate;
         public DateTime StartDate
         {
@@ -87,6 +69,7 @@ namespace FamilyExplorer
                 {
                     startDate = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -100,6 +83,7 @@ namespace FamilyExplorer
                 {
                     endDate = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -113,7 +97,8 @@ namespace FamilyExplorer
                 if (value != notes)
                 {
                     notes = value;
-                    NotifyPropertyChanged();                    
+                    NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }        

@@ -32,7 +32,7 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {
         
-        // TODO: 
+        // TODO: Add sibling canexecutes according to available parents
         // TODO: Disable Add child can execute without gender
         // TODO: Add Sibling buttons in person data grid
         // TODO: Settings window
@@ -66,6 +66,76 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private FamilyModel currentFamilyModel;
+        public FamilyModel CurrentFamilyModel
+        {
+            get { return currentFamilyModel; }
+            set
+            {
+                if (value != currentFamilyModel)
+                {
+                    currentFamilyModel = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private FamilyModel savedFamilyModel;
+        public FamilyModel SavedFamilyModel
+        {
+            get { return savedFamilyModel; }
+            set
+            {
+                if (value != savedFamilyModel)
+                {
+                    savedFamilyModel = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private bool hasChanges = false;
+        public bool HasChanges
+        {
+            get { return hasChanges; }
+            set
+            {
+                if (value != hasChanges)
+                {
+                    hasChanges = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private FileStream currentFile;
+        public FileStream CurrentFile
+        {
+            get { return currentFile; }
+            set
+            {
+                if (value != currentFile)
+                {
+                    currentFile = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        //private string familyFileName;
+        //public string FamilyFileName
+        //{
+        //    get { return familyFileName; }
+        //    set
+        //    {
+        //        if (value != familyFileName)
+        //        {
+        //            familyFileName = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private ObservableCollection<PersonView> members;
         public ObservableCollection<PersonView> Members
@@ -261,6 +331,13 @@ namespace FamilyExplorer
         private void RelationshipPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
 
+        }
+
+        private void BasePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            UpdateCurrentFamilyModel();
+            if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
+            else { HasChanges = true; }
         }
 
         public void CreateNewFamily()
@@ -577,12 +654,14 @@ namespace FamilyExplorer
         {
             OpenFile = new RelayCommand(OpenFile_Executed, OpenFile_CanExecute);
             SaveFile = new RelayCommand(SaveFile_Executed, SaveFile_CanExecute);
+            SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
         }
 
         private void RefreshCommandsCanExecute()
         {
             OpenFile.RaiseCanExecuteChanged();
             SaveFile.RaiseCanExecuteChanged();
+            SaveFileAs.RaiseCanExecuteChanged();
         }
 
         public RelayCommand OpenFile
@@ -594,8 +673,69 @@ namespace FamilyExplorer
         {            
            return true; 
         }
+    //    public void OpenFile_Executed()
+    //    {           
+    //        OpenFileDialog openfile = new OpenFileDialog();
+    //        // set a default file name
+    //        openfile.FileName = "Family.fex";
+    //        // set filters - this can be done in properties as well
+    //        openfile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+
+    //        Nullable<bool> result = openfile.ShowDialog();
+
+    //        if (result == true)
+    //        {
+    //            XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));
+
+    //            using (StreamReader reader = new StreamReader(openfile.FileName))
+    //            {
+    //                FamilyModel family = new FamilyModel();
+    //                family = (FamilyModel)serializer.Deserialize(reader);
+    //                if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
+    //                if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }
+    //                if (family.Tree != null) { Tree = family.Tree; }
+    //                Members.Clear();
+    //                if (family.Members != null)
+    //                {
+    //                    foreach (PersonModel personModel in family.Members)
+    //                    {
+    //                        PersonView personView = new PersonView(GetNextID());
+    //                        personView.CopyBaseProperties(personModel);
+    //                        Members.Add(personView);
+    //                    }
+    //                }
+    //                Relationships.Clear();
+    //                if (family.Relationships != null)
+    //                {
+    //                    foreach (RelationshipModel relationshipModel in family.Relationships)
+    //                    {
+    //                        RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
+    //                        relationshipView.CopyBaseProperties(relationshipModel);
+    //                        Relationships.Add(relationshipView);
+    //                    }
+    //                }
+    //                Title = "Family Explorer - " + openfile.FileName;
+
+    //                SetTreeLayout();                
+    //        }
+    //    }
+    //}
         public void OpenFile_Executed()
-        {           
+        {
+            // Save current changes
+            if (CurrentFile != null && HasChanges)
+            {
+                switch (SaveChangesDialog())
+                {
+                    case MessageBoxResult.Yes:
+                        Save();
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+
+            // Ask for file to open
             OpenFileDialog openfile = new OpenFileDialog();
             // set a default file name
             openfile.FileName = "Family.fex";
@@ -606,41 +746,9 @@ namespace FamilyExplorer
 
             if (result == true)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));
-
-                using (StreamReader reader = new StreamReader(openfile.FileName))
-                {
-                    FamilyModel family = new FamilyModel();
-                    family = (FamilyModel)serializer.Deserialize(reader);
-                    if (family.PersonSettings != null) { Settings.Instance.Person = family.PersonSettings; }
-                    if (family.RelationshipSettings != null) { Settings.Instance.Relationship = family.RelationshipSettings; }
-                    if (family.Tree != null) { Tree = family.Tree; }
-                    Members.Clear();
-                    if (family.Members != null)
-                    {
-                        foreach (PersonModel personModel in family.Members)
-                        {
-                            PersonView personView = new PersonView(GetNextID());
-                            personView.CopyBaseProperties(personModel);
-                            Members.Add(personView);
-                        }
-                    }
-                    Relationships.Clear();
-                    if (family.Relationships != null)
-                    {
-                        foreach (RelationshipModel relationshipModel in family.Relationships)
-                        {
-                            RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
-                            relationshipView.CopyBaseProperties(relationshipModel);
-                            Relationships.Add(relationshipView);
-                        }
-                    }
-                    Title = "Family Explorer - " + openfile.FileName;
-
-                    SetTreeLayout();                
+                Open(openfile.FileName);
             }
         }
-    }
 
         public RelayCommand SaveFile
         {
@@ -649,9 +757,69 @@ namespace FamilyExplorer
         }
         public bool SaveFile_CanExecute()
         {
+            if (HasChanges){ return true; }
+            else { return false; }
+        }
+        //public void SaveFile_Executed()
+        //{
+        //    SaveFileDialog savefile = new SaveFileDialog();
+        //    // set a default file name
+        //    savefile.FileName = "Family.fex";
+        //    // set filters - this can be done in properties as well
+        //    savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+
+        //    Nullable<bool> result = savefile.ShowDialog();
+
+        //    if (result == true)
+        //    {
+
+        //        FamilyModel family = new FamilyModel();
+        //        family.PersonSettings = Settings.Instance.Person;
+        //        family.RelationshipSettings = Settings.Instance.Relationship;
+        //        family.Tree = Tree;
+        //        family.Members = new ObservableCollection<PersonModel>() { };
+        //        foreach (PersonView personView in Members)
+        //        {
+        //            PersonModel personModel = new PersonModel();
+        //            personModel.CopyBaseProperties(personView);
+        //            family.Members.Add(personModel);
+        //        }
+        //        family.Relationships = new ObservableCollection<RelationshipModel> { };
+        //        foreach (RelationshipView relationshipView in Relationships)
+        //        {
+        //            RelationshipModel relationshipModel = new RelationshipModel();
+        //            relationshipModel.CopyBaseProperties(relationshipView);
+        //            family.Relationships.Add(relationshipModel);
+        //        }
+        //        XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
+        //        var subReq = family;
+        //        using (StringWriter sww = new StringWriter())
+        //        using (XmlWriter writer = XmlWriter.Create(sww))
+        //        {
+        //            xsSubmit.Serialize(writer, subReq);
+        //            var xml = sww.ToString();
+        //            XmlDocument xdoc = new XmlDocument();
+        //            xdoc.LoadXml(xml);
+        //            xdoc.Save(savefile.FileName);
+        //            Title = "Family Explorer - " + savefile.FileName;
+        //        }
+        //    }
+        //}
+        public void SaveFile_Executed()
+        {
+            Save();
+        }
+
+        public RelayCommand SaveFileAs
+        {
+            get;
+            private set;
+        }
+        public bool SaveFileAs_CanExecute()
+        {
             return true;
         }
-        public void SaveFile_Executed()
+        public void SaveFileAs_Executed()
         {
             SaveFileDialog savefile = new SaveFileDialog();
             // set a default file name
@@ -697,6 +865,142 @@ namespace FamilyExplorer
             }
         }
 
+        private void Open(string filename)
+        {
+            // Close handle to old file
+            if (CurrentFile != null) { CurrentFile.Dispose(); }
+
+            // Grab handle to new file
+            CurrentFile = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            CurrentFile.Seek(0, SeekOrigin.Begin);
+
+            // Deserialize file
+            XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));                            
+            CurrentFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
+            SavedFamilyModel = CurrentFamilyModel;
+
+            if (CurrentFamilyModel.PersonSettings != null) { Settings.Instance.Person = CurrentFamilyModel.PersonSettings; }
+            if (CurrentFamilyModel.RelationshipSettings != null) { Settings.Instance.Relationship = CurrentFamilyModel.RelationshipSettings; }
+            if (CurrentFamilyModel.Tree != null) { Tree = CurrentFamilyModel.Tree; }
+            Members.Clear();
+            if (CurrentFamilyModel.Members != null)
+            {
+                foreach (PersonModel personModel in CurrentFamilyModel.Members)
+                {
+                    PersonView personView = new PersonView(GetNextID());
+                    personView.CopyBaseProperties(personModel);
+                    Members.Add(personView);
+                    personView.BasePropertyChanged += BasePropertyChangedHandler;
+                }
+            }
+            Relationships.Clear();
+            if (CurrentFamilyModel.Relationships != null)
+            {
+                foreach (RelationshipModel relationshipModel in CurrentFamilyModel.Relationships)
+                {
+                    RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
+                    relationshipView.CopyBaseProperties(relationshipModel);
+                    Relationships.Add(relationshipView);
+                    relationshipView.BasePropertyChanged += BasePropertyChangedHandler;
+                }
+            }
+            Title = "Family Explorer - " + filename;
+            SelectedPerson = null;
+            SelectedRelationship = null;
+            SetTreeLayout();            
+        }
+        
+        private MessageBoxResult SaveChangesDialog()
+        {           
+            string msg = "Save changes to " + CurrentFile.Name + "?";
+            var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);           
+            return result;                            
+        }
+
+        private void UpdateCurrentFamilyModel()
+        {
+            CurrentFamilyModel = new FamilyModel();
+            CurrentFamilyModel.PersonSettings = Settings.Instance.Person;
+            CurrentFamilyModel.RelationshipSettings = Settings.Instance.Relationship;
+            CurrentFamilyModel.Tree = Tree;
+            CurrentFamilyModel.Members = new ObservableCollection<PersonModel>() { };
+            foreach (PersonView personView in Members)
+            {
+                PersonModel personModel = new PersonModel();
+                personModel.CopyBaseProperties(personView);
+                CurrentFamilyModel.Members.Add(personModel);
+            }
+            CurrentFamilyModel.Relationships = new ObservableCollection<RelationshipModel> { };
+            foreach (RelationshipView relationshipView in Relationships)
+            {
+                RelationshipModel relationshipModel = new RelationshipModel();
+                relationshipModel.CopyBaseProperties(relationshipView);
+                CurrentFamilyModel.Relationships.Add(relationshipModel);
+            }
+        }
+
+        private void UpdateCurrentFile()
+        {
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));            
+            using (XmlWriter writer = XmlWriter.Create(CurrentFile))
+            {                
+                CurrentFile.SetLength(0);
+                xsSubmit.Serialize(CurrentFile, CurrentFamilyModel);
+            }
+        }
+
+        private void Save()
+        {
+
+            if (HasChanges == false) { return; }
+
+            if (CurrentFile != null)
+            {
+                UpdateCurrentFile();
+                CurrentFile.Flush();                
+                HasChanges = false;
+                SavedFamilyModel = CurrentFamilyModel;
+            }
+        }
+
+        private void SaveAs()
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            // Get current file name
+            savefile.FileName = CurrentFile.Name;
+          
+            // Set filters - this can be done in properties as well
+            savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+
+            // Ask for the new file name
+            Nullable<bool> result = savefile.ShowDialog();
+
+            if (result == true)
+            {
+                // If the user selects the same file name, save and exit
+                if (savefile.FileName == CurrentFile.Name)
+                {
+                    Save();                    
+                    return;
+                }
+
+                // Copy current file data to new file
+                using (var fileStream = File.Create(savefile.FileName))
+                {
+                    CurrentFile.Seek(0, SeekOrigin.Begin);
+                    CurrentFile.CopyTo(fileStream);
+                }
+
+                // Close handle to old file
+                CurrentFile.Dispose();
+
+                // Grab handle to new file
+                CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            SavedFamilyModel = CurrentFamilyModel;
+            HasChanges = false;
+        }
+
         #endregion Commands
 
         public RelationshipView GetRelationship(int ID)
@@ -726,6 +1030,7 @@ namespace FamilyExplorer
             OrderSiblings(person.GenerationIndex);
             SetTreeLayout();
             person.PropertyChanged += PersonPropertyChangedHandler;
+            person.BasePropertyChanged += BasePropertyChangedHandler;
         }
 
         public void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
@@ -743,6 +1048,8 @@ namespace FamilyExplorer
             {
                 RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
                 FamilyView.Instance.Relationships.Add(newRelationship);
+                newRelationship.BasePropertyChanged += BasePropertyChangedHandler;
+
             }
         }      
 

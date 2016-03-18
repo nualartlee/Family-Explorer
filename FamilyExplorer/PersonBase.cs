@@ -28,13 +28,21 @@ namespace FamilyExplorer
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler BasePropertyChanged;        
         public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));                
+            }           
+        }
+        public void NotifyBasePropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (BasePropertyChanged != null)
+            {
+                BasePropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }       
+        }
 
         private int id;
         public int Id
@@ -46,6 +54,7 @@ namespace FamilyExplorer
                 {
                     id = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             } 
         }
@@ -59,6 +68,7 @@ namespace FamilyExplorer
                 {
                     firstName = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             } 
         }
@@ -72,6 +82,7 @@ namespace FamilyExplorer
                 {
                     lastName = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -84,7 +95,8 @@ namespace FamilyExplorer
                 if (value != gender)
                 {
                     gender = value;                    
-                    NotifyPropertyChanged();                    
+                    NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -98,115 +110,11 @@ namespace FamilyExplorer
                 {
                     dob = value;
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
-
-        //private int motherId;
-        //public int MotherId
-        //{
-        //    get { return motherId; }
-        //    set
-        //    {
-        //        if (value != motherId)
-        //        {
-        //            motherId = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        //private int fatherId;
-        //public int FatherId
-        //{
-        //    get { return fatherId; }
-        //    set
-        //    {
-        //        if (value != fatherId)
-        //        {
-        //            fatherId = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}       
-        //private List<int> siblingIds;
-        //public List<int> SiblingIds
-        //{
-        //    get { return siblingIds; }
-        //    set
-        //    {
-        //        if (value != siblingIds)
-        //        {
-        //            siblingIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        //private List<int> friendIds;
-        //public List<int> FriendIds
-        //{
-        //    get { return friendIds; }
-        //    set
-        //    {
-        //        if (value != friendIds)
-        //        {
-        //            friendIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        //private List<int> partnerIds;
-        //public List<int> PartnerIds
-        //{
-        //    get { return partnerIds; }
-        //    set
-        //    {
-        //        if (value != partnerIds)
-        //        {
-        //            partnerIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}        
-        //private List<int> childrenIds;
-        //public List<int> ChildrenIds
-        //{
-        //    get { return childrenIds; }
-        //    set
-        //    {
-        //        if (value != childrenIds)
-        //        {
-        //            childrenIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        //private List<int> abuserIds;
-        //public List<int> AbuserIds
-        //{
-        //    get { return abuserIds; }
-        //    set
-        //    {
-        //        if (value != abuserIds)
-        //        {
-        //            abuserIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        //private List<int> victimIds;
-        //public List<int> VictimIds
-        //{
-        //    get { return victimIds; }
-        //    set
-        //    {
-        //        if (value != victimIds)
-        //        {
-        //            victimIds = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-
+        
         private string notes;
         public string Notes
         {
@@ -216,7 +124,8 @@ namespace FamilyExplorer
                 if (value != notes)
                 {
                     notes = value;
-                    NotifyPropertyChanged();                    
+                    NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -229,9 +138,9 @@ namespace FamilyExplorer
             {
                 if (value != generationIndex)
                 {
-                    generationIndex = value;
-                    //setPosition();
+                    generationIndex = value;                   
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
@@ -243,9 +152,9 @@ namespace FamilyExplorer
             {
                 if (value != siblingIndex)
                 {
-                    siblingIndex = value;
-                    //setPosition();
+                    siblingIndex = value;                  
                     NotifyPropertyChanged();
+                    NotifyBasePropertyChanged();
                 }
             }
         }
