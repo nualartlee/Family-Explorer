@@ -67,19 +67,19 @@ namespace FamilyExplorer
             }
         }
 
-        private FamilyModel currentFamilyModel;
-        public FamilyModel CurrentFamilyModel
-        {
-            get { return currentFamilyModel; }
-            set
-            {
-                if (value != currentFamilyModel)
-                {
-                    currentFamilyModel = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private FamilyModel currentFamilyModel;
+        //public FamilyModel CurrentFamilyModel
+        //{
+        //    get { return currentFamilyModel; }
+        //    set
+        //    {
+        //        if (value != currentFamilyModel)
+        //        {
+        //            currentFamilyModel = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
         private FamilyModel savedFamilyModel;
         public FamilyModel SavedFamilyModel
@@ -363,27 +363,213 @@ namespace FamilyExplorer
         }
 
         private void BasePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            DoneFamilyModels.Add(CurrentFamilyModel);
-            UpdateCurrentFamilyModel();
-            if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
+        {            
+            DoneFamilyModels.Add(CurrentFamilyModel());           
+            if (SavedFamilyModel == CurrentFamilyModel()) { HasChanges = false; }
             else { HasChanges = true; }
         }
+        
+        #region Commands           
 
-        public void CreateNewFamily()
+        private void InitiateCommands()
         {
-            PersonView person = new PersonView(GetNextID());
-            AddPersonToFamily(person);
-            SelectPerson(person);
-            Tree.Scale = 1;
-            CenterTreeInWindow();
-            FamilyTreeCursor = Cursors.Arrow;
-            SelectCommandInProgressType = 0;
-            Title = "Family Explorer - NewFamily.fex";
+            OpenFile = new RelayCommand(OpenFile_Executed, OpenFile_CanExecute);
+            SaveFile = new RelayCommand(SaveFile_Executed, SaveFile_CanExecute);
+            SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
+            Undo = new RelayCommand(Undo_Executed, Undo_CanExecute);
         }
 
-        #region Commands                
-        
+        private void RefreshCommandsCanExecute()
+        {
+            OpenFile.RaiseCanExecuteChanged();
+            SaveFile.RaiseCanExecuteChanged();
+            SaveFileAs.RaiseCanExecuteChanged();
+            Undo.RaiseCanExecuteChanged();
+        }
+
+        public RelayCommand OpenFile
+        {
+            get;
+            private set;
+        }
+        public bool OpenFile_CanExecute()
+        {
+            return true;
+        }
+        public void OpenFile_Executed()
+        {
+            // Set open file dialog
+            OpenFileDialog openfile = new OpenFileDialog();
+            // Set a default file name
+            openfile.FileName = "Family.fex";
+            // Set filters - this can be done in properties as well
+            openfile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+
+            // Ask to select file
+            Nullable<bool> result = openfile.ShowDialog();
+            if (result == true)
+            {
+                // Ask to save any pending changes in current file
+                if (CurrentFile != null && HasChanges)
+                {
+                    switch (SaveChangesDialog())
+                    {
+                        case MessageBoxResult.Yes:
+                            Save();
+                            break;
+                        case MessageBoxResult.Cancel:
+                            return;
+                    }
+                }
+                // Open selected file
+                Open(openfile.FileName);
+            }
+        }
+        private string openFile_ToolTip = "Open...";
+        public string OpenFile_ToolTip
+        {
+            get { return openFile_ToolTip; }
+            set
+            {
+                if (value != openFile_ToolTip)
+                {
+                    openFile_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public RelayCommand SaveFile
+        {
+            get;
+            private set;
+        }
+        public bool SaveFile_CanExecute()
+        {
+            if (HasChanges) { return true; }
+            else { return false; }
+        }
+        public void SaveFile_Executed()
+        {
+            Save();
+        }
+        private string saveFile_ToolTip = "Save";
+        public string SaveFile_ToolTip
+        {
+            get { return saveFile_ToolTip; }
+            set
+            {
+                if (value != saveFile_ToolTip)
+                {
+                    saveFile_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public RelayCommand SaveFileAs
+        {
+            get;
+            private set;
+        }
+        public bool SaveFileAs_CanExecute()
+        {
+            return true;
+        }
+        public void SaveFileAs_Executed()
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            // set a default file name
+            savefile.FileName = "Family.fex";
+            // set filters - this can be done in properties as well
+            savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+
+            Nullable<bool> result = savefile.ShowDialog();
+
+            if (result == true)
+            {
+
+                FamilyModel family = new FamilyModel();
+                family.PersonSettings = Settings.Instance.Person;
+                family.RelationshipSettings = Settings.Instance.Relationship;
+                family.Tree = Tree;
+                family.Members = new ObservableCollection<PersonModel>() { };
+                foreach (PersonView personView in Members)
+                {
+                    PersonModel personModel = new PersonModel();
+                    personModel.CopyBaseProperties(personView);
+                    family.Members.Add(personModel);
+                }
+                family.Relationships = new ObservableCollection<RelationshipModel> { };
+                foreach (RelationshipView relationshipView in Relationships)
+                {
+                    RelationshipModel relationshipModel = new RelationshipModel();
+                    relationshipModel.CopyBaseProperties(relationshipView);
+                    family.Relationships.Add(relationshipModel);
+                }
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
+                var subReq = family;
+                using (StringWriter sww = new StringWriter())
+                using (XmlWriter writer = XmlWriter.Create(sww))
+                {
+                    xsSubmit.Serialize(writer, subReq);
+                    var xml = sww.ToString();
+                    XmlDocument xdoc = new XmlDocument();
+                    xdoc.LoadXml(xml);
+                    xdoc.Save(savefile.FileName);
+                    Title = "Family Explorer - " + savefile.FileName;
+                }
+            }
+        }
+        private string saveFileAs_ToolTip = "Save As...";
+        public string SaveFileAs_ToolTip
+        {
+            get { return saveFileAs_ToolTip; }
+            set
+            {
+                if (value != saveFileAs_ToolTip)
+                {
+                    saveFileAs_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public RelayCommand Undo
+        {
+            get;
+            private set;
+        }
+        public bool Undo_CanExecute()
+        {
+            if (DoneFamilyModels.Count() < 2) { return false; }
+            else { return true; }
+        }
+        public void Undo_Executed()
+        {
+            if (DoneFamilyModels.Count < 2) { return; }
+            SelectedPerson = null;
+            SelectedRelationship = null;
+            FamilyModel previousModel = DoneFamilyModels.ElementAt(DoneFamilyModels.IndexOf(DoneFamilyModels.Last()) - 1);
+            DoneFamilyModels.Remove(previousModel);
+            SetWorkspaceFromFamilyModel(previousModel);
+            SetTreeLayout();
+        }
+        private string undo_ToolTip = "Undo...";
+        public string Undo_ToolTip
+        {
+            get { return undo_ToolTip; }
+            set
+            {
+                if (value != undo_ToolTip)
+                {
+                    undo_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
         private bool SelectMother_CanFinalize(PersonView person)
         {
             // Not in previous generation
@@ -680,199 +866,7 @@ namespace FamilyExplorer
             }            
         }
 
-        private void InitiateCommands()
-        {
-            OpenFile = new RelayCommand(OpenFile_Executed, OpenFile_CanExecute);
-            SaveFile = new RelayCommand(SaveFile_Executed, SaveFile_CanExecute);
-            SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
-            Undo = new RelayCommand(Undo_Executed, Undo_CanExecute);
-        }
-
-        private void RefreshCommandsCanExecute()
-        {
-            OpenFile.RaiseCanExecuteChanged();
-            SaveFile.RaiseCanExecuteChanged();
-            SaveFileAs.RaiseCanExecuteChanged();
-            Undo.RaiseCanExecuteChanged();
-        }
-
-        public RelayCommand OpenFile
-        {
-            get;
-            private set;
-        }
-        public bool OpenFile_CanExecute()
-        {            
-           return true; 
-        } 
-        public void OpenFile_Executed()
-        {           
-            // Set open file dialog
-            OpenFileDialog openfile = new OpenFileDialog();
-            // Set a default file name
-            openfile.FileName = "Family.fex";
-            // Set filters - this can be done in properties as well
-            openfile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
-
-            // Ask to select file
-            Nullable<bool> result = openfile.ShowDialog();
-            if (result == true)
-            {
-                // Ask to save any pending changes in current file
-                if (CurrentFile != null && HasChanges)
-                {
-                    switch (SaveChangesDialog())
-                    {
-                        case MessageBoxResult.Yes:
-                            Save();
-                            break;
-                        case MessageBoxResult.Cancel:
-                            return;
-                    }
-                }
-                // Open selected file
-                Open(openfile.FileName);
-            }
-        }
-        private string openFile_ToolTip = "Open...";
-        public string OpenFile_ToolTip
-        {
-            get { return openFile_ToolTip; }
-            set
-            {
-                if (value != openFile_ToolTip)
-                {
-                    openFile_ToolTip = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public RelayCommand SaveFile
-        {
-            get;
-            private set;
-        }
-        public bool SaveFile_CanExecute()
-        {
-            if (HasChanges){ return true; }
-            else { return false; }
-        }     
-        public void SaveFile_Executed()
-        {
-            Save();
-        }
-        private string saveFile_ToolTip = "Save";
-        public string SaveFile_ToolTip
-        {
-            get { return saveFile_ToolTip; }
-            set
-            {
-                if (value != saveFile_ToolTip)
-                {
-                    saveFile_ToolTip = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public RelayCommand SaveFileAs
-        {
-            get;
-            private set;
-        }
-        public bool SaveFileAs_CanExecute()
-        {
-            return true;
-        }
-        public void SaveFileAs_Executed()
-        {
-            SaveFileDialog savefile = new SaveFileDialog();
-            // set a default file name
-            savefile.FileName = "Family.fex";
-            // set filters - this can be done in properties as well
-            savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
-
-            Nullable<bool> result = savefile.ShowDialog();
-
-            if (result == true)
-            {
-
-                FamilyModel family = new FamilyModel();
-                family.PersonSettings = Settings.Instance.Person;
-                family.RelationshipSettings = Settings.Instance.Relationship;
-                family.Tree = Tree;
-                family.Members = new ObservableCollection<PersonModel>() { };
-                foreach (PersonView personView in Members)
-                {
-                    PersonModel personModel = new PersonModel();
-                    personModel.CopyBaseProperties(personView);
-                    family.Members.Add(personModel);
-                }
-                family.Relationships = new ObservableCollection<RelationshipModel> { };
-                foreach (RelationshipView relationshipView in Relationships)
-                {
-                    RelationshipModel relationshipModel = new RelationshipModel();
-                    relationshipModel.CopyBaseProperties(relationshipView);
-                    family.Relationships.Add(relationshipModel);
-                }
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
-                var subReq = family;
-                using (StringWriter sww = new StringWriter())
-                using (XmlWriter writer = XmlWriter.Create(sww))
-                {
-                    xsSubmit.Serialize(writer, subReq);
-                    var xml = sww.ToString();
-                    XmlDocument xdoc = new XmlDocument();
-                    xdoc.LoadXml(xml);
-                    xdoc.Save(savefile.FileName);
-                    Title = "Family Explorer - " + savefile.FileName;
-                }
-            }
-        }
-        private string saveFileAs_ToolTip = "Save As...";
-        public string SaveFileAs_ToolTip
-        {
-            get { return saveFileAs_ToolTip; }
-            set
-            {
-                if (value != saveFileAs_ToolTip)
-                {
-                    saveFileAs_ToolTip = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public RelayCommand Undo
-        {
-            get;
-            private set;
-        }
-        public bool Undo_CanExecute()
-        {            
-            if (DoneFamilyModels.Count() > 0) { return true; }
-            else { return false; }
-        }
-        public void Undo_Executed()
-        {
-            CurrentFamilyModel = DoneFamilyModels.Last();
-            DoneFamilyModels.Remove(CurrentFamilyModel);
-            SetCurrentFamilyModel();
-        }
-        private string undo_ToolTip = "Undo...";
-        public string Undo_ToolTip
-        {
-            get { return undo_ToolTip; }
-            set
-            {
-                if (value != undo_ToolTip)
-                {
-                    undo_ToolTip = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        #endregion Commands
 
         private void Open(string filename)
         {            
@@ -885,10 +879,10 @@ namespace FamilyExplorer
 
             // Deserialize file
             XmlSerializer serializer = new XmlSerializer(typeof(FamilyModel));                            
-            CurrentFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
-            SavedFamilyModel = CurrentFamilyModel;
+            FamilyModel newFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
+            SavedFamilyModel = newFamilyModel;
 
-            SetCurrentFamilyModel();
+            SetWorkspaceFromFamilyModel(newFamilyModel);
 
             Title = "Family Explorer - " + filename;
             SelectedPerson = null;
@@ -896,31 +890,55 @@ namespace FamilyExplorer
             SetTreeLayout();            
         }
         
-        private void SetCurrentFamilyModel()
+        private void SetWorkspaceFromFamilyModel(FamilyModel model)
         {
-            if (CurrentFamilyModel.PersonSettings != null) { Settings.Instance.Person = CurrentFamilyModel.PersonSettings; }
-            if (CurrentFamilyModel.RelationshipSettings != null) { Settings.Instance.Relationship = CurrentFamilyModel.RelationshipSettings; }
-            if (CurrentFamilyModel.Tree != null) { Tree = CurrentFamilyModel.Tree; }
+
+            Settings.Instance.Person = new PersonSettings();
+            Settings.Instance.Relationship = new RelationshipSettings();
+            Tree = new Tree();
             Members.Clear();
-            if (CurrentFamilyModel.Members != null)
+            Relationships.Clear();
+
+            if (model.PersonSettings != null) { Settings.Instance.Person = model.PersonSettings; }
+            if (model.RelationshipSettings != null) { Settings.Instance.Relationship = model.RelationshipSettings; }
+            if (model.Tree != null) { Tree = model.Tree; }
+            Members.Clear();
+            if (model.Members != null)
             {
-                foreach (PersonModel personModel in CurrentFamilyModel.Members)
+                foreach (PersonModel personModel in model.Members)
                 {
                     PersonView personView = new PersonView(GetNextID());
                     personView.CopyBaseProperties(personModel);
-                    Members.Add(personView);
-                    personView.BasePropertyChanged += BasePropertyChangedHandler;
+                    Members.Add(personView);                    
                 }
             }
             Relationships.Clear();
-            if (CurrentFamilyModel.Relationships != null)
+            if (model.Relationships != null)
             {
-                foreach (RelationshipModel relationshipModel in CurrentFamilyModel.Relationships)
+                foreach (RelationshipModel relationshipModel in model.Relationships)
                 {
                     RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
                     relationshipView.CopyBaseProperties(relationshipModel);
-                    Relationships.Add(relationshipView);
-                    relationshipView.BasePropertyChanged += BasePropertyChangedHandler;
+                    Relationships.Add(relationshipView);                    
+                }
+            }
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            if (Members != null)
+            {
+                foreach (PersonView person in Members)
+                {                   
+                    person.BasePropertyChanged += BasePropertyChangedHandler;
+                }
+            }            
+            if (Relationships != null)
+            {
+                foreach (RelationshipView relationship in Relationships)
+                {                    
+                    relationship.BasePropertyChanged += BasePropertyChangedHandler;
                 }
             }
         }
@@ -932,9 +950,36 @@ namespace FamilyExplorer
             return result;                            
         }
 
-        private void UpdateCurrentFamilyModel()
+        //private void CopyFamilyViewModel(FamilyModel model, FamilyModel modelToCopy)
+        //{
+        //    if (modelToCopy.PersonSettings != null) { model.PersonSettings = modelToCopy.PersonSettings; }
+        //    if (modelToCopy.RelationshipSettings != null) { model.RelationshipSettings = modelToCopy.RelationshipSettings; }
+        //    if (modelToCopy.Tree != null) { model.Tree = modelToCopy.Tree; }
+        //    Members.Clear();
+        //    if (modelToCopy.Members != null)
+        //    {
+        //        foreach (PersonModel personModelCopy in modelToCopy.Members)
+        //        {
+        //            PersonModel personModel = new PersonModel();
+        //            personModel.CopyBaseProperties(personModelCopy);
+        //            model.Members.Add(personModel);                    
+        //        }
+        //    }
+        //    Relationships.Clear();
+        //    if (modelToCopy.Relationships != null)
+        //    {
+        //        foreach (RelationshipModel relationshipModelCopy in modelToCopy.Relationships)
+        //        {
+        //            RelationshipModel relationshipModel = new RelationshipModel();
+        //            relationshipModel.CopyBaseProperties(relationshipModelCopy);
+        //            model.Relationships.Add(relationshipModel);                    
+        //        }
+        //    }
+        //}
+
+        private FamilyModel CurrentFamilyModel()
         {
-            CurrentFamilyModel = new FamilyModel();
+            FamilyModel CurrentFamilyModel = new FamilyModel();
             CurrentFamilyModel.PersonSettings = Settings.Instance.Person;
             CurrentFamilyModel.RelationshipSettings = Settings.Instance.Relationship;
             CurrentFamilyModel.Tree = Tree;
@@ -952,6 +997,7 @@ namespace FamilyExplorer
                 relationshipModel.CopyBaseProperties(relationshipView);
                 CurrentFamilyModel.Relationships.Add(relationshipModel);
             }
+            return CurrentFamilyModel;
         }
 
         private void UpdateCurrentFile()
@@ -960,7 +1006,7 @@ namespace FamilyExplorer
             using (XmlWriter writer = XmlWriter.Create(CurrentFile))
             {                
                 CurrentFile.SetLength(0);
-                xsSubmit.Serialize(CurrentFile, CurrentFamilyModel);
+                xsSubmit.Serialize(CurrentFile, CurrentFamilyModel());
             }
         }
 
@@ -974,7 +1020,7 @@ namespace FamilyExplorer
                 UpdateCurrentFile();
                 CurrentFile.Flush();                
                 HasChanges = false;
-                SavedFamilyModel = CurrentFamilyModel;
+                SavedFamilyModel = CurrentFamilyModel();
             }
         }
 
@@ -1012,11 +1058,21 @@ namespace FamilyExplorer
                 // Grab handle to new file
                 CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            SavedFamilyModel = CurrentFamilyModel;
+            SavedFamilyModel = CurrentFamilyModel();
             HasChanges = false;
         }
-
-        #endregion Commands
+        
+        public void CreateNewFamily()
+        {
+            PersonView person = new PersonView(GetNextID());
+            AddPersonToFamily(person);
+            SelectPerson(person);
+            Tree.Scale = 1;
+            CenterTreeInWindow();
+            FamilyTreeCursor = Cursors.Arrow;
+            SelectCommandInProgressType = 0;
+            Title = "Family Explorer - NewFamily.fex";
+        }
 
         public RelationshipView GetRelationship(int ID)
         {

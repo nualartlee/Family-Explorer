@@ -41,8 +41,6 @@ namespace FamilyExplorer
     public partial class MainWindow : Window
     {
         
-
-
         public FamilyView family;        
 
         public MainWindow()

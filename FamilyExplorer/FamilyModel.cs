@@ -28,6 +28,6 @@ namespace FamilyExplorer
         public RelationshipSettings RelationshipSettings;
         public Tree Tree;
         public ObservableCollection<PersonModel> Members;
-        public ObservableCollection<RelationshipModel> Relationships;
+        public ObservableCollection<RelationshipModel> Relationships;       
     }
 }
