@@ -340,18 +340,15 @@ namespace FamilyExplorer
         public RelationshipView(int id)
         {
             InitiateCommands();
-            PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
-            FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
+            PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);            
             GetDataFromId(id);
-            RefreshHighlight();
-            
+            RefreshHighlight();            
         }
 
         public RelationshipView(int id, DateTime? start, DateTime? end)
         {
             InitiateCommands();
-            PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
-            FamilyView.Instance.PropertyChanged += new PropertyChangedEventHandler(FamilyViewPropertyChangedHandler);
+            PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);            
             GetDataFromId(id);           
             if (start != null) { StartDate = (DateTime)start; }
             if (end != null)
@@ -390,7 +387,7 @@ namespace FamilyExplorer
 
             if (PersonSource != null && PersonDestination != null) { Refresh(); }
         }
-
+       
         private void SourcePersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (PersonSource != null && PersonDestination != null) { Refresh(); }
@@ -400,12 +397,7 @@ namespace FamilyExplorer
         {
             if (PersonSource != null && PersonDestination != null) { Refresh(); }
         }
-
-        private void FamilyViewPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            //if (e.PropertyName == "SelectedPerson") { SetReciprocal(); }
-        }       
-
+                
         private void GetDataFromId(int id)
         {
             if (id < 1000000) { return; }

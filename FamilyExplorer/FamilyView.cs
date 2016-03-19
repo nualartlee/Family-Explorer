@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -123,6 +124,8 @@ namespace FamilyExplorer
             }
         }
 
+        private DateTime lastChangeTime;
+
         private bool hasChanges = false;
         public bool HasChanges
         {
@@ -174,7 +177,7 @@ namespace FamilyExplorer
                 if (value != members)
                 {
                     members = value;
-                    NotifyPropertyChanged();
+                    NotifyPropertyChanged();                    
                 }
             }
         }
@@ -202,7 +205,7 @@ namespace FamilyExplorer
                 if (value != relationships)
                 {
                     relationships = value;
-                    NotifyPropertyChanged();
+                    NotifyPropertyChanged();                    
                 }
             }
         }
@@ -325,6 +328,9 @@ namespace FamilyExplorer
             UndoneFamilyModels = new ObservableCollection<FamilyModel> { };
             InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
+            Members.CollectionChanged += new NotifyCollectionChangedEventHandler(CollectionChangedHandler);
+            Relationships.CollectionChanged += new NotifyCollectionChangedEventHandler(CollectionChangedHandler);
+
         }
 
         public static FamilyView Instance
@@ -347,6 +353,11 @@ namespace FamilyExplorer
             RefreshCommandsCanExecute();
         }
 
+        private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RecordFamilyChange();
+        }
+
         private void PersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "DOB")
@@ -363,12 +374,24 @@ namespace FamilyExplorer
         }
 
         private void BasePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {            
-            DoneFamilyModels.Add(CurrentFamilyModel());           
-            if (SavedFamilyModel == CurrentFamilyModel()) { HasChanges = false; }
-            else { HasChanges = true; }
+        {
+            RecordFamilyChange();
         }
         
+        private void RecordFamilyChange()
+        {
+            // If this change occurred within the last 300 ms of the last, we record both changes as one
+            if (lastChangeTime != null)
+            {
+                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 1)) { DoneFamilyModels.Remove(DoneFamilyModels.Last()); }
+            }
+            // Record the status
+            DoneFamilyModels.Add(GetCurrentFamilyModel());
+            lastChangeTime = DateTime.Now;
+            if (SavedFamilyModel == GetCurrentFamilyModel()) { HasChanges = false; }
+            else { HasChanges = true; }
+        }
+
         #region Commands           
 
         private void InitiateCommands()
@@ -552,7 +575,7 @@ namespace FamilyExplorer
             SelectedRelationship = null;
             FamilyModel previousModel = DoneFamilyModels.ElementAt(DoneFamilyModels.IndexOf(DoneFamilyModels.Last()) - 1);
             DoneFamilyModels.Remove(previousModel);
-            SetWorkspaceFromFamilyModel(previousModel);
+            RestoreFamilyModel(previousModel);
             SetTreeLayout();
         }
         private string undo_ToolTip = "Undo...";
@@ -882,7 +905,7 @@ namespace FamilyExplorer
             FamilyModel newFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
             SavedFamilyModel = newFamilyModel;
 
-            SetWorkspaceFromFamilyModel(newFamilyModel);
+            RestoreFamilyModel(newFamilyModel);
 
             Title = "Family Explorer - " + filename;
             SelectedPerson = null;
@@ -890,14 +913,12 @@ namespace FamilyExplorer
             SetTreeLayout();            
         }
         
-        private void SetWorkspaceFromFamilyModel(FamilyModel model)
+        private void RestoreFamilyModel(FamilyModel model)
         {
 
             Settings.Instance.Person = new PersonSettings();
             Settings.Instance.Relationship = new RelationshipSettings();
-            Tree = new Tree();
-            Members.Clear();
-            Relationships.Clear();
+            Tree = new Tree();            
 
             if (model.PersonSettings != null) { Settings.Instance.Person = model.PersonSettings; }
             if (model.RelationshipSettings != null) { Settings.Instance.Relationship = model.RelationshipSettings; }
@@ -977,7 +998,7 @@ namespace FamilyExplorer
         //    }
         //}
 
-        private FamilyModel CurrentFamilyModel()
+        private FamilyModel GetCurrentFamilyModel()
         {
             FamilyModel CurrentFamilyModel = new FamilyModel();
             CurrentFamilyModel.PersonSettings = Settings.Instance.Person;
@@ -1006,7 +1027,7 @@ namespace FamilyExplorer
             using (XmlWriter writer = XmlWriter.Create(CurrentFile))
             {                
                 CurrentFile.SetLength(0);
-                xsSubmit.Serialize(CurrentFile, CurrentFamilyModel());
+                xsSubmit.Serialize(CurrentFile, GetCurrentFamilyModel());
             }
         }
 
@@ -1020,7 +1041,7 @@ namespace FamilyExplorer
                 UpdateCurrentFile();
                 CurrentFile.Flush();                
                 HasChanges = false;
-                SavedFamilyModel = CurrentFamilyModel();
+                SavedFamilyModel = GetCurrentFamilyModel();
             }
         }
 
@@ -1058,7 +1079,7 @@ namespace FamilyExplorer
                 // Grab handle to new file
                 CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            SavedFamilyModel = CurrentFamilyModel();
+            SavedFamilyModel = GetCurrentFamilyModel();
             HasChanges = false;
         }
         
@@ -1119,6 +1140,7 @@ namespace FamilyExplorer
             {
                 RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
                 FamilyView.Instance.Relationships.Add(newRelationship);
+                newRelationship.PropertyChanged += RelationshipPropertyChangedHandler;
                 newRelationship.BasePropertyChanged += BasePropertyChangedHandler;
 
             }
