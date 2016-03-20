@@ -256,15 +256,31 @@
             x:Name="MainMenu" Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" />
-                <MenuItem Header="_Open" Command="{Binding OpenFile}"/>
-                <MenuItem Header="_Save" Command="{Binding SaveFile}"/>
+                <MenuItem Header="_Open" Command="{Binding OpenFile}" ToolTip="{Binding OpenFile_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource OpenFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Command="{Binding SaveFile}" ToolTip="{Binding SaveFile_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Print" Command="self:CustomCommands.Print" />
                 <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" />
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Undo" />
-                <MenuItem Header="_Redo" />
+                <MenuItem Header="_Undo" Command="{Binding Undo}" ToolTip="{Binding Undo_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource UndoIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Redo" Command="{Binding Redo}" ToolTip="{Binding Redo_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource RedoIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Zoom" />
@@ -286,7 +302,7 @@
                     <Button Margin="4" Width="24" Height="24" ToolTip="{Binding Undo_ToolTip}" Command="{Binding Undo}">
                         <Image Style="{StaticResource UndoIcon}"/>
                     </Button>
-                    <Button Margin="4" Width="24" Height="24">
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding Redo_ToolTip}" Command="{Binding Redo}">
                         <Image Style="{StaticResource RedoIcon}"/>
                     </Button>
                 </ToolBar>

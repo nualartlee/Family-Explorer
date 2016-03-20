@@ -110,30 +110,30 @@ namespace FamilyExplorer
             }
         }
 
-        private ObservableCollection<FamilyModel> doneFamilyModels;
-        public ObservableCollection<FamilyModel> DoneFamilyModels
+        private ObservableCollection<FamilyModel> undoFamilyModels;
+        public ObservableCollection<FamilyModel> UndoFamilyModels
         {
-            get { return doneFamilyModels; }
+            get { return undoFamilyModels; }
             set
             {
-                if (value != doneFamilyModels)
+                if (value != undoFamilyModels)
                 {
-                    doneFamilyModels = value;
+                    undoFamilyModels = value;
                     NotifyPropertyChanged();
                 }
             }
         }
         private bool disableChangeRecording;
 
-        private ObservableCollection<FamilyModel> undoneFamilyModels;
-        public ObservableCollection<FamilyModel> UndoneFamilyModels
+        private ObservableCollection<FamilyModel> redoFamilyModels;
+        public ObservableCollection<FamilyModel> RedoFamilyModels
         {
-            get { return undoneFamilyModels; }
+            get { return redoFamilyModels; }
             set
             {
-                if (value != undoneFamilyModels)
+                if (value != redoFamilyModels)
                 {
-                    undoneFamilyModels = value;
+                    redoFamilyModels = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -339,8 +339,8 @@ namespace FamilyExplorer
             Members = new ObservableCollection<PersonView> { };
             Relationships = new ObservableCollection<RelationshipView> { };            
             SelectedPerson = new PersonView();
-            DoneFamilyModels = new ObservableCollection<FamilyModel> { };
-            UndoneFamilyModels = new ObservableCollection<FamilyModel> { };
+            UndoFamilyModels = new ObservableCollection<FamilyModel> { };
+            RedoFamilyModels = new ObservableCollection<FamilyModel> { };
             InitiateCommands();
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             Members.CollectionChanged += new NotifyCollectionChangedEventHandler(CollectionChangedHandler);
@@ -401,7 +401,7 @@ namespace FamilyExplorer
             // If this change occurred within the last xxx ms of the last, assume it is a cascading change and ingnore
             if (lastChangeTime != null)
             {
-                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 20))
+                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 100))
                 {
                     CurrentFamilyModel = GetCurrentFamilyModel();
                     lastChangeTime = DateTime.Now;
@@ -409,12 +409,14 @@ namespace FamilyExplorer
                 }
             }
             // Record the previous status            
-            DoneFamilyModels.Add(CurrentFamilyModel);
+            UndoFamilyModels.Add(CurrentFamilyModel);
+            RedoFamilyModels.Clear();
             CurrentFamilyModel = GetCurrentFamilyModel();
             lastChangeTime = DateTime.Now;
             if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
             else { HasChanges = true; }
             Undo.RaiseCanExecuteChanged();
+            Redo.RaiseCanExecuteChanged();
         }
 
         #region Commands           
@@ -425,6 +427,7 @@ namespace FamilyExplorer
             SaveFile = new RelayCommand(SaveFile_Executed, SaveFile_CanExecute);
             SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
             Undo = new RelayCommand(Undo_Executed, Undo_CanExecute);
+            Redo = new RelayCommand(Redo_Executed, Redo_CanExecute);
         }
 
         private void RefreshCommandsCanExecute()
@@ -433,6 +436,7 @@ namespace FamilyExplorer
             SaveFile.RaiseCanExecuteChanged();
             SaveFileAs.RaiseCanExecuteChanged();
             Undo.RaiseCanExecuteChanged();
+            Redo.RaiseCanExecuteChanged();
         }
 
         public RelayCommand OpenFile
@@ -590,19 +594,20 @@ namespace FamilyExplorer
         }
         public bool Undo_CanExecute()
         {
-            if (DoneFamilyModels.Count() < 1) { return false; }
+            if (UndoFamilyModels.Count() < 1) { return false; }
             else { return true; }
         }
         public void Undo_Executed()
         {
-            if (DoneFamilyModels.Count < 1) { return; }
+            if (UndoFamilyModels.Count < 1) { return; }
             disableChangeRecording = true;
             SelectedPerson = null;
             SelectedRelationship = null;
-            FamilyModel previousModel = DoneFamilyModels.Last();
-            DoneFamilyModels.Remove(previousModel);
-            CurrentFamilyModel = previousModel;
-            RestoreFamilyModel(previousModel);            
+            FamilyModel modelToRestore = UndoFamilyModels.Last();
+            UndoFamilyModels.Remove(modelToRestore);
+            RedoFamilyModels.Add(GetCurrentFamilyModel());
+            CurrentFamilyModel = modelToRestore;
+            RestoreFamilyModel(modelToRestore);            
             disableChangeRecording = false;
         }
         private string undo_ToolTip = "Undo...";
@@ -619,6 +624,45 @@ namespace FamilyExplorer
             }
         }
 
+        public RelayCommand Redo
+        {
+            get;
+            private set;
+        }
+        public bool Redo_CanExecute()
+        {
+            if (RedoFamilyModels.Count() < 1) { return false; }
+            else { return true; }
+        }
+        public void Redo_Executed()
+        {
+            if (RedoFamilyModels.Count < 1) { return; }
+            disableChangeRecording = true;
+            SelectedPerson = null;
+            SelectedRelationship = null;
+
+            FamilyModel modelToRestore = RedoFamilyModels.Last();
+            RedoFamilyModels.Remove(modelToRestore);
+            UndoFamilyModels.Add(GetCurrentFamilyModel());
+            Redo.RaiseCanExecuteChanged();
+
+            CurrentFamilyModel = modelToRestore;
+            RestoreFamilyModel(modelToRestore);
+            disableChangeRecording = false;
+        }
+        private string redo_ToolTip = "Redo...";
+        public string Redo_ToolTip
+        {
+            get { return redo_ToolTip; }
+            set
+            {
+                if (value != redo_ToolTip)
+                {
+                    redo_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         private bool SelectMother_CanFinalize(PersonView person)
         {
@@ -935,8 +979,8 @@ namespace FamilyExplorer
             RestoreFamilyModel(newFamilyModel);
 
             Title = "Family Explorer - " + filename;
-            DoneFamilyModels.Clear();
-            UndoneFamilyModels.Clear();
+            UndoFamilyModels.Clear();
+            RedoFamilyModels.Clear();
             SelectedPerson = null;
             SelectedRelationship = null;                  
         }
