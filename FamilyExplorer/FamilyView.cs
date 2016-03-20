@@ -96,6 +96,20 @@ namespace FamilyExplorer
             }
         }
 
+        private FamilyModel currentFamilyModel;
+        public FamilyModel CurrentFamilyModel
+        {
+            get { return currentFamilyModel; }
+            set
+            {
+                if (value != currentFamilyModel)
+                {
+                    currentFamilyModel = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private ObservableCollection<FamilyModel> doneFamilyModels;
         public ObservableCollection<FamilyModel> DoneFamilyModels
         {
@@ -109,6 +123,7 @@ namespace FamilyExplorer
                 }
             }
         }
+        private bool disableChangeRecording;
 
         private ObservableCollection<FamilyModel> undoneFamilyModels;
         public ObservableCollection<FamilyModel> UndoneFamilyModels
@@ -122,7 +137,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
+        }        
 
         private DateTime lastChangeTime;
 
@@ -364,7 +379,7 @@ namespace FamilyExplorer
             {
                 PersonView person = (PersonView)sender;
                 OrderSiblings(person.GenerationIndex);
-                SetTreeLayout();
+                RefreshTreeLayout();
             }
         }
 
@@ -380,16 +395,26 @@ namespace FamilyExplorer
         
         private void RecordFamilyChange()
         {
-            // If this change occurred within the last 300 ms of the last, we record both changes as one
+            // Do not record undo commands
+            if (disableChangeRecording) { return; }
+
+            // If this change occurred within the last xxx ms of the last, assume it is a cascading change and ingnore
             if (lastChangeTime != null)
             {
-                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 1)) { DoneFamilyModels.Remove(DoneFamilyModels.Last()); }
+                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 20))
+                {
+                    CurrentFamilyModel = GetCurrentFamilyModel();
+                    lastChangeTime = DateTime.Now;
+                    return;
+                }
             }
-            // Record the status
-            DoneFamilyModels.Add(GetCurrentFamilyModel());
+            // Record the previous status            
+            DoneFamilyModels.Add(CurrentFamilyModel);
+            CurrentFamilyModel = GetCurrentFamilyModel();
             lastChangeTime = DateTime.Now;
-            if (SavedFamilyModel == GetCurrentFamilyModel()) { HasChanges = false; }
+            if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
             else { HasChanges = true; }
+            Undo.RaiseCanExecuteChanged();
         }
 
         #region Commands           
@@ -565,18 +590,20 @@ namespace FamilyExplorer
         }
         public bool Undo_CanExecute()
         {
-            if (DoneFamilyModels.Count() < 2) { return false; }
+            if (DoneFamilyModels.Count() < 1) { return false; }
             else { return true; }
         }
         public void Undo_Executed()
         {
-            if (DoneFamilyModels.Count < 2) { return; }
+            if (DoneFamilyModels.Count < 1) { return; }
+            disableChangeRecording = true;
             SelectedPerson = null;
             SelectedRelationship = null;
-            FamilyModel previousModel = DoneFamilyModels.ElementAt(DoneFamilyModels.IndexOf(DoneFamilyModels.Last()) - 1);
+            FamilyModel previousModel = DoneFamilyModels.Last();
             DoneFamilyModels.Remove(previousModel);
-            RestoreFamilyModel(previousModel);
-            SetTreeLayout();
+            CurrentFamilyModel = previousModel;
+            RestoreFamilyModel(previousModel);            
+            disableChangeRecording = false;
         }
         private string undo_ToolTip = "Undo...";
         public string Undo_ToolTip
@@ -908,14 +935,16 @@ namespace FamilyExplorer
             RestoreFamilyModel(newFamilyModel);
 
             Title = "Family Explorer - " + filename;
+            DoneFamilyModels.Clear();
+            UndoneFamilyModels.Clear();
             SelectedPerson = null;
-            SelectedRelationship = null;
-            SetTreeLayout();            
+            SelectedRelationship = null;                  
         }
         
         private void RestoreFamilyModel(FamilyModel model)
         {
 
+            disableChangeRecording = true;
             Settings.Instance.Person = new PersonSettings();
             Settings.Instance.Relationship = new RelationshipSettings();
             Tree = new Tree();            
@@ -943,7 +972,10 @@ namespace FamilyExplorer
                     Relationships.Add(relationshipView);                    
                 }
             }
+            CurrentFamilyModel = model;
+            RefreshTreeLayout();
             SubscribeToEvents();
+            disableChangeRecording = false;
         }
 
         private void SubscribeToEvents()
@@ -970,34 +1002,7 @@ namespace FamilyExplorer
             var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);           
             return result;                            
         }
-
-        //private void CopyFamilyViewModel(FamilyModel model, FamilyModel modelToCopy)
-        //{
-        //    if (modelToCopy.PersonSettings != null) { model.PersonSettings = modelToCopy.PersonSettings; }
-        //    if (modelToCopy.RelationshipSettings != null) { model.RelationshipSettings = modelToCopy.RelationshipSettings; }
-        //    if (modelToCopy.Tree != null) { model.Tree = modelToCopy.Tree; }
-        //    Members.Clear();
-        //    if (modelToCopy.Members != null)
-        //    {
-        //        foreach (PersonModel personModelCopy in modelToCopy.Members)
-        //        {
-        //            PersonModel personModel = new PersonModel();
-        //            personModel.CopyBaseProperties(personModelCopy);
-        //            model.Members.Add(personModel);                    
-        //        }
-        //    }
-        //    Relationships.Clear();
-        //    if (modelToCopy.Relationships != null)
-        //    {
-        //        foreach (RelationshipModel relationshipModelCopy in modelToCopy.Relationships)
-        //        {
-        //            RelationshipModel relationshipModel = new RelationshipModel();
-        //            relationshipModel.CopyBaseProperties(relationshipModelCopy);
-        //            model.Relationships.Add(relationshipModel);                    
-        //        }
-        //    }
-        //}
-
+        
         private FamilyModel GetCurrentFamilyModel()
         {
             FamilyModel CurrentFamilyModel = new FamilyModel();
@@ -1085,14 +1090,30 @@ namespace FamilyExplorer
         
         public void CreateNewFamily()
         {
-            PersonView person = new PersonView(GetNextID());
-            AddPersonToFamily(person);
-            SelectPerson(person);
+            PersonModel personModel = new PersonModel();
+            personModel.FirstName = "First Name";
+            personModel.LastName = "Last Name";
+            personModel.Gender = "Not Specified";
+            personModel.DOB = DateTime.Now;
+            personModel.GenerationIndex = 0;
+            personModel.SiblingIndex = 0;
+
+            FamilyModel newFamily = new FamilyModel();
+            newFamily.PersonSettings = new PersonSettings();
+            newFamily.RelationshipSettings = new RelationshipSettings();
+            newFamily.Tree = new Tree();
+            newFamily.Members = new ObservableCollection<PersonModel>() { };
+            newFamily.Relationships = new ObservableCollection<RelationshipModel>() { };
+            newFamily.Members.Add(personModel);            
+
+            RestoreFamilyModel(newFamily);            
             Tree.Scale = 1;
             CenterTreeInWindow();
             FamilyTreeCursor = Cursors.Arrow;
             SelectCommandInProgressType = 0;
             Title = "Family Explorer - NewFamily.fex";
+            PersonView person = Members.Last();
+            person.Selected = true;
         }
 
         public RelationshipView GetRelationship(int ID)
@@ -1120,7 +1141,7 @@ namespace FamilyExplorer
             }
             Members.Add(person);
             OrderSiblings(person.GenerationIndex);
-            SetTreeLayout();
+            RefreshTreeLayout();
             person.PropertyChanged += PersonPropertyChangedHandler;
             person.BasePropertyChanged += BasePropertyChangedHandler;
         }
@@ -1164,7 +1185,7 @@ namespace FamilyExplorer
 
         }
 
-        private void SetTreeLayout()
+        private void RefreshTreeLayout()
         {
             Tree.Width = (Members.Max(m => m.SiblingIndex) + 1 - Members.Min(m => m.SiblingIndex)) * (Settings.Instance.Person.Width + Settings.Instance.Person.HorizontalSpace) + Settings.Instance.Person.HorizontalSpace;
             Tree.Height = (Members.Max(m => m.GenerationIndex) + 1 - Members.Min(m => m.GenerationIndex)) * (Settings.Instance.Person.Height + Settings.Instance.Person.VerticalSpace) + Settings.Instance.Person.VerticalSpace;
@@ -1191,7 +1212,7 @@ namespace FamilyExplorer
         public void CenterTreeInWindow()
         {
 
-            SetTreeLayout();
+            RefreshTreeLayout();
             Tree.XPosition = (Tree.WindowWidth / 2) - (Tree.Width / 2);
             Tree.YPosition = (Tree.WindowHeight / 2) - (Tree.Height / 2);
         }
