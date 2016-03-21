@@ -1156,8 +1156,9 @@ namespace FamilyExplorer
             FamilyTreeCursor = Cursors.Arrow;
             SelectCommandInProgressType = 0;
             Title = "Family Explorer - NewFamily.fex";
-            PersonView person = Members.Last();
-            person.Selected = true;
+            PersonView person = Members.First();
+            SelectedPerson = person;
+            person.Selected = true;          
         }
 
         public RelationshipView GetRelationship(int ID)
