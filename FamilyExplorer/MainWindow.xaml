@@ -446,20 +446,32 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Label Grid.Column="0" Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
-                                                    <Button x:Name="AddSiblingButton" ToolTip="Add a sibling..." 
-                                                                Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                                        <Image Style="{StaticResource AddPersonIcon}"/>
-                                                        <Button.Style >
+                                                    <Button Grid.Column="1" x:Name="AddSiblingButton" ToolTip="Add a sibling..." Click="AddSiblingButton_Click" Style="{StaticResource RelationshipListButtonStyle}">
+                                                                
+                                                        <Grid>
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                            <Popup x:Name="AddSiblingButtonContextMenu" Placement="Mouse" StaysOpen="False">
+                                                                <Border BorderBrush="Transparent">
+                                                                    <Menu>
+                                                                        <StackPanel>
+                                                                        <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
+                                                                        <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
+                                                                        <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
+                                                                        </StackPanel>
+                                                                    </Menu>
+                                                                </Border>
+                                                            </Popup>
+                                                        </Grid>
+                                                        <!--<Button.Style >
                                                             <Style TargetType="Button"  BasedOn="{StaticResource RelationshipListButtonStyle}">
                                                                 <Style.Triggers>
                                                                     <EventTrigger RoutedEvent="Click">
                                                                         <EventTrigger.Actions>
                                                                             <BeginStoryboard>
                                                                                 <Storyboard>
-                                                                                    <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
+                                                                                    <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="Popup.IsOpen">
                                                                                         <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
                                                                                     </BooleanAnimationUsingKeyFrames>
-
                                                                                 </Storyboard>
                                                                             </BeginStoryboard>
                                                                         </EventTrigger.Actions>
@@ -468,8 +480,7 @@
                                                                 <Style.Setters>
                                                                     <Setter Property="ContextMenu">
                                                                         <Setter.Value>
-                                                                            <ContextMenu x:Name="AddSiblingButtonContextMenu" DataContext="{Binding PlacementTarget.Tag.
-                                                                                DataContext, RelativeSource={RelativeSource Self}}" >
+                                                                            <ContextMenu x:Name="AddSiblingButtonContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
                                                                                 <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
                                                                                 <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
                                                                                 <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
@@ -478,17 +489,8 @@
                                                                     </Setter>
                                                                 </Style.Setters>
                                                             </Style>
-                                                        </Button.Style>
-                                                        <!--<Button.ContextMenu>
-                                                                <ContextMenu x:Name="AddSiblingButtonContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
-                                                                    <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
-                                                                    <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
-                                                                    <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
-                                                                </ContextMenu>
-                                                            </Button.ContextMenu>-->
-                                                       
-                                                        </Button>
-                                                    
+                                                        </Button.Style>-->
+                                                    </Button>
                                                 </Grid>
                                                 <ItemsControl ItemsSource="{Binding SiblingRelationships}">
                                                     <ItemsControl.ItemTemplate>
