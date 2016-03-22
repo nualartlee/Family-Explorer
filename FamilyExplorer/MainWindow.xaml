@@ -89,6 +89,7 @@
                                     <MenuItem Header="Mother" Command="{Binding AddMother}" ToolTip="{Binding AddMother_ToolTip}"/>
                                     <MenuItem Header="Father" Command="{Binding AddFather}" ToolTip="{Binding AddFather_ToolTip}"/>
                                     <MenuItem Header="Sibling">
+                                        <MenuItem Header="Unknwon Parents" Command="{Binding AddSiblingUnknownParents}" ToolTip="{Binding AddSiblingUnknownParents_ToolTip}"/>
                                         <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}"/>
                                         <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}"/>
                                         <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}"/>
@@ -453,7 +454,8 @@
                                                         <Image Style="{StaticResource AddPersonIcon}"/>
                                                         <Button.ContextMenu>
                                                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
-                                                            <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
+                                                                <MenuItem Header="{Binding AddSiblingUnknownParents_ToolTip}" Command="{Binding AddSiblingUnknownParents}"/>
+                                                                <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
                                                             <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
                                                             <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
                                                         </ContextMenu>

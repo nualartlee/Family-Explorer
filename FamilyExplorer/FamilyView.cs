@@ -371,7 +371,7 @@ namespace FamilyExplorer
                 if (sender.GetType() == typeof(ObservableCollection<RelationshipView>))
                 {
                     RelationshipView relationship = (RelationshipView)e.NewItems[0];
-                    changeDescription += " Relationship:" + relationship.Description;
+                    changeDescription += " Relationship: " + relationship.Description;
                 }
             }
 
@@ -387,7 +387,7 @@ namespace FamilyExplorer
                 if (sender.GetType() == typeof(ObservableCollection<RelationshipView>))
                 {
                     RelationshipView relationship = (RelationshipView)e.OldItems[0];
-                    changeDescription += " Relationship:" + relationship.Description;
+                    changeDescription += " Relationship: " + relationship.Description;
                 }
             }
 
@@ -437,30 +437,32 @@ namespace FamilyExplorer
             // If this change occurred within the last xxx ms of the previous change, assume it is a cascading change and ingnore
             if (lastChangeTime != null)
             {
-                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 300))
+                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 100))
                 {
                     //CurrentFamilyModel = GetCurrentFamilyModel();
                     lastChangeTime = DateTime.Now;
                     return;
                 }
             }
-            // Record the previous status
+            // Record the status before the change
             Tree.SelectedPerson = SelectedPerson;
             Tree.SelectedRelationship = SelectedRelationship;
-            Tree.UndoDescription = Undo_ToolTip; // TODO: check for null value                        
+            Tree.UndoDescription = Undo_ToolTip; // TODO: check for null value  
+            Tree.RedoDescription = Redo_ToolTip;                      
             UndoFamilyModels.Add(GetCurrentFamilyModel());
 
             // Clear redo list on new changes
             RedoFamilyModels.Clear();
+            Redo_ToolTip = "Redo...";
 
             // Update the current status
             Undo_ToolTip = "Undo " + changeDescription;
-            //CurrentFamilyModel = GetCurrentFamilyModel();
-            lastChangeTime = DateTime.Now;
+            //CurrentFamilyModel = GetCurrentFamilyModel();            
             if (SavedFamilyModel == GetCurrentFamilyModel()) { HasChanges = false; }
             else { HasChanges = true; }
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
+            lastChangeTime = DateTime.Now;
         }
 
         #region Commands           
