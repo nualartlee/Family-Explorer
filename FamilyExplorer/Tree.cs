@@ -193,5 +193,62 @@ namespace FamilyExplorer
                 }
             }
         }
+
+        private PersonView selectedPerson;
+        public PersonView SelectedPerson
+        {
+            get { return selectedPerson; }
+            set
+            {
+                if (value != selectedPerson)
+                {
+                    selectedPerson = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private RelationshipView selectedRelationship;
+        public RelationshipView SelectedRelationship
+        {
+            get { return selectedRelationship; }
+            set
+            {
+                if (value != selectedRelationship)
+                {
+                    selectedRelationship = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string undoDescription;
+        public string UndoDescription
+        {
+            get { return undoDescription; }
+            set
+            {
+                if (value != undoDescription)
+                {
+                    undoDescription = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string redoDescription;
+        public string RedoDescription
+        {
+            get { return redoDescription; }
+            set
+            {
+                if (value != redoDescription)
+                {
+                    redoDescription = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
     }
 }

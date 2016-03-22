@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
@@ -95,21 +96,7 @@ namespace FamilyExplorer
                 }
             }
         }
-
-        private FamilyModel currentFamilyModel;
-        public FamilyModel CurrentFamilyModel
-        {
-            get { return currentFamilyModel; }
-            set
-            {
-                if (value != currentFamilyModel)
-                {
-                    currentFamilyModel = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
+                
         private ObservableCollection<FamilyModel> undoFamilyModels;
         public ObservableCollection<FamilyModel> UndoFamilyModels
         {
@@ -122,8 +109,7 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }
-        private bool disableChangeRecording;
+        }        
 
         private ObservableCollection<FamilyModel> redoFamilyModels;
         public ObservableCollection<FamilyModel> RedoFamilyModels
@@ -137,7 +123,9 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }        
+        }
+        
+        private bool disableChangeRecording;
 
         private DateTime lastChangeTime;
 
@@ -370,7 +358,41 @@ namespace FamilyExplorer
 
         private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
-            RecordFamilyChange();
+            string changeDescription = "";
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                changeDescription += "Add";
+                if (sender.GetType() == typeof(ObservableCollection<PersonView>))
+                {
+                    PersonView person = (PersonView)e.NewItems[0];
+                    changeDescription += " Person: " + person.FirstName + " " + person.LastName;
+                }
+                if (sender.GetType() == typeof(ObservableCollection<RelationshipView>))
+                {
+                    RelationshipView relationship = (RelationshipView)e.NewItems[0];
+                    changeDescription += " Relationship:" + relationship.Description;
+                }
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                changeDescription += "Delete";
+
+                if (sender.GetType() == typeof(ObservableCollection<PersonView>))
+                {
+                    PersonView person = (PersonView)e.OldItems[0];
+                    changeDescription += " Person: " + person.FirstName + " " + person.LastName;
+                }
+                if (sender.GetType() == typeof(ObservableCollection<RelationshipView>))
+                {
+                    RelationshipView relationship = (RelationshipView)e.OldItems[0];
+                    changeDescription += " Relationship:" + relationship.Description;
+                }
+            }
+
+            
+            RecordFamilyChange(changeDescription);
         }
 
         private void PersonPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -390,30 +412,52 @@ namespace FamilyExplorer
 
         private void BasePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            RecordFamilyChange();
+            string changeDescription = "Edit ";
+            if (sender.GetType() == typeof(PersonView))
+            {
+                PersonView person = (PersonView)sender;
+                changeDescription += person.FirstName + "'s ";
+            }
+            if (sender.GetType() == typeof(RelationshipView))
+            {
+                RelationshipView relationship = (RelationshipView)sender;
+                changeDescription += relationship.Description + " ";
+            }
+
+            changeDescription += Regex.Replace(e.PropertyName.ToString(), @"((?<=\p{Ll})\p{Lu})|((?!\A)\p{Lu}(?>\p{Ll}))", " $0");
+
+            RecordFamilyChange(changeDescription);
         }
         
-        private void RecordFamilyChange()
+        private void RecordFamilyChange(string changeDescription)
         {
             // Do not record undo commands
             if (disableChangeRecording) { return; }
 
-            // If this change occurred within the last xxx ms of the last, assume it is a cascading change and ingnore
+            // If this change occurred within the last xxx ms of the previous change, assume it is a cascading change and ingnore
             if (lastChangeTime != null)
             {
-                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 100))
+                if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 300))
                 {
-                    CurrentFamilyModel = GetCurrentFamilyModel();
+                    //CurrentFamilyModel = GetCurrentFamilyModel();
                     lastChangeTime = DateTime.Now;
                     return;
                 }
             }
-            // Record the previous status            
-            UndoFamilyModels.Add(CurrentFamilyModel);
+            // Record the previous status
+            Tree.SelectedPerson = SelectedPerson;
+            Tree.SelectedRelationship = SelectedRelationship;
+            Tree.UndoDescription = Undo_ToolTip; // TODO: check for null value                        
+            UndoFamilyModels.Add(GetCurrentFamilyModel());
+
+            // Clear redo list on new changes
             RedoFamilyModels.Clear();
-            CurrentFamilyModel = GetCurrentFamilyModel();
+
+            // Update the current status
+            Undo_ToolTip = "Undo " + changeDescription;
+            //CurrentFamilyModel = GetCurrentFamilyModel();
             lastChangeTime = DateTime.Now;
-            if (SavedFamilyModel == CurrentFamilyModel) { HasChanges = false; }
+            if (SavedFamilyModel == GetCurrentFamilyModel()) { HasChanges = false; }
             else { HasChanges = true; }
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
@@ -600,14 +644,14 @@ namespace FamilyExplorer
         public void Undo_Executed()
         {
             if (UndoFamilyModels.Count < 1) { return; }
-            disableChangeRecording = true;
-            SelectedPerson = null;
-            SelectedRelationship = null;
+            disableChangeRecording = true;            
             FamilyModel modelToRestore = UndoFamilyModels.Last();
-            UndoFamilyModels.Remove(modelToRestore);
+            UndoFamilyModels.Remove(modelToRestore);            
             RedoFamilyModels.Add(GetCurrentFamilyModel());
-            CurrentFamilyModel = modelToRestore;
-            RestoreFamilyModel(modelToRestore);            
+            string redoDescription = Undo_ToolTip.Replace("Undo", "Redo");
+            //CurrentFamilyModel = modelToRestore;
+            RestoreFamilyModel(modelToRestore);
+            Redo_ToolTip = redoDescription;        
             disableChangeRecording = false;
         }
         private string undo_ToolTip = "Undo...";
@@ -637,16 +681,14 @@ namespace FamilyExplorer
         public void Redo_Executed()
         {
             if (RedoFamilyModels.Count < 1) { return; }
-            disableChangeRecording = true;
-            SelectedPerson = null;
-            SelectedRelationship = null;
+            disableChangeRecording = true;            
 
             FamilyModel modelToRestore = RedoFamilyModels.Last();
             RedoFamilyModels.Remove(modelToRestore);
             UndoFamilyModels.Add(GetCurrentFamilyModel());
             Redo.RaiseCanExecuteChanged();
 
-            CurrentFamilyModel = modelToRestore;
+            //CurrentFamilyModel = modelToRestore;
             RestoreFamilyModel(modelToRestore);
             disableChangeRecording = false;
         }
@@ -980,22 +1022,20 @@ namespace FamilyExplorer
 
             Title = "Family Explorer - " + filename;
             UndoFamilyModels.Clear();
-            RedoFamilyModels.Clear();
-            SelectedPerson = null;
-            SelectedRelationship = null;                  
+            RedoFamilyModels.Clear();                          
         }
         
         private void RestoreFamilyModel(FamilyModel model)
         {
-
+            
             disableChangeRecording = true;
+            
             Settings.Instance.Person = new PersonSettings();
-            Settings.Instance.Relationship = new RelationshipSettings();
-            Tree = new Tree();            
-
             if (model.PersonSettings != null) { Settings.Instance.Person = model.PersonSettings; }
-            if (model.RelationshipSettings != null) { Settings.Instance.Relationship = model.RelationshipSettings; }
-            if (model.Tree != null) { Tree = model.Tree; }
+
+            Settings.Instance.Relationship = new RelationshipSettings();
+            if (model.RelationshipSettings != null) { Settings.Instance.Relationship = model.RelationshipSettings; }   
+                    
             Members.Clear();
             if (model.Members != null)
             {
@@ -1003,9 +1043,11 @@ namespace FamilyExplorer
                 {
                     PersonView personView = new PersonView(GetNextID());
                     personView.CopyBaseProperties(personModel);
-                    Members.Add(personView);                    
+                    Members.Add(personView);            
+                    if (personView.Selected) { SelectedPerson = personView; }        
                 }
             }
+
             Relationships.Clear();
             if (model.Relationships != null)
             {
@@ -1013,10 +1055,23 @@ namespace FamilyExplorer
                 {
                     RelationshipView relationshipView = new RelationshipView(relationshipModel.Id);
                     relationshipView.CopyBaseProperties(relationshipModel);
-                    Relationships.Add(relationshipView);                    
+                    Relationships.Add(relationshipView);
+                    if (relationshipView.Selected) { SelectedRelationship = relationshipView; }                    
                 }
             }
-            CurrentFamilyModel = model;
+            Tree = new Tree();
+            if (model.Tree != null)
+            {
+                Tree = model.Tree;
+            }
+
+            //CurrentFamilyModel = model;
+            SelectedPerson = Tree.SelectedPerson;
+            if (SelectedPerson != null) { SelectedPerson.Selected = true; }
+            SelectedRelationship = Tree.SelectedRelationship;
+            if (SelectedRelationship != null) { SelectedRelationship.Selected = true; }
+            Undo_ToolTip = Tree.UndoDescription;
+            Redo_ToolTip = Tree.RedoDescription;
             RefreshTreeLayout();
             SubscribeToEvents();
             disableChangeRecording = false;
