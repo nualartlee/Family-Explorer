@@ -79,6 +79,7 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DropdownButtonBehaviour.cs" />
     <Compile Include="FamilyModel.cs" />
     <Compile Include="PersonBase.cs" />
     <Compile Include="PersonModel.cs" />

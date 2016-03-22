@@ -246,9 +246,5 @@ namespace FamilyExplorer
             SelectCommandPopup.VerticalOffset = currentPos.Y + 15;
         }
 
-        private void AddSiblingButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddSiblingButtonContextMenu.IsOpen = true;
-        }
     }
 }
