@@ -640,7 +640,7 @@ namespace FamilyExplorer
             RecordedFamilyModels.Remove(modelToRestore);
             UndoDescriptions.Remove(UndoDescriptions.Last());           
             // Record the current model in the undone list
-            UndoneFamilyModels.Add(GetCurrentFamilyModel());
+            UndoneFamilyModels.Add(CurrentFamilyModel);
             RedoDescriptions.Add(Undo_ToolTip.Replace("Undo", "Redo"));
             // Refresh the undo-redo tooltips
             if (UndoDescriptions.Count() > 0) { Undo_ToolTip = UndoDescriptions.Last(); }
@@ -649,7 +649,8 @@ namespace FamilyExplorer
             if (RedoDescriptions.Count() > 0) { Redo_ToolTip = RedoDescriptions.Last(); }
             else { Redo_ToolTip = "Redo..."; }
             // Restore          
-            RestoreFamilyModel(modelToRestore);           
+            RestoreFamilyModel(modelToRestore);
+
             disableChangeRecording = false;
         }
         private string undo_ToolTip = "Undo...";
@@ -688,7 +689,7 @@ namespace FamilyExplorer
             UndoneFamilyModels.Remove(modelToRestore);
             RedoDescriptions.Remove(RedoDescriptions.Last());
             // Record the current model in the done list
-            RecordedFamilyModels.Add(GetCurrentFamilyModel());
+            RecordedFamilyModels.Add(CurrentFamilyModel);
             UndoDescriptions.Add(Redo_ToolTip.Replace("Redo", "Undo"));
             // Refresh the undo-redo tooltips
             if (UndoDescriptions.Count() > 0) { Undo_ToolTip = UndoDescriptions.Last(); }
@@ -1051,7 +1052,7 @@ namespace FamilyExplorer
             }
 
             // Record the status before the change            
-            RecordedFamilyModels.Add(CurrentFamilyModel);
+            RecordedFamilyModels.Add(CurrentFamilyModel); //TODO: need to create a new object, currently storing the same object repeatedly
             UndoDescriptions.Add("Undo " + changeDescription);
 
             // Clear redo list on new changes
