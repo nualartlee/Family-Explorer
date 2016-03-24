@@ -194,61 +194,61 @@ namespace FamilyExplorer
             }
         }
 
-        private PersonView selectedPerson;
-        public PersonView SelectedPerson
+        private int selectedPersonId;
+        public int SelectedPersonId
         {
-            get { return selectedPerson; }
+            get { return selectedPersonId; }
             set
             {
-                if (value != selectedPerson)
+                if (value != selectedPersonId)
                 {
-                    selectedPerson = value;
+                    selectedPersonId = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        private RelationshipView selectedRelationship;
-        public RelationshipView SelectedRelationship
+        private int selectedRelationshipId;
+        public int SelectedRelationshipId
         {
-            get { return selectedRelationship; }
+            get { return selectedRelationshipId; }
             set
             {
-                if (value != selectedRelationship)
+                if (value != selectedRelationshipId)
                 {
-                    selectedRelationship = value;
+                    selectedRelationshipId = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        private string undoDescription;
-        public string UndoDescription
-        {
-            get { return undoDescription; }
-            set
-            {
-                if (value != undoDescription)
-                {
-                    undoDescription = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private string undoDescription;
+        //public string UndoDescription
+        //{
+        //    get { return undoDescription; }
+        //    set
+        //    {
+        //        if (value != undoDescription)
+        //        {
+        //            undoDescription = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
-        private string redoDescription;
-        public string RedoDescription
-        {
-            get { return redoDescription; }
-            set
-            {
-                if (value != redoDescription)
-                {
-                    redoDescription = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        //private string redoDescription;
+        //public string RedoDescription
+        //{
+        //    get { return redoDescription; }
+        //    set
+        //    {
+        //        if (value != redoDescription)
+        //        {
+        //            redoDescription = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
 
     }
 }
