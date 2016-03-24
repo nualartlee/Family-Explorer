@@ -693,7 +693,6 @@ namespace FamilyExplorer
             // Refresh the undo-redo tooltips
             if (UndoDescriptions.Count() > 0) { Undo_ToolTip = UndoDescriptions.Last(); }
             else { Undo_ToolTip = "Undo..."; }
-
             if (RedoDescriptions.Count() > 0) { Redo_ToolTip = RedoDescriptions.Last(); }
             else { Redo_ToolTip = "Redo..."; }
             // Restore
@@ -1043,7 +1042,9 @@ namespace FamilyExplorer
             if (lastChangeTime != null)
             {
                 if (DateTime.Now - lastChangeTime < new TimeSpan(0, 0, 0, 0, 50))
-                {                   
+                {
+                    // Make note of the new status
+                    CurrentFamilyModel = GetCurrentFamilyModel();
                     lastChangeTime = DateTime.Now;
                     return;
                 }
