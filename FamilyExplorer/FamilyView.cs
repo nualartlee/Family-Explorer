@@ -1077,7 +1077,7 @@ namespace FamilyExplorer
             Redo_ToolTip = "Redo...";
            
             // Check if different from saved copy
-            if (SavedFamilyModel == GetCurrentFamilyModel()) { HasChanges = false; }
+            if (SavedFamilyModel.IsEqual(GetCurrentFamilyModel())) { HasChanges = false; }
             else { HasChanges = true; }
 
             // Refresh can executes
@@ -1136,6 +1136,9 @@ namespace FamilyExplorer
             RefreshTreeLayout();
             SubscribeToEvents();
             CurrentFamilyModel = model;
+            // Check if different from saved copy
+            if (SavedFamilyModel.IsEqual(GetCurrentFamilyModel())) { HasChanges = false; }
+            else { HasChanges = true; }
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
             lastChangeTime = DateTime.Now;
@@ -1217,8 +1220,8 @@ namespace FamilyExplorer
             {
                 UpdateCurrentFile();
                 CurrentFile.Flush();                
-                HasChanges = false;
-                SavedFamilyModel = GetCurrentFamilyModel();
+                HasChanges = false;                
+                SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
             }
         }
 
@@ -1256,7 +1259,7 @@ namespace FamilyExplorer
                 // Grab handle to new file
                 CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            SavedFamilyModel = GetCurrentFamilyModel();
+            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
             HasChanges = false;
         }
         
@@ -1276,8 +1279,9 @@ namespace FamilyExplorer
             newFamily.Tree = new Tree();
             newFamily.Members = new ObservableCollection<PersonModel>() { };
             newFamily.Relationships = new ObservableCollection<RelationshipModel>() { };
-            newFamily.Members.Add(personModel);            
+            newFamily.Members.Add(personModel);
 
+            SavedFamilyModel = newFamily;
             RestoreFamilyModel(newFamily);            
             Tree.Scale = 1;
             CenterTreeInWindow();

@@ -43,5 +43,29 @@ namespace FamilyExplorer
             Relationships = new ObservableCollection<RelationshipModel>() { };
             Relationships = copyModel.Relationships;
         }
+
+        public bool IsEqual(FamilyModel compareModel)
+        {            
+
+            if (!PersonSettings.IsEqual(compareModel.PersonSettings)) { return false; }
+
+            if (!RelationshipSettings.IsEqual(compareModel.RelationshipSettings)) { return false; }
+
+            if (!Tree.IsEqual(compareModel.Tree)) { return false; }
+
+            if (Members.Count() != compareModel.Members.Count()) { return false; }                       
+            for (int i = 0; i < Members.Count; i++)
+            {
+                if (!Members[i].IsEqual(compareModel.Members[i])) { return false; }
+            }
+
+            if (Relationships.Count() != compareModel.Relationships.Count()) { return false; }
+            for (int i = 0; i < Relationships.Count; i++)
+            {
+                if (!Relationships[i].IsEqual(compareModel.Relationships[i])) { return false; }
+            }
+
+            return true;
+        }
     }
 }

@@ -159,14 +159,25 @@ namespace FamilyExplorer
             }
         }
 
-        public void CopyBaseProperties(Object personObject)
+        public void CopyBaseProperties(Object copyObject)
         {
            foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
             {
-                property.SetValue(this, property.GetValue(personObject));
+                property.SetValue(this, property.GetValue(copyObject));
             }            
         }
 
-        
+        public bool IsEqual(Object compareObject)
+        {
+            foreach (PropertyInfo property in this.GetType().GetProperties())
+            {
+                if (property.GetValue(this) != property.GetValue(compareObject))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }

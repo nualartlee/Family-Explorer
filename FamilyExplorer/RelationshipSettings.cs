@@ -302,5 +302,17 @@ namespace FamilyExplorer
             }
         }
 
+        public bool IsEqual(Object compareObject)
+        {
+            foreach (PropertyInfo property in this.GetType().GetProperties())
+            {
+                if (property.GetValue(this) != property.GetValue(compareObject))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }
