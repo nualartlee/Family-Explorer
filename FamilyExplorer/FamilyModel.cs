@@ -28,6 +28,20 @@ namespace FamilyExplorer
         public RelationshipSettings RelationshipSettings;
         public Tree Tree;
         public ObservableCollection<PersonModel> Members;
-        public ObservableCollection<RelationshipModel> Relationships;       
+        public ObservableCollection<RelationshipModel> Relationships;
+
+        public void CopyProperties(FamilyModel copyModel)
+        {
+            PersonSettings = new PersonSettings();
+            PersonSettings.CopyProperties(copyModel.PersonSettings);
+            RelationshipSettings = new RelationshipSettings();
+            RelationshipSettings.CopyProperties(copyModel.RelationshipSettings);
+            Tree = new Tree();
+            Tree.CopyProperties(copyModel.Tree);
+            Members = new ObservableCollection<PersonModel>() { };
+            Members = copyModel.Members;
+            Relationships = new ObservableCollection<RelationshipModel>() { };
+            Relationships = copyModel.Relationships;
+        }
     }
 }

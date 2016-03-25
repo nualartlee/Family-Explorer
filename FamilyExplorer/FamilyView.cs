@@ -638,9 +638,11 @@ namespace FamilyExplorer
             FamilyModel modelToRestore = RecordedFamilyModels.Last();
             // Remove the undo records
             RecordedFamilyModels.Remove(modelToRestore);
-            UndoDescriptions.Remove(UndoDescriptions.Last());           
+            UndoDescriptions.Remove(UndoDescriptions.Last());
             // Record the current model in the undone list
-            UndoneFamilyModels.Add(CurrentFamilyModel);
+            FamilyModel recordModel = new FamilyModel();
+            recordModel.CopyProperties(currentFamilyModel);
+            UndoneFamilyModels.Add(recordModel);
             RedoDescriptions.Add(Undo_ToolTip.Replace("Undo", "Redo"));
             // Refresh the undo-redo tooltips
             if (UndoDescriptions.Count() > 0) { Undo_ToolTip = UndoDescriptions.Last(); }
@@ -689,7 +691,9 @@ namespace FamilyExplorer
             UndoneFamilyModels.Remove(modelToRestore);
             RedoDescriptions.Remove(RedoDescriptions.Last());
             // Record the current model in the done list
-            RecordedFamilyModels.Add(CurrentFamilyModel);
+            FamilyModel recordModel = new FamilyModel();
+            recordModel.CopyProperties(currentFamilyModel);
+            RecordedFamilyModels.Add(recordModel);
             UndoDescriptions.Add(Redo_ToolTip.Replace("Redo", "Undo"));
             // Refresh the undo-redo tooltips
             if (UndoDescriptions.Count() > 0) { Undo_ToolTip = UndoDescriptions.Last(); }
@@ -1051,8 +1055,10 @@ namespace FamilyExplorer
                 }
             }
 
-            // Record the status before the change            
-            RecordedFamilyModels.Add(CurrentFamilyModel); //TODO: need to create a new object, currently storing the same object repeatedly
+            // Record the status before the change       
+            FamilyModel recordModel = new FamilyModel();
+            recordModel.CopyProperties(currentFamilyModel);
+            RecordedFamilyModels.Add(recordModel); //TODO: need to create a new object, currently storing the same object repeatedly
             UndoDescriptions.Add("Undo " + changeDescription);
 
             // Clear redo list on new changes
@@ -1161,33 +1167,33 @@ namespace FamilyExplorer
         
         private FamilyModel GetCurrentFamilyModel()
         {
-            FamilyModel CurrentFamilyModel = new FamilyModel();
+            FamilyModel currentFamilyModel = new FamilyModel();
 
-            CurrentFamilyModel.PersonSettings = Settings.Instance.Person;
+            currentFamilyModel.PersonSettings = Settings.Instance.Person;
 
-            CurrentFamilyModel.RelationshipSettings = Settings.Instance.Relationship;
+            currentFamilyModel.RelationshipSettings = Settings.Instance.Relationship;
 
-            CurrentFamilyModel.Tree = Tree;
-            if (SelectedPerson != null) { CurrentFamilyModel.Tree.SelectedPersonId = SelectedPerson.Id; }
-            if (SelectedRelationship != null) { CurrentFamilyModel.Tree.SelectedRelationshipId = SelectedRelationship.Id; }
+            currentFamilyModel.Tree = Tree;
+            if (SelectedPerson != null) { currentFamilyModel.Tree.SelectedPersonId = SelectedPerson.Id; }
+            if (SelectedRelationship != null) { currentFamilyModel.Tree.SelectedRelationshipId = SelectedRelationship.Id; }
 
-            CurrentFamilyModel.Members = new ObservableCollection<PersonModel>() { };
+            currentFamilyModel.Members = new ObservableCollection<PersonModel>() { };
             foreach (PersonView personView in Members)
             {
                 PersonModel personModel = new PersonModel();
                 personModel.CopyBaseProperties(personView);
-                CurrentFamilyModel.Members.Add(personModel);
+                currentFamilyModel.Members.Add(personModel);
             }
 
-            CurrentFamilyModel.Relationships = new ObservableCollection<RelationshipModel> { };
+            currentFamilyModel.Relationships = new ObservableCollection<RelationshipModel> { };
             foreach (RelationshipView relationshipView in Relationships)
             {
                 RelationshipModel relationshipModel = new RelationshipModel();
                 relationshipModel.CopyBaseProperties(relationshipView);
-                CurrentFamilyModel.Relationships.Add(relationshipModel);
+                currentFamilyModel.Relationships.Add(relationshipModel);
             }
             
-            return CurrentFamilyModel;
+            return currentFamilyModel;
         }
 
         private void UpdateCurrentFile()

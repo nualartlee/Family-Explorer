@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -222,33 +223,13 @@ namespace FamilyExplorer
             }
         }
 
-        //private string undoDescription;
-        //public string UndoDescription
-        //{
-        //    get { return undoDescription; }
-        //    set
-        //    {
-        //        if (value != undoDescription)
-        //        {
-        //            undoDescription = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-
-        //private string redoDescription;
-        //public string RedoDescription
-        //{
-        //    get { return redoDescription; }
-        //    set
-        //    {
-        //        if (value != redoDescription)
-        //        {
-        //            redoDescription = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
+        public void CopyProperties(Object copyObject)
+        {
+            foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
+            {
+                property.SetValue(this, property.GetValue(copyObject));
+            }
+        }
 
     }
 }

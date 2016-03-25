@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathThickness = 3;
+        private double pathThickness = 4;
         public double PathThickness
         {
             get { return pathThickness; }
@@ -33,7 +34,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double selectedPathThickness = 5;
+        private double selectedPathThickness = 7;
         public double SelectedPathThickness
         {
             get { return selectedPathThickness; }
@@ -61,7 +62,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathOffSelectMother = 0;
+        private double pathOffSelectMother = -16;
         public double PathOffSelectMother
         {
             get { return pathOffSelectMother; }
@@ -74,7 +75,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffSelectFather = 4;
+        private double pathOffSelectFather = -8;
         public double PathOffSelectFather
         {
             get { return pathOffSelectFather; }
@@ -87,7 +88,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetSibling = 7;
+        private double pathOffsetSibling = 0;
         public double PathOffsetSibling
         {
             get { return pathOffsetSibling; }
@@ -100,7 +101,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffSelectFriend = 10;
+        private double pathOffSelectFriend = 8;
         public double PathOffSelectFriend
         {
             get { return pathOffSelectFriend; }
@@ -113,7 +114,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffSelectPartner = 13;
+        private double pathOffSelectPartner = 16;
         public double PathOffSelectPartner
         {
             get { return pathOffSelectPartner; }
@@ -126,7 +127,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetAbuse = 15;
+        private double pathOffsetAbuse = 24;
         public double PathOffsetAbuse
         {
             get { return pathOffsetAbuse; }
@@ -202,7 +203,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private string pathColorFriend = "LightGreen";
+        private string pathColorFriend = "LightBlue";
         public string PathColorFriend
         {
             get { return pathColorFriend; }
@@ -215,7 +216,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private string pathColorPartner = "Orange";
+        private string pathColorPartner = "Pink";
         public string PathColorPartner
         {
             get { return pathColorPartner; }
@@ -291,7 +292,15 @@ namespace FamilyExplorer
                     NotifyPropertyChanged();
                 }
             }
-        }     
+        }
+
+        public void CopyProperties(Object copyObject)
+        {
+            foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
+            {
+                property.SetValue(this, property.GetValue(copyObject));
+            }
+        }
 
     }
 }
