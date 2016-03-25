@@ -267,6 +267,11 @@
                         <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Save As..." Command="{Binding SaveFileAs}" ToolTip="{Binding SaveFileAs_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Print" Command="self:CustomCommands.Print" />
                 <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" />

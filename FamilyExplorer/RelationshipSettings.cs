@@ -62,7 +62,7 @@ namespace FamilyExplorer
             }
         }
 
-        private double pathOffSelectMother = -16;
+        private double pathOffSelectMother = 0;
         public double PathOffSelectMother
         {
             get { return pathOffSelectMother; }
@@ -75,7 +75,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffSelectFather = -8;
+        private double pathOffSelectFather = 8;
         public double PathOffSelectFather
         {
             get { return pathOffSelectFather; }
@@ -88,7 +88,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffsetSibling = 0;
+        private double pathOffsetSibling = -8;
         public double PathOffsetSibling
         {
             get { return pathOffsetSibling; }
@@ -101,7 +101,7 @@ namespace FamilyExplorer
                 }
             }
         }
-        private double pathOffSelectFriend = 8;
+        private double pathOffSelectFriend = -16;
         public double PathOffSelectFriend
         {
             get { return pathOffSelectFriend; }
@@ -296,7 +296,7 @@ namespace FamilyExplorer
 
         public void CopyProperties(Object copyObject)
         {
-            foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
+            foreach (PropertyInfo property in this.GetType().GetProperties())
             {
                 property.SetValue(this, property.GetValue(copyObject));
             }

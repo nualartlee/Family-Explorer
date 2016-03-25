@@ -224,8 +224,8 @@ namespace FamilyExplorer
         }
 
         public void CopyProperties(Object copyObject)
-        {
-            foreach (PropertyInfo property in this.GetType().BaseType.GetProperties())
+        {            
+            foreach (PropertyInfo property in this.GetType().GetProperties())
             {
                 property.SetValue(this, property.GetValue(copyObject));
             }

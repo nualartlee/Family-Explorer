@@ -34,6 +34,8 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {
                 
+        // TODO: Default newfamily save handling
+        // TODO: New and Print icons
         // TODO: Settings window
         // TODO: Save handling & FamilyView command binding       
         // TODO: Review & comment
