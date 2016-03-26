@@ -369,6 +369,10 @@ namespace FamilyExplorer
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             RefreshCommandsCanExecute();
+            
+            if (e.PropertyName == "SavedFamilyModel") { CheckForChanges(); };
+            if (e.PropertyName == "CurrentFamilyModel") { CheckForChanges(); };
+
         }
 
         private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
@@ -1077,8 +1081,8 @@ namespace FamilyExplorer
             Redo_ToolTip = "Redo...";
            
             // Check if different from saved copy
-            if (SavedFamilyModel.IsEqual(GetCurrentFamilyModel())) { HasChanges = false; }
-            else { HasChanges = true; }
+            //if (SavedFamilyModel.IsEqual(GetCurrentFamilyModel())) { HasChanges = false; }
+            //else { HasChanges = true; }
 
             // Refresh can executes
             Undo.RaiseCanExecuteChanged();
@@ -1093,10 +1097,10 @@ namespace FamilyExplorer
             disableChangeRecording = true;
             
             Settings.Instance.Person = new PersonSettings();
-            if (model.PersonSettings != null) { Settings.Instance.Person = model.PersonSettings; }
+            if (model.PersonSettings != null) { Settings.Instance.Person.CopyProperties(model.PersonSettings); }
 
             Settings.Instance.Relationship = new RelationshipSettings();
-            if (model.RelationshipSettings != null) { Settings.Instance.Relationship = model.RelationshipSettings; }   
+            if (model.RelationshipSettings != null) { Settings.Instance.Relationship.CopyProperties(model.RelationshipSettings); }   
                     
             Members.Clear();
             if (model.Members != null)
@@ -1122,7 +1126,7 @@ namespace FamilyExplorer
             Tree = new Tree();
             if (model.Tree != null)
             {
-                Tree = model.Tree;
+                Tree.CopyProperties(model.Tree);
             }
                  
             SelectedPerson = GetPerson(Tree.SelectedPersonId);
@@ -1130,15 +1134,13 @@ namespace FamilyExplorer
 
             SelectedRelationship = GetRelationship(Tree.SelectedRelationshipId);
             if (SelectedRelationship != null) { SelectedRelationship.Selected = true; }
-
-            //Undo_ToolTip = model.Tree.UndoDescription;
-            //Redo_ToolTip = model.Tree.RedoDescription;
+            
             RefreshTreeLayout();
             SubscribeToEvents();
-            CurrentFamilyModel = model;
+            CurrentFamilyModel = GetCurrentFamilyModel();
             // Check if different from saved copy
-            if (SavedFamilyModel.IsEqual(GetCurrentFamilyModel())) { HasChanges = false; }
-            else { HasChanges = true; }
+            //if (SavedFamilyModel.IsEqual(CurrentFamilyModel)) { HasChanges = false; }
+            //else { HasChanges = true; }
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
             lastChangeTime = DateTime.Now;
@@ -1201,6 +1203,14 @@ namespace FamilyExplorer
             return currentFamilyModel;
         }
 
+        private void CheckForChanges()
+        {
+            if (SavedFamilyModel == null) { return; }
+            if (CurrentFamilyModel == null) { return; }
+            if (SavedFamilyModel.IsEqual(CurrentFamilyModel)) { HasChanges = false; }
+            else { HasChanges = true; }
+        }
+
         private void UpdateCurrentFile()
         {
             XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));            
@@ -1219,8 +1229,7 @@ namespace FamilyExplorer
             if (CurrentFile != null)
             {
                 UpdateCurrentFile();
-                CurrentFile.Flush();                
-                HasChanges = false;                
+                CurrentFile.Flush();                                             
                 SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
             }
         }
@@ -1259,8 +1268,7 @@ namespace FamilyExplorer
                 // Grab handle to new file
                 CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
-            HasChanges = false;
+            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());            
         }
         
         public void CreateNewFamily()
@@ -1281,16 +1289,20 @@ namespace FamilyExplorer
             newFamily.Relationships = new ObservableCollection<RelationshipModel>() { };
             newFamily.Members.Add(personModel);
 
+            newFamily.Tree.SelectedPersonId = personModel.Id;
+            
+            RestoreFamilyModel(newFamily);
+            newFamily.CopyProperties(GetCurrentFamilyModel());
             SavedFamilyModel = newFamily;
-            RestoreFamilyModel(newFamily);            
-            Tree.Scale = 1;
-            CenterTreeInWindow();
+            //SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
+            //Tree.Scale = 1;
+            //CenterTreeInWindow();
             FamilyTreeCursor = Cursors.Arrow;
             SelectCommandInProgressType = 0;
             Title = "Family Explorer - NewFamily.fex";
-            PersonView person = Members.First();
-            SelectedPerson = person;
-            person.Selected = true;          
+            //PersonView person = Members.First();
+            //SelectedPerson = person;
+            //person.Selected = true;          
         }
 
         public RelationshipView GetRelationship(int ID)

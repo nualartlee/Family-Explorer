@@ -115,10 +115,21 @@ namespace FamilyExplorer
         {
             foreach (PropertyInfo property in this.GetType().GetProperties())
             {
-                if (property.GetValue(this) != property.GetValue(compareObject))
+                var thisProperty = property.GetValue(this);
+                var comparedProperty = property.GetValue(compareObject);
+                if (thisProperty != null)
                 {
-                    return false;
+                    if (comparedProperty != null)
+                    {
+                        if (!thisProperty.Equals(comparedProperty)) { return false; }
+                    }
+                    else { return false; }
                 }
+                else
+                {
+                    if (comparedProperty != null) { return false; }
+                }
+
             }
             return true;
         }

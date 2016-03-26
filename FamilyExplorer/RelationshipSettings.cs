@@ -306,7 +306,9 @@ namespace FamilyExplorer
         {
             foreach (PropertyInfo property in this.GetType().GetProperties())
             {
-                if (property.GetValue(this) != property.GetValue(compareObject))
+                var thisProperty = property.GetValue(this);
+                var comparedProperty = property.GetValue(compareObject);
+                if (!thisProperty.Equals(comparedProperty))
                 {
                     return false;
                 }
