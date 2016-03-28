@@ -567,48 +567,50 @@ namespace FamilyExplorer
         }
         public void SaveFileAs_Executed()
         {
-            SaveFileDialog savefile = new SaveFileDialog();
-            // set a default file name
-            savefile.FileName = "Family.fex";
-            // set filters - this can be done in properties as well
-            savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
+            SaveAs();
 
-            Nullable<bool> result = savefile.ShowDialog();
+            //SaveFileDialog savefile = new SaveFileDialog();
+            //// set a default file name
+            //savefile.FileName = "Family.fex";
+            //// set filters - this can be done in properties as well
+            //savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
 
-            if (result == true)
-            {
+            //Nullable<bool> result = savefile.ShowDialog();
 
-                FamilyModel family = new FamilyModel();
-                family.PersonSettings = Settings.Instance.Person;
-                family.RelationshipSettings = Settings.Instance.Relationship;
-                family.Tree = Tree;
-                family.Members = new ObservableCollection<PersonModel>() { };
-                foreach (PersonView personView in Members)
-                {
-                    PersonModel personModel = new PersonModel();
-                    personModel.CopyBaseProperties(personView);
-                    family.Members.Add(personModel);
-                }
-                family.Relationships = new ObservableCollection<RelationshipModel> { };
-                foreach (RelationshipView relationshipView in Relationships)
-                {
-                    RelationshipModel relationshipModel = new RelationshipModel();
-                    relationshipModel.CopyBaseProperties(relationshipView);
-                    family.Relationships.Add(relationshipModel);
-                }
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
-                var subReq = family;
-                using (StringWriter sww = new StringWriter())
-                using (XmlWriter writer = XmlWriter.Create(sww))
-                {
-                    xsSubmit.Serialize(writer, subReq);
-                    var xml = sww.ToString();
-                    XmlDocument xdoc = new XmlDocument();
-                    xdoc.LoadXml(xml);
-                    xdoc.Save(savefile.FileName);
-                    Title = "Family Explorer - " + savefile.FileName;
-                }
-            }
+            //if (result == true)
+            //{
+
+            //    FamilyModel family = new FamilyModel();
+            //    family.PersonSettings = Settings.Instance.Person;
+            //    family.RelationshipSettings = Settings.Instance.Relationship;
+            //    family.Tree = Tree;
+            //    family.Members = new ObservableCollection<PersonModel>() { };
+            //    foreach (PersonView personView in Members)
+            //    {
+            //        PersonModel personModel = new PersonModel();
+            //        personModel.CopyBaseProperties(personView);
+            //        family.Members.Add(personModel);
+            //    }
+            //    family.Relationships = new ObservableCollection<RelationshipModel> { };
+            //    foreach (RelationshipView relationshipView in Relationships)
+            //    {
+            //        RelationshipModel relationshipModel = new RelationshipModel();
+            //        relationshipModel.CopyBaseProperties(relationshipView);
+            //        family.Relationships.Add(relationshipModel);
+            //    }
+            //    XmlSerializer xsSubmit = new XmlSerializer(typeof(FamilyModel));
+            //    var subReq = family;
+            //    using (StringWriter sww = new StringWriter())
+            //    using (XmlWriter writer = XmlWriter.Create(sww))
+            //    {
+            //        xsSubmit.Serialize(writer, subReq);
+            //        var xml = sww.ToString();
+            //        XmlDocument xdoc = new XmlDocument();
+            //        xdoc.LoadXml(xml);
+            //        xdoc.Save(savefile.FileName);
+            //        Title = "Family Explorer - " + savefile.FileName;
+            //    }
+            //}
         }
         private string saveFileAs_ToolTip = "Save As...";
         public string SaveFileAs_ToolTip
@@ -1229,48 +1231,77 @@ namespace FamilyExplorer
             if (CurrentFile != null)
             {
                 UpdateCurrentFile();
-                CurrentFile.Flush();                                             
-                SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
+                CurrentFile.Flush();                
+                SavedFamilyModel = GetCurrentFamilyModel();
+            }
+            else
+            {
+                SaveAs();
             }
         }
 
         private void SaveAs()
         {
+            // Create a new dialog to select the file to save to
             SaveFileDialog savefile = new SaveFileDialog();
+
             // Get current file name
-            savefile.FileName = CurrentFile.Name;
+            if (CurrentFile != null)
+            {
+                savefile.FileName = Path.GetFileName(CurrentFile.Name);
+                savefile.InitialDirectory = Path.GetDirectoryName(CurrentFile.Name);
+            }
+            else { savefile.FileName = "NewFamily"; }
           
-            // Set filters - this can be done in properties as well
+            // Set dialog filters
             savefile.Filter = "Family Explorer files (*.fex)|*.fex|All files (*.*)|*.*";
 
-            // Ask for the new file name
+            // Show the dialog to ask for the new file name
             Nullable<bool> result = savefile.ShowDialog();
 
             if (result == true)
             {
-                // If the user selects the same file name, save and exit
-                if (savefile.FileName == CurrentFile.Name)
+
+                if (CurrentFile != null)
                 {
-                    Save();                    
-                    return;
+                    // If the user selects the same file name, save and exit
+                    if (savefile.FileName == CurrentFile.Name)
+                    {
+                        Save();                        
+                    }
+                    else
+                    {
+                        // Copy current file data to new file
+                        using (var fileStream = File.Create(savefile.FileName))
+                        {
+                            // Go to file origin
+                            CurrentFile.Seek(0, SeekOrigin.Begin);
+                            // Copy to new file
+                            CurrentFile.CopyTo(fileStream);
+                            // Close handle to old file
+                            CurrentFile.Dispose();
+                            // Set the new file as current
+                            CurrentFile = fileStream;
+                            // Update
+                            UpdateCurrentFile();
+                            // Save
+                            Save();                            
+                        }
+                    }
                 }
-
-                // Copy current file data to new file
-                using (var fileStream = File.Create(savefile.FileName))
+                else
                 {
-                    CurrentFile.Seek(0, SeekOrigin.Begin);
-                    CurrentFile.CopyTo(fileStream);
+                    // Set the new file as current
+                    CurrentFile = File.Create(savefile.FileName);
+                    // Update
+                    UpdateCurrentFile();
+                    // Save
+                    Save();
                 }
-
-                // Close handle to old file
-                CurrentFile.Dispose();
-
-                // Grab handle to new file
-                CurrentFile = new FileStream(savefile.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());            
+                     
         }
-        
+       
         public void CreateNewFamily()
         {
             PersonModel personModel = new PersonModel();
@@ -1294,12 +1325,16 @@ namespace FamilyExplorer
             RestoreFamilyModel(newFamily);
             newFamily.CopyProperties(GetCurrentFamilyModel());
             SavedFamilyModel = newFamily;
-            //SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
+            //SavedFamilyModel = GetCurrentFamilyModel();
+            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
             //Tree.Scale = 1;
             //CenterTreeInWindow();
             FamilyTreeCursor = Cursors.Arrow;
             SelectCommandInProgressType = 0;
             Title = "Family Explorer - NewFamily.fex";
+
+            // Grab handle to new file
+            //CurrentFile = new FileStream("NewFamily", FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             //PersonView person = Members.First();
             //SelectedPerson = person;
             //person.Selected = true;          
