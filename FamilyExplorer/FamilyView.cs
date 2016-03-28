@@ -1139,10 +1139,7 @@ namespace FamilyExplorer
             
             RefreshTreeLayout();
             SubscribeToEvents();
-            CurrentFamilyModel = GetCurrentFamilyModel();
-            // Check if different from saved copy
-            //if (SavedFamilyModel.IsEqual(CurrentFamilyModel)) { HasChanges = false; }
-            //else { HasChanges = true; }
+            CurrentFamilyModel = GetCurrentFamilyModel();            
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
             lastChangeTime = DateTime.Now;
