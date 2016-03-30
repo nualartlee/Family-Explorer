@@ -679,8 +679,8 @@
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                           >
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                           
 
                 <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
 

@@ -33,14 +33,12 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
-                
-        // TODO: Default newfamily save handling
+        // TODO: Keyboard shortcuts for commands
+        // TODO: Tree zoom handling                
         // TODO: New and Print icons
-        // TODO: Settings window
-        // TODO: Save handling & FamilyView command binding       
+        // TODO: Settings window           
         // TODO: Review & comment
         // TODO: Unit tests
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -455,8 +453,6 @@ namespace FamilyExplorer
                 RecordFamilyChange(changeDescription);
             }
         }
-        
-        #region Commands           
 
         private void InitiateCommands()
         {
@@ -475,6 +471,8 @@ namespace FamilyExplorer
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
         }
+
+        #region Commands           
 
         public RelayCommand OpenFile
         {
@@ -1038,6 +1036,7 @@ namespace FamilyExplorer
             FamilyModel newFamilyModel = (FamilyModel)serializer.Deserialize(CurrentFile);
             SavedFamilyModel = newFamilyModel;
 
+            // Restore the familymodel to the workspace
             RestoreFamilyModel(newFamilyModel);
 
             Title = "Family Explorer - " + filename;
@@ -1144,6 +1143,9 @@ namespace FamilyExplorer
             Redo.RaiseCanExecuteChanged();
             lastChangeTime = DateTime.Now;
             disableChangeRecording = false;
+
+            FamilyTreeCursor = Cursors.Arrow;
+            SelectCommandInProgressType = 0;
         }
 
         private void SubscribeToEvents()
@@ -1301,6 +1303,7 @@ namespace FamilyExplorer
        
         public void CreateNewFamily()
         {
+            // Create a personmodel
             PersonModel personModel = new PersonModel();
             personModel.FirstName = "First Name";
             personModel.LastName = "Last Name";
@@ -1309,6 +1312,7 @@ namespace FamilyExplorer
             personModel.GenerationIndex = 0;
             personModel.SiblingIndex = 0;
 
+            // Create a familymodel and add the personmodel
             FamilyModel newFamily = new FamilyModel();
             newFamily.PersonSettings = new PersonSettings();
             newFamily.RelationshipSettings = new RelationshipSettings();
@@ -1317,24 +1321,21 @@ namespace FamilyExplorer
             newFamily.Relationships = new ObservableCollection<RelationshipModel>() { };
             newFamily.Members.Add(personModel);
 
+            // Mark the personmodel as selected
             newFamily.Tree.SelectedPersonId = personModel.Id;
             
+            // Restore this new familymodel into the workspace
             RestoreFamilyModel(newFamily);
             newFamily.CopyProperties(GetCurrentFamilyModel());
-            SavedFamilyModel = newFamily;
-            //SavedFamilyModel = GetCurrentFamilyModel();
-            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());
-            //Tree.Scale = 1;
-            //CenterTreeInWindow();
-            FamilyTreeCursor = Cursors.Arrow;
-            SelectCommandInProgressType = 0;
+            SavedFamilyModel = newFamily;           
+            SavedFamilyModel.CopyProperties(GetCurrentFamilyModel());           
+            
+            // Set the title
             Title = "Family Explorer - NewFamily.fex";
 
-            // Grab handle to new file
-            //CurrentFile = new FileStream("NewFamily", FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-            //PersonView person = Members.First();
-            //SelectedPerson = person;
-            //person.Selected = true;          
+            // Clear undo-redo records
+            RecordedFamilyModels.Clear();
+            UndoneFamilyModels.Clear();
         }
 
         public RelationshipView GetRelationship(int ID)
