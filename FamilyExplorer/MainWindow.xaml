@@ -19,12 +19,24 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="NewIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/New.png" />
+        </Style>
+
         <Style x:Key="OpenFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
             <Setter Property="Source" Value="Resources/Icons/OpenFile.png" />
         </Style>
 
         <Style x:Key="SaveFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
             <Setter Property="Source" Value="Resources/Icons/SaveFile.png" />
+        </Style>
+
+        <Style x:Key="PrintIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Print.png" />
+        </Style>
+
+        <Style x:Key="PrintViewIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/PrintView.png" />
         </Style>
 
         <Style x:Key="UndoIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
@@ -240,7 +252,6 @@
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
-        <CommandBinding Command="self:CustomCommands.CenterTree" CanExecute="CenterTree_CanExecute" Executed="CenterTree_Executed"/>
         <CommandBinding Command="self:CustomCommands.Edit" />
         <CommandBinding Command="self:CustomCommands.Delete" />
     </Window.CommandBindings>
@@ -256,7 +267,11 @@
         <Menu
             x:Name="MainMenu" Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" />
+                <MenuItem Header="_New" Command="{Binding NewFamily}" ToolTip="{Binding NewFamily_ToolTip}">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource NewIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Open" Command="{Binding OpenFile}" ToolTip="{Binding OpenFile_ToolTip}">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource OpenFileIcon}" Width="16" Height="16"/>
@@ -273,8 +288,16 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="_Print" Command="self:CustomCommands.Print" />
-                <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" />
+                <MenuItem Header="_Print" Command="self:CustomCommands.Print" >
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource PrintIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" >
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource PrintViewIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Undo" Command="{Binding Undo}" ToolTip="{Binding Undo_ToolTip}">

@@ -46,8 +46,7 @@ namespace FamilyExplorer
         public MainWindow()
         {
             InitializeComponent();                       
-            family = FamilyView.Instance;
-            family.CreateNewFamily();
+            family = FamilyView.Instance;           
             this.DataContext = family;
         }
         
@@ -60,17 +59,7 @@ namespace FamilyExplorer
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             family.EndSetCommand();
-        }
-        
-        private void CenterTree_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void CenterTree_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            family.CenterTreeInWindow();
-        }
+        }              
 
         private void Print_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {

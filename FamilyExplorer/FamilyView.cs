@@ -346,6 +346,7 @@ namespace FamilyExplorer
             PropertyChanged += new PropertyChangedEventHandler(PropertyChangedHandler);
             Members.CollectionChanged += new NotifyCollectionChangedEventHandler(CollectionChangedHandler);
             Relationships.CollectionChanged += new NotifyCollectionChangedEventHandler(CollectionChangedHandler);
+            CreateNewFamily();
 
         }
 
@@ -461,6 +462,8 @@ namespace FamilyExplorer
             SaveFileAs = new RelayCommand(SaveFileAs_Executed, SaveFileAs_CanExecute);
             Undo = new RelayCommand(Undo_Executed, Undo_CanExecute);
             Redo = new RelayCommand(Redo_Executed, Redo_CanExecute);
+            NewFamily = new RelayCommand(NewFamily_Executed, NewFamily_CanExecute);
+            CenterTree = new RelayCommand(CenterTree_Executed, CenterTree_CanExecute);
         }
 
         private void RefreshCommandsCanExecute()
@@ -470,6 +473,8 @@ namespace FamilyExplorer
             SaveFileAs.RaiseCanExecuteChanged();
             Undo.RaiseCanExecuteChanged();
             Redo.RaiseCanExecuteChanged();
+            NewFamily.RaiseCanExecuteChanged();
+            CenterTree.RaiseCanExecuteChanged();
         }
 
         #region Commands           
@@ -503,6 +508,7 @@ namespace FamilyExplorer
                     {
                         case MessageBoxResult.Yes:
                             Save();
+                            CurrentFile.Dispose();
                             break;
                         case MessageBoxResult.Cancel:
                             return;
@@ -719,6 +725,74 @@ namespace FamilyExplorer
                 if (value != redo_ToolTip)
                 {
                     redo_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public RelayCommand NewFamily
+        {
+            get;
+            private set;
+        }
+        public bool NewFamily_CanExecute()
+        {
+            return true;
+        }
+        public void NewFamily_Executed()
+        {
+            // Ask to save any pending changes in current file
+            if (HasChanges)
+            {
+                switch (SaveChangesDialog())
+                {
+                    case MessageBoxResult.Yes:
+                        Save();
+                        CurrentFile.Dispose();
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+            // Create new family
+            CreateNewFamily();
+        }
+        private string newFamily_ToolTip = "Create New Family";
+        public string NewFamily_ToolTip
+        {
+            get { return newFamily_ToolTip; }
+            set
+            {
+                if (value != newFamily_ToolTip)
+                {
+                    newFamily_ToolTip = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public RelayCommand CenterTree
+        {
+            get;
+            private set;
+        }
+        public bool CenterTree_CanExecute()
+        {
+            return true;
+        }
+        public void CenterTree_Executed()
+        {
+            CenterTreeInWindow();
+        }
+        private string centerTree_ToolTip = "Center Tree";
+        public string CenterTree_ToolTip
+        {
+            get { return centerTree_ToolTip; }
+            set
+            {
+                if (value != centerTree_ToolTip)
+                {
+                    centerTree_ToolTip = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -1022,6 +1096,58 @@ namespace FamilyExplorer
 
         #endregion Commands
 
+
+        public RelationshipView GetRelationship(int ID)
+        {
+            return (RelationshipView)relationships.Where(r => r.Id == ID).FirstOrDefault();
+        }
+
+        public PersonView GetPerson(int ID)
+        {
+            return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
+        }
+
+        public int GetNextID()
+        {
+            if (Members.Count == 0) { return 1; }
+            int? maxId = Members.Max(m => m.Id) + 1;
+            return maxId ?? 1;
+        }
+
+        public void AddPersonToFamily(PersonView person)
+        {
+            if (Members == null)
+            {
+                Members = new ObservableCollection<PersonView> { };
+            }
+            Members.Add(person);
+            OrderSiblings(person.GenerationIndex);
+            RefreshTreeLayout();
+            person.PropertyChanged += PersonPropertyChangedHandler;
+            person.BasePropertyChanged += BasePropertyChangedHandler;
+        }
+
+        public void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
+        {
+
+            if (personSource == personDestination) { return; }
+            int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;
+
+            RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
+            if (relationship != null)
+            {
+                relationship.Refresh();
+            }
+            else
+            {
+                RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
+                FamilyView.Instance.Relationships.Add(newRelationship);
+                newRelationship.PropertyChanged += RelationshipPropertyChangedHandler;
+                newRelationship.BasePropertyChanged += BasePropertyChangedHandler;
+
+            }
+        }
+
         private void Open(string filename)
         {            
             // Close handle to old file
@@ -1043,6 +1169,8 @@ namespace FamilyExplorer
             RecordedFamilyModels.Clear();
             UndoneFamilyModels.Clear();                          
         }
+
+
 
         private void RecordFamilyChange(string changeDescription)
         {            
@@ -1168,7 +1296,7 @@ namespace FamilyExplorer
 
         private MessageBoxResult SaveChangesDialog()
         {           
-            string msg = "Save changes to " + CurrentFile.Name + "?";
+            string msg = "Save changes to " + Title + "?";
             var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);           
             return result;                            
         }
@@ -1301,7 +1429,7 @@ namespace FamilyExplorer
                      
         }
        
-        public void CreateNewFamily()
+        private void CreateNewFamily()
         {
             // Create a personmodel
             PersonModel personModel = new PersonModel();
@@ -1337,57 +1465,6 @@ namespace FamilyExplorer
             RecordedFamilyModels.Clear();
             UndoneFamilyModels.Clear();
         }
-
-        public RelationshipView GetRelationship(int ID)
-        {
-            return (RelationshipView)relationships.Where(r => r.Id == ID).FirstOrDefault();
-        }
-
-        public PersonView GetPerson(int ID)
-        {
-            return (PersonView)members.Where(m => m.Id == ID).FirstOrDefault();
-        }
-                
-        public int GetNextID()
-        {
-            if (Members.Count == 0) { return 1; }
-            int? maxId = Members.Max(m => m.Id) + 1;
-            return maxId ?? 1;
-        }
-        
-        public void AddPersonToFamily(PersonView person)
-        {
-            if (Members == null)
-            {
-                Members = new ObservableCollection<PersonView> { };
-            }
-            Members.Add(person);
-            OrderSiblings(person.GenerationIndex);
-            RefreshTreeLayout();
-            person.PropertyChanged += PersonPropertyChangedHandler;
-            person.BasePropertyChanged += BasePropertyChangedHandler;
-        }
-
-        public void CreateRelationship(int type, PersonView personSource, PersonView personDestination, DateTime? startDate, DateTime? endDate)
-        {
-
-            if (personSource == personDestination) { return; }
-            int Id = type * (int)Math.Pow(10, 6) + personSource.Id * (int)Math.Pow(10, 3) + personDestination.Id;           
-            
-            RelationshipView relationship = FamilyView.Instance.GetRelationship(Id);
-            if (relationship != null)
-            {
-                relationship.Refresh();
-            }
-            else
-            {
-                RelationshipView newRelationship = new RelationshipView(Id, startDate, endDate);
-                FamilyView.Instance.Relationships.Add(newRelationship);
-                newRelationship.PropertyChanged += RelationshipPropertyChangedHandler;
-                newRelationship.BasePropertyChanged += BasePropertyChangedHandler;
-
-            }
-        }      
 
         private void SetPersonPosition(PersonView person)
         {
@@ -1425,31 +1502,28 @@ namespace FamilyExplorer
             Tree.HeightScaled = Tree.Height * Tree.Scale;
         }
 
-        public void SetWindowSize(double width, double height)
+        private void SetWindowSize(double width, double height)
         {
             Tree.WindowWidth = width;
             Tree.WindowHeight = height;
         }
 
-        public void CenterTreeInWindow()
+        private void CenterTreeInWindow()
         {
-
             RefreshTreeLayout();
             Tree.XPosition = (Tree.WindowWidth / 2) - (Tree.Width / 2);
             Tree.YPosition = (Tree.WindowHeight / 2) - (Tree.Height / 2);
         }
 
-        public void MoveTreePositionInWindow(double deltaX, double deltaY)
+        private void MoveTreePositionInWindow(double deltaX, double deltaY)
         {
             Tree.XPosition += deltaX; /// TreeScale;
             Tree.YPosition += deltaY; /// TreeScale;
         }
 
-        public void ScaleTree(double scaleIncrease, double windowCenterX, double windowCenterY)
+        private void ScaleTree(double scaleIncrease, double windowCenterX, double windowCenterY)
 
         {
-
-            //TreeScaleOrigin = new Point(windowCenterX / windowWidth, windowCenterY / windowHeight);
             Tree.ScaleOrigin = new Point(0.5, 0.5);
 
             Tree.ScaleCenterX = windowCenterX;
@@ -1459,11 +1533,8 @@ namespace FamilyExplorer
             { Tree.Scale = Tree.Scale * (scaleIncrease / 100); }
             else { Tree.Scale = Tree.Scale * (-100 / scaleIncrease); }
 
-            //XPosition = XPosition - (windowWidth * TreeScale) * scaleIncrease;
-            //YPosition = YPosition - (windowHeight * TreeScale)* scaleIncrease;
-
             SetScaledTreeDimensions();
         }
-                
+
     }
 }
