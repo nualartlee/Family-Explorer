@@ -256,6 +256,15 @@
         <CommandBinding Command="self:CustomCommands.Delete" />
     </Window.CommandBindings>
 
+    <Window.InputBindings>
+        <KeyBinding x:Name="NewFamilyKeys" Command="{Binding NewFamily}" Key="n" Modifiers="Ctrl" Gesture="Ctrl+N" />
+        <KeyBinding Command="{Binding OpenFile}" Key="o" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveFile}" Key="s" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveFileAs}" Key="s" Modifiers="Alt"/>
+        <KeyBinding Command="{Binding Undo}" Key="z" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding Redo}" Key="y" Modifiers="Ctrl"/>
+    </Window.InputBindings>
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -267,22 +276,22 @@
         <Menu
             x:Name="MainMenu" Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Command="{Binding NewFamily}" ToolTip="{Binding NewFamily_ToolTip}">
+                <MenuItem Header="_New" Command="{Binding NewFamily}" ToolTip="{Binding NewFamily_ToolTip}" InputGestureText="Ctrl+N">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource NewIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Open" Command="{Binding OpenFile}" ToolTip="{Binding OpenFile_ToolTip}">
+                <MenuItem Header="_Open" Command="{Binding OpenFile}" ToolTip="{Binding OpenFile_ToolTip}" InputGestureText="Ctrl+O">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource OpenFileIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Save" Command="{Binding SaveFile}" ToolTip="{Binding SaveFile_ToolTip}">
+                <MenuItem Header="_Save" Command="{Binding SaveFile}" ToolTip="{Binding SaveFile_ToolTip}" InputGestureText="Ctrl+S">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Save As..." Command="{Binding SaveFileAs}" ToolTip="{Binding SaveFileAs_ToolTip}">
+                <MenuItem Header="_Save As..." Command="{Binding SaveFileAs}" ToolTip="{Binding SaveFileAs_ToolTip}" InputGestureText="Alt+S">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
@@ -300,12 +309,12 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Undo" Command="{Binding Undo}" ToolTip="{Binding Undo_ToolTip}">
+                <MenuItem Header="_Undo" Command="{Binding Undo}" ToolTip="{Binding Undo_ToolTip}" InputGestureText="Ctrl+Z">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource UndoIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Redo" Command="{Binding Redo}" ToolTip="{Binding Redo_ToolTip}">
+                <MenuItem Header="_Redo" Command="{Binding Redo}" ToolTip="{Binding Redo_ToolTip}" InputGestureText="Ctrl+Y">
                     <MenuItem.Icon>
                         <Image Style="{StaticResource RedoIcon}" Width="16" Height="16"/>
                     </MenuItem.Icon>

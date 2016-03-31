@@ -1297,7 +1297,7 @@ namespace FamilyExplorer
         private MessageBoxResult SaveChangesDialog()
         {           
             string msg = "Save changes to " + Title + "?";
-            var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);           
+            var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);           
             return result;                            
         }
         
