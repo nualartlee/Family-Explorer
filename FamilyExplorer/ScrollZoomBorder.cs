@@ -54,8 +54,8 @@ namespace FamilyExplorer
             this.RenderTransform = group;
             this.RenderTransformOrigin = new Point(0.0, 0.0);
             parent.PreviewMouseWheel += child_PreviewMouseWheel;
-            parent.PreviewMouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
-            parent.PreviewMouseLeftButtonUp += child_PreviewMouseLeftButtonUp;
+            parent.MouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
+            parent.MouseLeftButtonUp += child_PreviewMouseLeftButtonUp;
             parent.PreviewMouseMove += child_PreviewMouseMove;
             parent.PreviewMouseRightButtonDown += new MouseButtonEventHandler(child_PreviewMouseRightButtonDown);
         }  
@@ -105,15 +105,13 @@ namespace FamilyExplorer
         {
             var tt = GetTranslateTransform();
             start = e.GetPosition(parent);
-            origin = new Point(tt.X, tt.Y);
-            //Parent().Cursor = Cursors.Hand;
+            origin = new Point(tt.X, tt.Y);            
             parent.CaptureMouse();
         }
 
         private void child_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            parent.ReleaseMouseCapture();
-            //this.Cursor = Cursors.Arrow;            
+            parent.ReleaseMouseCapture();                     
         }
 
         void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)

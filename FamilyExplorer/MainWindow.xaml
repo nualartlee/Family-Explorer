@@ -81,7 +81,7 @@
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
                             </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                                 <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -149,7 +149,6 @@
         <DataTemplate x:Key="RelationshipItem">
             <Canvas Background="{x:Null}">
                 <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}" StrokeStartLineCap="{Binding StrokeStartLineCap}" StrokeEndLineCap="{Binding StrokeEndLineCap}">
-                    <!--MouseLeftButtonDown="RelationshipItem_MouseLeftButtonDown" MouseEnter="RelationshipItem_MouseEnter" MouseLeave="RelationshipItem_MouseLeave">-->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
@@ -157,7 +156,7 @@
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
                         </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -170,7 +169,7 @@
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
                         </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                             <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -711,10 +710,9 @@
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                           
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False">
 
-                <Border x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown">
+                <self:ScrollZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" >
 
                     <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
 
@@ -751,7 +749,7 @@
 
                     </Canvas>
 
-                </Border>
+                </self:ScrollZoomBorder>
 
             </ScrollViewer>
             <Popup x:Name="SelectCommandPopup" Grid.Column="2" IsOpen="{Binding SelectCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" Opened="SelectCommandPopup_Opened" >

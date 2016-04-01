@@ -33,9 +33,8 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
-        // TODO: Keyboard shortcuts for commands
-        // TODO: Tree zoom handling                
-        // TODO: New and Print icons
+        
+        // TODO: Tree zoom handling                        
         // TODO: Settings window           
         // TODO: Review & comment
         // TODO: Unit tests
