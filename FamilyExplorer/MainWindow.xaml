@@ -714,7 +714,7 @@
 
                 <self:ScrollZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" >
                     
-                    <Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" BorderBrush="Beige" BorderThickness="2">
+                    <Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
                         
                         <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
