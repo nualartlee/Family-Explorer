@@ -713,8 +713,10 @@
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False">
 
                 <self:ScrollZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" >
-
-                    <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >
+                    
+                    <Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" BorderBrush="Beige" BorderThickness="2">
+                        
+                        <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
                         <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Relationships}"
@@ -748,7 +750,9 @@
                         </ItemsControl>
 
                     </Canvas>
-
+                        
+                    </Border>
+                    
                 </self:ScrollZoomBorder>
 
             </ScrollViewer>

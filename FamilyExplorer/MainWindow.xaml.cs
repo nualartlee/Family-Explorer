@@ -67,10 +67,8 @@ namespace FamilyExplorer
         }
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            //Canvas TreeCanvas = FindChild<Canvas>(PersonItemsControl, "PersonListBoxCanvas");
-            //PrintPreview(ItemCanvas, PersonListBox.ActualWidth, PersonListBox.ActualHeight);
-            PrintPreview(TreeCanvas, TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);
+        {            
+            PrintPreview(TreeCanvas, TreeCanvas.Width, TreeCanvas.Height);
         }
 
         private void PrintView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -107,16 +105,15 @@ namespace FamilyExplorer
                     writer.Write(visual);
                 }
 
-                // Read the XPS document into a dynamically generated
-                // preview Window 
+                // Read the XPS document into a dynamically generated preview window               
                 using (XpsDocument doc = new XpsDocument(fileName, FileAccess.Read))
                 {
                     FixedDocumentSequence fds = doc.GetFixedDocumentSequence();
 
                     string s = _previewWindowXaml;                    
                     s = s.Replace("@@TITLE", title.Replace("'", "&apos;"));
-                    s = s.Replace("@@WIDTH", (width + 200).ToString());
-                    s = s.Replace("@@HEIGHT", (height + 200).ToString());
+                    s = s.Replace("@@WIDTH", (width).ToString());
+                    s = s.Replace("@@HEIGHT", (height).ToString());
 
                     using (var reader = new System.Xml.XmlTextReader(new StringReader(s)))
                     {
