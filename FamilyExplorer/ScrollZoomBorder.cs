@@ -25,19 +25,7 @@ namespace FamilyExplorer
             return (ScaleTransform)((TransformGroup)this.RenderTransform)
               .Children.First(tr => tr is ScaleTransform);
         }
-
-        //public override UIElement Child
-        //{
-        //    get { return base.Child; }
-        //    set
-        //    {
-        //        if (value != null && value != this.Child)
-        //            this.Initialize(value);
-        //        base.Child = value;
-        //    }
-        //}                 
-
-
+        
         public ScrollZoomBorder()
         {
             this.Loaded += ScrollZoomBorder_Loaded;                        
