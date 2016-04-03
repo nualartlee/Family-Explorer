@@ -249,10 +249,14 @@
     </Window.Resources>
 
     <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
+        <CommandBinding Command="self:CustomCommands.ZoomOut" CanExecute="ZoomOut_CanExecute" Executed="ZoomOut_Executed"/>
+        <CommandBinding Command="self:CustomCommands.MoveUp" CanExecute="MoveUp_CanExecute" Executed="MoveUp_Executed"/>
+        <CommandBinding Command="self:CustomCommands.MoveDown" CanExecute="MoveDown_CanExecute" Executed="MoveDown_Executed"/>
+        <CommandBinding Command="self:CustomCommands.MoveLeft" CanExecute="MoveLeft_CanExecute" Executed="MoveLeft_Executed"/>
+        <CommandBinding Command="self:CustomCommands.MoveRight" CanExecute="MoveRight_CanExecute" Executed="MoveRight_Executed"/>
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Edit" />
-        <CommandBinding Command="self:CustomCommands.Delete" />
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -320,7 +324,8 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
-                <MenuItem Header="_Zoom" />
+                <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
             </MenuItem>
             <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
@@ -712,7 +717,7 @@
 
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False">
 
-                <self:ScrollZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" >
+                <self:ZoomBorder x:Name="TreeZoomBorder" ClipToBounds="False" Background="White" >
                     
                     <Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
                         
@@ -753,7 +758,7 @@
                         
                     </Border>
                     
-                </self:ScrollZoomBorder>
+                </self:ZoomBorder>
 
             </ScrollViewer>
             <Popup x:Name="SelectCommandPopup" Grid.Column="2" IsOpen="{Binding SelectCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" Opened="SelectCommandPopup_Opened" >

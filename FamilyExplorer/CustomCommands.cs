@@ -24,28 +24,82 @@ namespace FamilyExplorer
 {
     public static class CustomCommands
     {
-        public static readonly RoutedUICommand Open = new RoutedUICommand
+        public static readonly RoutedUICommand CenterTree = new RoutedUICommand
                        (
-                               "Open",
-                               "Open",
+                               "Center Tree",
+                               "Center Tree",
                                typeof(CustomCommands),
                                new InputGestureCollection()
                                {
-                                        new KeyGesture(Key.O, ModifierKeys.Control)
+                                        new KeyGesture(Key.C, ModifierKeys.Alt)
                                }
                        );
 
-        public static readonly RoutedUICommand Save = new RoutedUICommand
-                        (
-                                "Save",
-                                "Save",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.S, ModifierKeys.Control)
-                                }
-                        );
+        public static readonly RoutedUICommand ZoomIn = new RoutedUICommand
+                      (
+                              "Zoom In",
+                              "Zoom In",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Add, ModifierKeys.Control)
+                              }
+                      );
 
+        public static readonly RoutedUICommand ZoomOut = new RoutedUICommand
+                      (
+                              "Zoom Out",
+                              "Zoom Out",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Subtract, ModifierKeys.Control)
+                              }
+                      );
+
+        public static readonly RoutedUICommand MoveUp = new RoutedUICommand
+                      (
+                              "Move Up",
+                              "Move Up",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Up)
+                              }
+                      );
+
+        public static readonly RoutedUICommand MoveDown = new RoutedUICommand
+                      (
+                              "Move Down",
+                              "Move Down",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Down)
+                              }
+                      );
+
+        public static readonly RoutedUICommand MoveLeft = new RoutedUICommand
+                      (
+                              "Move Left",
+                              "Move Left",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Left)
+                              }
+                      );
+
+        public static readonly RoutedUICommand MoveRight = new RoutedUICommand
+                      (
+                              "Move Right",
+                              "Move Right",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                        new KeyGesture(Key.Right)
+                              }
+                      );
         public static readonly RoutedUICommand Print = new RoutedUICommand
                         (
                                 "Print",
@@ -68,226 +122,8 @@ namespace FamilyExplorer
                                 }
                         );
 
-        public static readonly RoutedUICommand CenterTree = new RoutedUICommand
-                       (
-                               "Center Tree",
-                               "Center Tree",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                               {
-                                        new KeyGesture(Key.C, ModifierKeys.Alt)
-                               }
-                       );
-
-        public static readonly RoutedUICommand Edit = new RoutedUICommand
-                        (
-                                "Edit",
-                                "Edit",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.E, ModifierKeys.Alt)
-                                }
-                        );
-
-        public static readonly RoutedUICommand Delete = new RoutedUICommand
-                        (
-                                "Delete",
-                                "Delete",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.Delete)
-                                }
-                        );
-
-        public static readonly RoutedUICommand AddMother = new RoutedUICommand
-                        (
-                                "AddMother",
-                                "AddMother",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.M, ModifierKeys.Alt)
-                                }
-                        );
-
-        public static readonly RoutedUICommand AddFather = new RoutedUICommand
-                        (
-                                "AddFather",
-                                "AddFather",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.F, ModifierKeys.Alt)
-                                }
-                        );
-
-        public static readonly RoutedUICommand AddSiblingEqualParents = new RoutedUICommand
-                        (
-                                "Add Equal Parent Sibling",
-                                "Add Equal Parent Sibling",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.S, ModifierKeys.Alt)
-                                }
-                        );
-
-        public static readonly RoutedUICommand AddSiblingByMother = new RoutedUICommand
-                        (
-                                "Add Sibling By Mother",
-                                "Add Sibling By Mother",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.J, ModifierKeys.Alt)
-                                }
-                        );
-
-        public static readonly RoutedUICommand AddSiblingByFather = new RoutedUICommand
-                       (
-                               "Add Sibling By Father",
-                               "Add Sibling By Father",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                               {
-                                        new KeyGesture(Key.K, ModifierKeys.Alt)
-                               }
-                       );
-
-        public static readonly RoutedUICommand AddFriend = new RoutedUICommand
-                       (
-                               "AddFriend",
-                               "AddFriend",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.D, ModifierKeys.Alt)
-                                }
-                       );
-
-        public static readonly RoutedUICommand AddPartner = new RoutedUICommand
-                        (
-                                "AddPartner",
-                                "AddPartner",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.P, ModifierKeys.Alt)
-                                }
-                        );       
-
-        public static readonly RoutedUICommand AddChild = new RoutedUICommand
-                       (
-                               "AddChild",
-                               "AddChild",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.C, ModifierKeys.Alt)
-                                }
-                       );
-
-        public static readonly RoutedUICommand AddAbuser = new RoutedUICommand
-                       (
-                               "AddAbuser",
-                               "AddAbuser",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.A, ModifierKeys.Alt)
-                                }
-                       );
-
-        public static readonly RoutedUICommand AddVictim = new RoutedUICommand
-                       (
-                               "AddVictim",
-                               "AddVictim",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.V, ModifierKeys.Alt)
-                                }
-                       );
-
-        public static readonly RoutedUICommand SelectMother = new RoutedUICommand
-                       (
-                               "SelectMother",
-                               "SelectMother",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.M, ModifierKeys.Control)
-                                }
-                       );
-
-        public static readonly RoutedUICommand SelectFather = new RoutedUICommand
-                        (
-                                "SelectFather",
-                                "SelectFather",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.F, ModifierKeys.Control)
-                                }
-                        );
-
-        public static readonly RoutedUICommand SelectFriend = new RoutedUICommand
-                       (
-                               "SelectFriend",
-                               "SelectFriend",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.D, ModifierKeys.Control)
-                                }
-                       );
-
-        public static readonly RoutedUICommand SelectPartner = new RoutedUICommand
-                        (
-                                "SelectPartner",
-                                "SelectPartner",
-                                typeof(CustomCommands),
-                                new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.P, ModifierKeys.Control)
-                                }
-                        );
        
-        public static readonly RoutedUICommand SelectChild = new RoutedUICommand
-                       (
-                               "SelectChild",
-                               "SelectChild",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.C, ModifierKeys.Control)
-                                }
-                       );
-
-        public static readonly RoutedUICommand SelectAbuser = new RoutedUICommand
-                       (
-                               "SelectAbuser",
-                               "SelectAbuser",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.A, ModifierKeys.Control)
-                                }
-                       );
-
-        public static readonly RoutedUICommand SelectVictim = new RoutedUICommand
-                       (
-                               "SelectVictim",
-                               "SelectVictim",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                                {
-                                        new KeyGesture(Key.V, ModifierKeys.Control)
-                                }
-                       );
-
+        
 
     }
 }

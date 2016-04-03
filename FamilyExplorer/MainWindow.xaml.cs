@@ -48,8 +48,7 @@ namespace FamilyExplorer
             InitializeComponent();                       
             family = FamilyView.Instance;           
             this.DataContext = family;
-        }
-        
+        }        
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -60,6 +59,66 @@ namespace FamilyExplorer
         {
             family.EndSetCommand();
         }              
+
+        private void ZoomIn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ZoomIn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.ZoomIn();
+        }
+
+        private void ZoomOut_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ZoomOut_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.ZoomOut();
+        }
+
+        private void MoveUp_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MoveUp_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.MoveUp();
+        }
+
+        private void MoveDown_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MoveDown_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.MoveDown();
+        }
+
+        private void MoveLeft_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MoveLeft_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.MoveLeft();
+        }
+
+        private void MoveRight_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MoveRight_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.MoveRight();
+        }
 
         private void Print_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -200,9 +259,7 @@ namespace FamilyExplorer
 
             return foundChild;
         }
-
-       
-
+        
         private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {           
             family.SelectPerson(null);
