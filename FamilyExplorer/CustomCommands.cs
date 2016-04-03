@@ -24,16 +24,28 @@ namespace FamilyExplorer
 {
     public static class CustomCommands
     {
-        public static readonly RoutedUICommand CenterTree = new RoutedUICommand
-                       (
-                               "Center Tree",
-                               "Center Tree",
-                               typeof(CustomCommands),
-                               new InputGestureCollection()
-                               {
-                                        new KeyGesture(Key.C, ModifierKeys.Alt)
-                               }
-                       );
+
+        public static readonly RoutedUICommand ResetView = new RoutedUICommand
+                      (
+                              "Reset View",
+                              "Reset View",
+                              typeof(CustomCommands),
+                              new InputGestureCollection()
+                              {
+                                  new KeyGesture(Key.Up, ModifierKeys.Control)
+                              }
+                      );
+
+        public static readonly RoutedUICommand ResetZoom = new RoutedUICommand
+                     (
+                             "Reset Zoom",
+                             "Reset Zoom",
+                             typeof(CustomCommands),
+                             new InputGestureCollection()
+                             {
+                                        new KeyGesture(Key.Down, ModifierKeys.Control)
+                             }
+                     );
 
         public static readonly RoutedUICommand ZoomIn = new RoutedUICommand
                       (
@@ -56,6 +68,17 @@ namespace FamilyExplorer
                                         new KeyGesture(Key.Subtract, ModifierKeys.Control)
                               }
                       );
+
+        public static readonly RoutedUICommand Center = new RoutedUICommand
+                     (
+                             "Center",
+                             "Center",
+                             typeof(CustomCommands),
+                             new InputGestureCollection()
+                             {
+                                        new KeyGesture(Key.Left, ModifierKeys.Control)
+                             }
+                     );
 
         public static readonly RoutedUICommand MoveUp = new RoutedUICommand
                       (
@@ -100,6 +123,7 @@ namespace FamilyExplorer
                                         new KeyGesture(Key.Right)
                               }
                       );
+
         public static readonly RoutedUICommand Print = new RoutedUICommand
                         (
                                 "Print",
@@ -122,8 +146,8 @@ namespace FamilyExplorer
                                 }
                         );
 
-       
-        
+
+
 
     }
 }

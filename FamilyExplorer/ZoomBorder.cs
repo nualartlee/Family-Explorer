@@ -58,7 +58,7 @@ namespace FamilyExplorer
             }
         }
 
-        public void Reset()
+        public void ResetView()
         {
             ResetZoom();
             ResetPan();

@@ -58,7 +58,17 @@ namespace FamilyExplorer
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             family.EndSetCommand();
-        }              
+        }
+
+        private void ResetView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ResetView_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.ResetView();
+        }
 
         private void ZoomIn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -78,6 +88,16 @@ namespace FamilyExplorer
         private void ZoomOut_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             TreeZoomBorder.ZoomOut();
+        }
+
+        private void ResetZoom_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ResetZoom_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.ResetZoom();
         }
 
         private void MoveUp_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -118,6 +138,16 @@ namespace FamilyExplorer
         private void MoveRight_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             TreeZoomBorder.MoveRight();
+        }
+
+        private void Center_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void Center_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            TreeZoomBorder.ResetPan();
         }
 
         private void Print_CanExecute(object sender, CanExecuteRoutedEventArgs e)

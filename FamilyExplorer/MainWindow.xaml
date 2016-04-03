@@ -6,7 +6,7 @@
         xmlns:self="clr-namespace:FamilyExplorer"  
         xmlns:converters="clr-namespace:FamilyExplorer.XamlConverters"        
         Title="{Binding Title}" WindowState="Maximized" x:Name="FamilyExplorerWindow"
-        Icon="./Resources/Icons/FEX.ico"
+        Icon="./Resources/Icons/FEX.ico"        
     MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
 
     <Window.Resources>
@@ -249,12 +249,15 @@
     </Window.Resources>
 
     <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.ResetView" CanExecute="ResetView_CanExecute" Executed="ResetView_Executed"/>
         <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
         <CommandBinding Command="self:CustomCommands.ZoomOut" CanExecute="ZoomOut_CanExecute" Executed="ZoomOut_Executed"/>
+        <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoom_CanExecute" Executed="ResetZoom_Executed"/>
         <CommandBinding Command="self:CustomCommands.MoveUp" CanExecute="MoveUp_CanExecute" Executed="MoveUp_Executed"/>
         <CommandBinding Command="self:CustomCommands.MoveDown" CanExecute="MoveDown_CanExecute" Executed="MoveDown_Executed"/>
         <CommandBinding Command="self:CustomCommands.MoveLeft" CanExecute="MoveLeft_CanExecute" Executed="MoveLeft_Executed"/>
         <CommandBinding Command="self:CustomCommands.MoveRight" CanExecute="MoveRight_CanExecute" Executed="MoveRight_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Center" CanExecute="Center_CanExecute" Executed="Center_Executed"/>
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
     </Window.CommandBindings>
@@ -324,8 +327,19 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
-                <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
-                <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
+                <MenuItem Header="_Zoom">
+                    <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
+                    <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                    <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                </MenuItem>
+                <MenuItem Header="_Pan">
+                    <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
+                    <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
+                    <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
+                    <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
+                    <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
