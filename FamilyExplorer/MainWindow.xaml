@@ -263,7 +263,12 @@
     </Window.CommandBindings>
 
     <Window.InputBindings>
-        <KeyBinding x:Name="NewFamilyKeys" Command="{Binding NewFamily}" Key="n" Modifiers="Ctrl" Gesture="Ctrl+N" />
+        <!--<KeyBinding Command="self:CustomCommands.MoveUp" Key="Up" Gesture="Up"/>
+        <KeyBinding Command="self:CustomCommands.MoveDown" Key="Down" Gesture="Down"/>
+        <KeyBinding Command="self:CustomCommands.MoveLeft" Key="Left" Gesture="Left"/>
+        <KeyBinding Command="self:CustomCommands.MoveRight" Key="Right" Gesture="Right"/>-->
+        
+        <KeyBinding Command="{Binding NewFamily}" Key="n" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding OpenFile}" Key="o" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveFile}" Key="s" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveFileAs}" Key="s" Modifiers="Alt"/>

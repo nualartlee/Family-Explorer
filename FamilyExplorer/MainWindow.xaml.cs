@@ -205,12 +205,12 @@ namespace FamilyExplorer
                     s = s.Replace("@@HEIGHT", (height).ToString());
 
                     using (var reader = new System.Xml.XmlTextReader(new StringReader(s)))
-                    {
+                    {                        
                         Window preview = System.Windows.Markup.XamlReader.Load(reader) as Window;
                         DocumentViewer dv1 = LogicalTreeHelper.FindLogicalNode(preview, "dv1") as DocumentViewer;                                                                                  
                         dv1.Document = fds as IDocumentPaginatorSource;
-
-                        preview.Icon = this.Icon;
+                        
+                        preview.Icon = this.Icon;               
                         preview.ShowDialog();
                     }
                 }
