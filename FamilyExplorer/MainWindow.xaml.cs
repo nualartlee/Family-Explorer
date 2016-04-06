@@ -49,16 +49,25 @@ namespace FamilyExplorer
             family = FamilyView.Instance;           
             this.DataContext = family;
 
+            // Check for passed arguments
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
+                // Check if file is passed
                 var fileName = args[1];
                 if (File.Exists(fileName))
                 {
                     family.Open(fileName);                    
-                }
-            }
+                }               
+            }          
         }        
+
+        private void ShowSplash()
+        {
+            AboutWindow splash = new AboutWindow();
+            splash.Owner = this;
+            splash.ShowDialog();
+        }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

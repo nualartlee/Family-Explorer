@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FamilyExplorer"
         mc:Ignorable="d"
-        Title="About" Icon="./Resources/Icons/FEX.ico"
+        Title="About Family Explorer" Icon="./Resources/Icons/FEX.ico"
         Height="500" Width="500" Background="Azure" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
