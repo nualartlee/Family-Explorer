@@ -16,6 +16,7 @@ along with this program.If not, see<http://www.gnu.org/licenses/> */
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -60,8 +61,9 @@ namespace FamilyExplorer
                     family.Open(fileName);                    
                 }               
             }          
-        }        
+        }
 
+       
         private void ShowSplash()
         {
             AboutWindow splash = new AboutWindow();

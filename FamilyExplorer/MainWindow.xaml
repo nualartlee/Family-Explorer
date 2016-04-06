@@ -397,7 +397,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding ColorText}" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding TextColor}" HorizontalAlignment="Center"/>
                                     <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
                                         <Image Style="{StaticResource DeleteIcon}"/>
                                     </Button>
