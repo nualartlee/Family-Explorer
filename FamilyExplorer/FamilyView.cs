@@ -1147,7 +1147,7 @@ namespace FamilyExplorer
             }
         }
 
-        private void Open(string filename)
+        public void Open(string filename)
         {            
             // Close handle to old file
             if (CurrentFile != null) { CurrentFile.Dispose(); }

@@ -48,6 +48,16 @@ namespace FamilyExplorer
             InitializeComponent();                       
             family = FamilyView.Instance;           
             this.DataContext = family;
+
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                var fileName = args[1];
+                if (File.Exists(fileName))
+                {
+                    family.Open(fileName);                    
+                }
+            }
         }        
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
