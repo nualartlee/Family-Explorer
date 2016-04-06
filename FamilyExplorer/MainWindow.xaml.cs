@@ -61,15 +61,7 @@ namespace FamilyExplorer
                     family.Open(fileName);                    
                 }               
             }          
-        }
-
-       
-        private void ShowSplash()
-        {
-            AboutWindow splash = new AboutWindow();
-            splash.Owner = this;
-            splash.ShowDialog();
-        }
+        }       
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

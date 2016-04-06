@@ -33,6 +33,8 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        // TODO: Children handling on change of gender
+        // TODO: Check for changes before close
         // TODO: Pan & zoom reset interaction
         // TODO: Add sibling option order
         // TODO: Splash screen
