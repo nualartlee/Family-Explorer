@@ -33,6 +33,9 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        // TODO: Add sibling option order
+        // TODO: Splash screen
+        // TODO: Relationship path over various generations can cross person
         // TODO: Correct zoom blur
         // TODO: Zoom commands, menu, context menu, keybindings                   
         // TODO: Settings window           

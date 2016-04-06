@@ -2772,7 +2772,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Family Explorer"
         "ProductCode" = "8:{578FE5E2-6521-4E6B-BA6E-42C0A7062CC4}"
-        "PackageCode" = "8:{CA6858F5-FF78-4884-B687-AB3B934D7F9B}"
+        "PackageCode" = "8:{DE87D403-ABFA-43CB-B1E2-E9A1EB5FF9BB}"
         "UpgradeCode" = "8:{0E36FF7D-FACA-4F8B-99C0-E11E18F161E2}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -3310,7 +3310,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:This installer will guide you through the steps required to install [ProductName] on your computer."
+                            "Value" = "8:This installer will guide you through the steps required to install [ProductName] on this computer."
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
