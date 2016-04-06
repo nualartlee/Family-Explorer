@@ -144,6 +144,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\License.rtf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -180,9 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\FEX_Large.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\FamilyExplorerLogo.jpeg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\FamilyExplorerLogo.jpg" />
