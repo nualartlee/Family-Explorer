@@ -33,6 +33,7 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
+        // TODO: Large icon on desktop shortcut
         // TODO: Children handling on change of gender        
         // TODO: Pan & zoom reset interaction
         // TODO: Add sibling option order        
@@ -1322,7 +1323,7 @@ namespace FamilyExplorer
 
         private MessageBoxResult SaveChangesDialog()
         {           
-            string msg = "Save changes to " + Title + "?";
+            string msg = "Save changes to " + Title.Replace("Family Explorer - ", "") + "?";
             var result = MessageBox.Show(msg, "Unsaved Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);           
             return result;                            
         }
