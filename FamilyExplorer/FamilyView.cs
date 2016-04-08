@@ -32,8 +32,8 @@ using System.Xml.Serialization;
 namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
-    {
-        // TODO: Large icon on desktop shortcut
+    {        
+        // TODO: Setup file names
         // TODO: Children handling on change of gender        
         // TODO: Pan & zoom reset interaction
         // TODO: Add sibling option order        
