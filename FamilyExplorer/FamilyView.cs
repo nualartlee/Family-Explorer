@@ -33,11 +33,9 @@ namespace FamilyExplorer
 {
     public sealed class FamilyView : INotifyPropertyChanged
     {
-        // TODO: Children handling on change of gender
-        // TODO: Check for changes before close
+        // TODO: Children handling on change of gender        
         // TODO: Pan & zoom reset interaction
-        // TODO: Add sibling option order
-        // TODO: Splash screen
+        // TODO: Add sibling option order        
         // TODO: Relationship path over various generations can cross person
         // TODO: Correct zoom blur
         // TODO: Zoom commands, menu, context menu, keybindings                   
@@ -1101,7 +1099,6 @@ namespace FamilyExplorer
 
         #endregion Commands
 
-
         public RelationshipView GetRelationship(int ID)
         {
             return (RelationshipView)relationships.Where(r => r.Id == ID).FirstOrDefault();
@@ -1175,7 +1172,31 @@ namespace FamilyExplorer
             UndoneFamilyModels.Clear();                          
         }
 
-
+        public bool CanClose()
+        {
+            // Ask to save any pending changes in current file
+            if (HasChanges)
+            {
+                switch (SaveChangesDialog())
+                {
+                    case MessageBoxResult.Yes:
+                        Save();
+                        CurrentFile.Dispose();
+                        return true;
+                    case MessageBoxResult.No:
+                        if (CurrentFile != null) { CurrentFile.Dispose(); }
+                        return true;
+                    case MessageBoxResult.Cancel:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         private void RecordFamilyChange(string changeDescription)
         {            

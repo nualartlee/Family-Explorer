@@ -60,8 +60,16 @@ namespace FamilyExplorer
                 {
                     family.Open(fileName);                    
                 }               
-            }          
-        }       
+            }
+
+            this.Closing += MainWindow_Closing;  
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //throw new NotImplementedException();
+            e.Cancel = !family.CanClose();
+        }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
