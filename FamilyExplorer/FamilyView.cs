@@ -31,8 +31,13 @@ using System.Xml.Serialization;
 
 namespace FamilyExplorer
 {
+    /// <summary>
+    /// This is the main viewmodel. MainWindow intantiates and binds to a singleton of this type when the program is started.
+    /// </summary>
     public sealed class FamilyView : INotifyPropertyChanged
     {        
+        // TODO: Data grid vertical scroll bar
+        // TODO: Zoom border sizing bug, part of tree cut out at certain zoom levels
         // TODO: Setup file names
         // TODO: Children handling on change of gender        
         // TODO: Pan & zoom reset interaction
