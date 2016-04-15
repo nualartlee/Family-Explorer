@@ -39,8 +39,7 @@ namespace FamilyExplorer
         // TODO: Zoom border sizing bug, part of tree cut out at certain zoom levels
         // TODO: Setup file names
         // TODO: Children handling on change of gender        
-        // TODO: Pan & zoom reset interaction
-        // TODO: Add sibling option order        
+        // TODO: Pan & zoom reset interaction           
         // TODO: Relationship path over various generations can cross person
         // TODO: Correct zoom blur
         // TODO: Zoom commands, menu, context menu, keybindings                   
