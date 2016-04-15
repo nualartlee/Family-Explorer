@@ -373,17 +373,17 @@
         <Grid x:Name="MainGrid" Grid.Row="2" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="500"/>
+                <ColumnDefinition Width="500" MinWidth="20"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
+           
             <Grid x:Name="DataGrid" Grid.Column="0" Background="Azure" Height="{Binding ElementName=MainGrid, Path=ActualHeight}">
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="20"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" MinHeight="20"/>
                 </Grid.RowDefinitions>
 
                 <ScrollViewer x:Name="PersonDataScrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
