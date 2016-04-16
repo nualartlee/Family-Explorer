@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace FamilyExplorer
 {
@@ -71,7 +72,12 @@ namespace FamilyExplorer
                 // reset zoom
                 var st = GetScaleTransform(child);
                 st.ScaleX = 1.0;
-                st.ScaleY = 1.0;                
+                st.ScaleY = 1.0;
+                // Apply zoom
+                this.Width = ((FrameworkElement)child).ActualWidth * st.ScaleX;
+                if (this.Width < ((FrameworkElement)this.Parent).ActualWidth) { this.Width = ((FrameworkElement)this.Parent).ActualWidth - 20; }
+                this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
+                if (this.Height < ((FrameworkElement)this.Parent).ActualHeight) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
             }
         }
 
@@ -81,8 +87,11 @@ namespace FamilyExplorer
             {              
                 // reset pan
                 var tt = GetTranslateTransform(child);
-                tt.X = 0.0;
-                tt.Y = 0.0;
+                var st = GetScaleTransform(child);
+                tt.X = 0.0 + ((FrameworkElement)child).ActualWidth * (1 - st.ScaleX);
+                tt.Y = 0.0 + ((FrameworkElement)child).ActualHeight * (1- st.ScaleY);
+                //tt.X = Center().X * st.ScaleX;
+                //tt.Y = Center().Y *st.ScaleY;
             }
         }       
 
@@ -180,6 +189,7 @@ namespace FamilyExplorer
                     var tt = GetTranslateTransform(child);
                     tt.X = origin.X - v.X;
                     tt.Y = origin.Y - v.Y;
+                    BoundToParent();              
                 }
             }
         }
@@ -217,9 +227,8 @@ namespace FamilyExplorer
                 this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
                 if (this.Height < ((FrameworkElement)this.Parent).ActualHeight) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
 
-                // Keep child in bounds of parent
-                if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2; }
-                if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2; }
+                // Keep child in bounds of parent           
+                BoundToParent();
             }
         }
 
@@ -229,6 +238,18 @@ namespace FamilyExplorer
             FrameworkElement childFE = (FrameworkElement)child;
             return new Point(childFE.ActualWidth / 2 - tt.X, childFE.ActualHeight / 2 - tt.Y);
         }        
+
+        private void BoundToParent()
+        {
+            // Get current transform settings   
+            var tt = GetTranslateTransform(child);
+           
+            // Keep child in bounds of parent
+            if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2 + 20; }
+            if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2 + 20; }
+            if (tt.X > this.ActualWidth / 2) { tt.X = this.ActualWidth / 2 - 20; }
+            if (tt.Y > this.ActualHeight / 2) { tt.Y = this.ActualHeight / 2 - 20; }
+        }
         
     }
 }

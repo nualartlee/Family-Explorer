@@ -734,13 +734,13 @@
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False">
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False"  Background="Yellow" >
 
-                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" ClipToBounds="False" Background="White">
-                    
-                    <Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
-                        
-                        <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="Green"  ClipToBounds="True">
+
+                    <!--<Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >-->
+
+                    <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
                         <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Relationships}"
@@ -762,7 +762,7 @@
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource PersonItem}" >
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas IsItemsHost="True" Background="{x:Null}"/>
+                                    <Canvas IsItemsHost="True" Background="Orange"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemContainerStyle>
@@ -775,7 +775,7 @@
 
                     </Canvas>
                         
-                    </Border>
+                    <!--</Border>-->
                     
                 </self:ZoomBorder>
             
