@@ -7,7 +7,8 @@
         xmlns:converters="clr-namespace:FamilyExplorer.XamlConverters"        
         Title="{Binding Title}" WindowState="Maximized" x:Name="FamilyExplorerWindow"
         Icon="./Resources/Icons/FEX.ico"        
-    MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown">
+    MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown"
+        FocusManager.FocusedElement="{Binding RelativeSource={x:Static RelativeSource.Self}, Mode=OneTime}">
 
     <Window.Resources>
 
@@ -249,25 +250,12 @@
     </Window.Resources>
 
     <Window.CommandBindings>
-        <CommandBinding Command="self:CustomCommands.ResetView" CanExecute="ResetView_CanExecute" Executed="ResetView_Executed"/>
-        <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
-        <CommandBinding Command="self:CustomCommands.ZoomOut" CanExecute="ZoomOut_CanExecute" Executed="ZoomOut_Executed"/>
-        <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoom_CanExecute" Executed="ResetZoom_Executed"/>
-        <CommandBinding Command="self:CustomCommands.MoveUp" CanExecute="MoveUp_CanExecute" Executed="MoveUp_Executed"/>
-        <CommandBinding Command="self:CustomCommands.MoveDown" CanExecute="MoveDown_CanExecute" Executed="MoveDown_Executed"/>
-        <CommandBinding Command="self:CustomCommands.MoveLeft" CanExecute="MoveLeft_CanExecute" Executed="MoveLeft_Executed"/>
-        <CommandBinding Command="self:CustomCommands.MoveRight" CanExecute="MoveRight_CanExecute" Executed="MoveRight_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Center" CanExecute="Center_CanExecute" Executed="Center_Executed"/>
+       
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
     </Window.CommandBindings>
 
     <Window.InputBindings>
-        <!--<KeyBinding Command="self:CustomCommands.MoveUp" Key="Up" Gesture="Up"/>
-        <KeyBinding Command="self:CustomCommands.MoveDown" Key="Down" Gesture="Down"/>
-        <KeyBinding Command="self:CustomCommands.MoveLeft" Key="Left" Gesture="Left"/>
-        <KeyBinding Command="self:CustomCommands.MoveRight" Key="Right" Gesture="Right"/>-->
-        
         <KeyBinding Command="{Binding NewFamily}" Key="n" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding OpenFile}" Key="o" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveFile}" Key="s" Modifiers="Ctrl"/>
@@ -333,18 +321,16 @@
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
-                <MenuItem Header="_Zoom">
-                    <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
-                    <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
-                    <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
-                </MenuItem>
-                <MenuItem Header="_Pan">
-                    <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
-                    <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
-                    <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
-                    <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
-                    <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
-                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
+                <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                <Separator/>
+                <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
+                <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
+                <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
+                <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
+                <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
             </MenuItem>
             <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
@@ -734,13 +720,44 @@
 
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
-            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Focusable="False"  Background="Yellow" >
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                          MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Background="White" >
+                
+                <ScrollViewer.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
+                        <Separator/>
+                        <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
+                        <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                        <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                        <Separator/>
+                        <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
+                        <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
+                        <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
+                        <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
+                        <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
+                    </ContextMenu>
+                </ScrollViewer.ContextMenu>
+                
+                <ScrollViewer.CommandBindings>
+                    <CommandBinding Command="self:CustomCommands.ResetView" CanExecute="ResetView_CanExecute" Executed="ResetView_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ZoomOut" CanExecute="ZoomOut_CanExecute" Executed="ZoomOut_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoom_CanExecute" Executed="ResetZoom_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveUp" CanExecute="MoveUp_CanExecute" Executed="MoveUp_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveDown" CanExecute="MoveDown_CanExecute" Executed="MoveDown_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveLeft" CanExecute="MoveLeft_CanExecute" Executed="MoveLeft_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveRight" CanExecute="MoveRight_CanExecute" Executed="MoveRight_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.Center" CanExecute="Center_CanExecute" Executed="Center_Executed"/>
+                </ScrollViewer.CommandBindings>
 
-                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="Green"  ClipToBounds="True">
+                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="White">
 
-                    <!--<Border Width="{Binding Tree.Width}" Height="{Binding Tree.Height}" >-->
+                    <Canvas Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
-                    <Canvas x:Name="TreeCanvas" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+                        <Border Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+
+                    <Canvas x:Name="TreeCanvas" Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
                         <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Relationships}"
@@ -762,7 +779,7 @@
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource PersonItem}" >
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas IsItemsHost="True" Background="Orange"/>
+                                        <Canvas x:Name="PeopleCanvas" IsItemsHost="True" Background="{x:Null}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemContainerStyle>
@@ -775,7 +792,9 @@
 
                     </Canvas>
                         
-                    <!--</Border>-->
+                    </Border>
+                        
+                    </Canvas>
                     
                 </self:ZoomBorder>
             

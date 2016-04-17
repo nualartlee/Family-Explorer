@@ -66,8 +66,7 @@ namespace FamilyExplorer
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            //throw new NotImplementedException();
+        {           
             e.Cancel = !family.CanClose();
         }
 
@@ -178,7 +177,7 @@ namespace FamilyExplorer
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
         {            
-            PrintPreview(TreeCanvas, TreeCanvas.Width, TreeCanvas.Height);
+            PrintPreview(TreeCanvas, TreeCanvas.ActualWidth, TreeCanvas.ActualHeight);
         }
 
         private void PrintView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -315,6 +314,7 @@ namespace FamilyExplorer
         {           
             family.SelectPerson(null);
             family.SelectRelationship(null);
+            TreeZoomBorder.Focus();
         }
 
         private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)

@@ -36,7 +36,8 @@ namespace FamilyExplorer
     /// </summary>
     public sealed class FamilyView : INotifyPropertyChanged
     {                
-        // TODO: Zoom border sizing bug, part of tree cut out at certain zoom levels
+       
+        // TODO: Keep zoomborder contents within bounds regardless of scaling
         // TODO: Setup file names             
         // TODO: Pan & zoom reset interaction           
         // TODO: Relationship path over various generations can cross person

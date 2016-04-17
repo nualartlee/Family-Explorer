@@ -49,7 +49,7 @@ namespace FamilyExplorer
                 TranslateTransform tt = new TranslateTransform();
                 group.Children.Add(tt);
                 child.RenderTransform = group;
-                child.RenderTransformOrigin = new Point(0.0, 0.0);                                
+                child.RenderTransformOrigin = new Point(0.0, 0.0);
                 this.PreviewMouseWheel += child_PreviewMouseWheel;
                 this.PreviewMouseLeftButtonDown += child_PreviewMouseLeftButtonDown;
                 this.PreviewMouseLeftButtonUp += child_PreviewMouseLeftButtonUp;
@@ -73,27 +73,22 @@ namespace FamilyExplorer
                 var st = GetScaleTransform(child);
                 st.ScaleX = 1.0;
                 st.ScaleY = 1.0;
-                // Apply zoom
-                this.Width = ((FrameworkElement)child).ActualWidth * st.ScaleX;
-                if (this.Width < ((FrameworkElement)this.Parent).ActualWidth) { this.Width = ((FrameworkElement)this.Parent).ActualWidth - 20; }
-                this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
-                if (this.Height < ((FrameworkElement)this.Parent).ActualHeight) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
+                // Refresh size
+                RefreshSize();
             }
         }
 
         public void ResetPan()
         {
             if (child != null)
-            {              
+            {
                 // reset pan
                 var tt = GetTranslateTransform(child);
                 var st = GetScaleTransform(child);
                 tt.X = 0.0 + ((FrameworkElement)child).ActualWidth * (1 - st.ScaleX);
-                tt.Y = 0.0 + ((FrameworkElement)child).ActualHeight * (1- st.ScaleY);
-                //tt.X = Center().X * st.ScaleX;
-                //tt.Y = Center().Y *st.ScaleY;
+                tt.Y = 0.0 + ((FrameworkElement)child).ActualHeight * (1 - st.ScaleY);
             }
-        }       
+        }
 
         public void ZoomIn()
         {
@@ -109,9 +104,11 @@ namespace FamilyExplorer
         {
             var st = GetScaleTransform(child);
             var tt = GetTranslateTransform(child);
-            Vector v = new Vector(0, -10 * st.ScaleY);                        
+            Vector v = new Vector(0, -10 * st.ScaleY);
             tt.X += v.X;
             tt.Y += v.Y;
+            // Keep child in bounds          
+            BoundToParent();
         }
 
         public void MoveDown()
@@ -121,6 +118,8 @@ namespace FamilyExplorer
             Vector v = new Vector(0, 10 * st.ScaleY);
             tt.X += v.X;
             tt.Y += v.Y;
+            // Keep child in bounds          
+            BoundToParent();
         }
 
         public void MoveLeft()
@@ -130,6 +129,8 @@ namespace FamilyExplorer
             Vector v = new Vector(-10 * st.ScaleX, 0);
             tt.X += v.X;
             tt.Y += v.Y;
+            // Keep child in bounds           
+            BoundToParent();
         }
 
         public void MoveRight()
@@ -139,6 +140,8 @@ namespace FamilyExplorer
             Vector v = new Vector(10 * st.ScaleX, 0);
             tt.X += v.X;
             tt.Y += v.Y;
+            // Keep child in bounds          
+            BoundToParent();
         }
 
         private void child_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -146,7 +149,7 @@ namespace FamilyExplorer
             if (child != null)
             {
                 // Set increasing/decreasing zoom value according to mouse wheel
-                double zoomValue = e.Delta > 0 ? 0.1 : -0.1;        
+                double zoomValue = e.Delta > 0 ? 0.1 : -0.1;
                 // Set relative point according to mouse location       
                 Point relativePoint = e.GetPosition(child);
                 Zoom(zoomValue, relativePoint);
@@ -184,12 +187,12 @@ namespace FamilyExplorer
             if (child != null)
             {
                 if (child.IsMouseCaptured)
-                {                      
+                {
                     Vector v = start - e.GetPosition(this);
                     var tt = GetTranslateTransform(child);
                     tt.X = origin.X - v.X;
                     tt.Y = origin.Y - v.Y;
-                    BoundToParent();              
+                    BoundToParent();
                 }
             }
         }
@@ -204,7 +207,7 @@ namespace FamilyExplorer
 
                 // Check max/min limits
                 if (zoomValue > 0 && (st.ScaleX > 20 || st.ScaleY > 20)) { return; }
-                if (zoomValue < 0 && (st.ScaleX < 0.2 || st.ScaleY < 0.2 )) { return; }                
+                if (zoomValue < 0 && (st.ScaleX < 0.2 || st.ScaleY < 0.2)) { return; }
 
 
                 // Get absolute location of reference point
@@ -219,15 +222,12 @@ namespace FamilyExplorer
 
                 // Apply new location of reference point
                 tt.X = abosuluteX - relativePoint.X * st.ScaleX;
-                tt.Y = abosuluteY - relativePoint.Y * st.ScaleY;                
+                tt.Y = abosuluteY - relativePoint.Y * st.ScaleY;
 
-                // Apply zoom
-                this.Width = ((FrameworkElement)child).ActualWidth * st.ScaleX;
-                if (this.Width < ((FrameworkElement)this.Parent).ActualWidth) { this.Width = ((FrameworkElement)this.Parent).ActualWidth - 20; }
-                this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
-                if (this.Height < ((FrameworkElement)this.Parent).ActualHeight) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
+                // Refresh size
+                RefreshSize();
 
-                // Keep child in bounds of parent           
+                // Keep child in bounds           
                 BoundToParent();
             }
         }
@@ -237,19 +237,35 @@ namespace FamilyExplorer
             var tt = GetTranslateTransform(child);
             FrameworkElement childFE = (FrameworkElement)child;
             return new Point(childFE.ActualWidth / 2 - tt.X, childFE.ActualHeight / 2 - tt.Y);
-        }        
+        }
 
         private void BoundToParent()
         {
             // Get current transform settings   
             var tt = GetTranslateTransform(child);
-           
+
+
+            //var st = GetScaleTransform(child);
+            //child.TransformToAncestor
+
             // Keep child in bounds of parent
             if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2 + 20; }
             if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2 + 20; }
             if (tt.X > this.ActualWidth / 2) { tt.X = this.ActualWidth / 2 - 20; }
             if (tt.Y > this.ActualHeight / 2) { tt.Y = this.ActualHeight / 2 - 20; }
         }
-        
+
+        private void RefreshSize()
+        {
+            // Get current transform settings
+            var st = GetScaleTransform(child);
+
+            // Reset zoomborder size
+            this.Width = ((FrameworkElement)child).ActualWidth * st.ScaleX;
+            if (this.Width < ((FrameworkElement)this.Parent).ActualWidth - 20) { this.Width = ((FrameworkElement)this.Parent).ActualWidth - 20; }
+            this.Height = ((FrameworkElement)child).ActualHeight * st.ScaleY;
+            if (this.Height < ((FrameworkElement)this.Parent).ActualHeight - 20) { this.Height = ((FrameworkElement)this.Parent).ActualHeight - 20; }
+        }
+
     }
 }

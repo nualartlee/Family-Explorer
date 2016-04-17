@@ -32,7 +32,7 @@ namespace FamilyExplorer
                               typeof(CustomCommands),
                               new InputGestureCollection()
                               {
-                                  new KeyGesture(Key.Up, ModifierKeys.Control)
+                                  new KeyGesture(Key.Home, ModifierKeys.Control)
                               }
                       );
 
@@ -43,7 +43,7 @@ namespace FamilyExplorer
                              typeof(CustomCommands),
                              new InputGestureCollection()
                              {
-                                        new KeyGesture(Key.Down, ModifierKeys.Control)
+                                        new KeyGesture(Key.D0, ModifierKeys.Control)
                              }
                      );
 
@@ -76,7 +76,7 @@ namespace FamilyExplorer
                              typeof(CustomCommands),
                              new InputGestureCollection()
                              {
-                                        new KeyGesture(Key.Left, ModifierKeys.Control)
+                                        new KeyGesture(Key.End, ModifierKeys.Control)
                              }
                      );
 
@@ -87,7 +87,7 @@ namespace FamilyExplorer
                               typeof(CustomCommands),
                               new InputGestureCollection()
                               {
-                                        new KeyGesture(Key.Up)
+                                        new KeyGesture(Key.Up, ModifierKeys.Control)
                               }
                       );
 
@@ -98,7 +98,7 @@ namespace FamilyExplorer
                               typeof(CustomCommands),
                               new InputGestureCollection()
                               {
-                                        new KeyGesture(Key.Down)
+                                        new KeyGesture(Key.Down, ModifierKeys.Control)
                               }
                       );
 
@@ -109,7 +109,7 @@ namespace FamilyExplorer
                               typeof(CustomCommands),
                               new InputGestureCollection()
                               {
-                                        new KeyGesture(Key.Left)
+                                        new KeyGesture(Key.Left, ModifierKeys.Control)
                               }
                       );
 
@@ -120,7 +120,7 @@ namespace FamilyExplorer
                               typeof(CustomCommands),
                               new InputGestureCollection()
                               {
-                                        new KeyGesture(Key.Right)
+                                        new KeyGesture(Key.Right, ModifierKeys.Control)
                               }
                       );
 
