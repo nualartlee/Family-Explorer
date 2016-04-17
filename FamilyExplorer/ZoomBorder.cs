@@ -241,18 +241,35 @@ namespace FamilyExplorer
 
         private void BoundToParent()
         {
-            // Get current transform settings   
-            var tt = GetTranslateTransform(child);
-
-
+            // Need to define the desired functionality...
+            
+            //// Get current transform settings   
+            //var tt = GetTranslateTransform(child);
             //var st = GetScaleTransform(child);
-            //child.TransformToAncestor
 
-            // Keep child in bounds of parent
-            if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2 + 20; }
-            if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2 + 20; }
-            if (tt.X > this.ActualWidth / 2) { tt.X = this.ActualWidth / 2 - 20; }
-            if (tt.Y > this.ActualHeight / 2) { tt.Y = this.ActualHeight / 2 - 20; }
+            //double scaledWidth = child.RenderSize.Width * st.ScaleX;
+            //double scaledHeight = child.RenderSize.Height * st.ScaleY;
+
+            //Point topLeft = child.TranslatePoint(new Point(0, 0), this);
+            //Point bottomRight = child.TranslatePoint(new Point(scaledWidth, scaledHeight), this);
+
+            ////// Keep child in bounds of parent
+            ////if (tt.X < -this.ActualWidth / 2) { tt.X = -this.ActualWidth / 2 + 20; }
+            ////if (tt.Y < -this.ActualHeight / 2) { tt.Y = -this.ActualHeight / 2 + 20; }
+            ////if (tt.X > this.ActualWidth / 2) { tt.X = this.ActualWidth / 2 - 20; }
+            ////if (tt.Y > this.ActualHeight / 2) { tt.Y = this.ActualHeight / 2 - 20; }
+
+            //// Keep child in bounds of parent
+            //if (scaledWidth < this.ActualWidth)
+            //{
+            //    if (topLeft.X < 0) { tt.X -= topLeft.X; }
+            //    if (bottomRight.X > this.ActualWidth) { tt.X -= (bottomRight.X - this.ActualWidth); }
+            //}
+            //if (scaledHeight < this.ActualHeight)
+            //{
+            //    if (topLeft.Y < 0) { tt.Y -= topLeft.Y; }
+            //    if (bottomRight.Y > this.ActualHeight) { tt.Y -= (bottomRight.Y - this.ActualHeight); }
+            //}
         }
 
         private void RefreshSize()

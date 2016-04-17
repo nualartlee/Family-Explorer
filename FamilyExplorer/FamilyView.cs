@@ -37,6 +37,7 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {                
        
+        // TODO: Print window open maximized and centered
         // TODO: Single generation print cuts relationship paths
         // TODO: Keep zoomborder contents within bounds regardless of scaling
         // TODO: Setup file names             
