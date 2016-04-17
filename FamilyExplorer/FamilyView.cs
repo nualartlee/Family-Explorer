@@ -37,6 +37,7 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {                
        
+        // TODO: Single generation print cuts relationship paths
         // TODO: Keep zoomborder contents within bounds regardless of scaling
         // TODO: Setup file names             
         // TODO: Pan & zoom reset interaction           
