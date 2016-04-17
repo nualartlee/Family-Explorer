@@ -1,0 +1,814 @@
+﻿<Window x:Class="FamilyExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
+        xmlns:self="clr-namespace:FamilyExplorer"  
+        xmlns:converters="clr-namespace:FamilyExplorer.XamlConverters"        
+        Title="{Binding Title}" WindowState="Maximized" x:Name="FamilyExplorerWindow"
+        Icon="./Resources/Icons/FEX.ico"        
+    MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseDown="Window_MouseDown"
+        FocusManager.FocusedElement="{Binding RelativeSource={x:Static RelativeSource.Self}, Mode=OneTime}">
+
+    <Window.Resources>
+
+        <Style x:Key="ToolbarIcons" TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.3" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NewIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/New.png" />
+        </Style>
+
+        <Style x:Key="OpenFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/OpenFile.png" />
+        </Style>
+
+        <Style x:Key="SaveFileIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/SaveFile.png" />
+        </Style>
+
+        <Style x:Key="PrintIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Print.png" />
+        </Style>
+
+        <Style x:Key="PrintViewIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/PrintView.png" />
+        </Style>
+
+        <Style x:Key="UndoIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Undo.png" />
+        </Style>
+
+        <Style x:Key="RedoIcon" TargetType="Image" BasedOn="{StaticResource ToolbarIcons}">
+            <Setter Property="Source" Value="Resources/Icons/Redo.png" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AddPersonIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/AddPerson.png" />
+        </Style>
+
+        <Style x:Key="SelectPersonIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/SelectPerson.png" />
+        </Style>
+
+        <Style x:Key="DeleteIcon" TargetType="Image">
+            <Setter Property="Source" Value="Resources/Icons/Delete.png" />
+        </Style>
+
+        <DataTemplate x:Key="PersonItem">
+            <Border>
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Color="Gray" Opacity="0.5" BlurRadius="10"/>
+                </Border.Effect>
+                <Border x:Name="BorderSelection" CornerRadius="10" BorderThickness="{Binding HighlightBorderThickness}" BorderBrush="{Binding HighlightBorderBrush}" Background="{Binding HighlightBorderBrush}" 
+                    Width="{Binding Width}" Height="{Binding Height}">
+
+                    <Border x:Name="BorderMain"  BorderBrush="{Binding BorderBrush}"
+                        Background="{Binding Background}" CornerRadius="10" BorderThickness="{Binding BorderThickness}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource DeleteIcon}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Add">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource AddPersonIcon}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Mother" Command="{Binding AddMother}" ToolTip="{Binding AddMother_ToolTip}"/>
+                                    <MenuItem Header="Father" Command="{Binding AddFather}" ToolTip="{Binding AddFather_ToolTip}"/>
+                                    <MenuItem Header="Sibling">
+                                        <MenuItem Header="Same Parents" Command="{Binding AddSiblingEqualParents}" ToolTip="{Binding AddSiblingEqualParents_ToolTip}"/>
+                                        <MenuItem Header="Same Mother" Command="{Binding AddSiblingByMother}" ToolTip="{Binding AddSiblingByMother_ToolTip}"/>
+                                        <MenuItem Header="Same Father" Command="{Binding AddSiblingByFather}" ToolTip="{Binding AddSiblingByFather_ToolTip}"/>
+                                        <MenuItem Header="Unknwon Parents" Command="{Binding AddSiblingUnknownParents}" ToolTip="{Binding AddSiblingUnknownParents_ToolTip}"/>
+                                    </MenuItem>
+                                    <MenuItem Header="Friend" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}"/>
+                                    <MenuItem Header="Partner" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}"/>
+                                    <MenuItem Header="Child" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}"/>
+                                    <MenuItem Header="Abuser" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}"/>
+                                    <MenuItem Header="Victim"  Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}"/>
+                                </MenuItem>
+                                <MenuItem Header="Select">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource SelectPersonIcon}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Mother" Command="{Binding SelectMother}" ToolTip="{Binding SelectMother_ToolTip}"/>
+                                    <MenuItem Header="Father" Command="{Binding SelectFather}" ToolTip="{Binding SelectFather_ToolTip}"/>
+                                    <MenuItem Header="Friend" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}"/>
+                                    <MenuItem Header="Partner" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}"/>
+                                    <MenuItem Header="Child" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}"/>
+                                    <MenuItem Header="Abuser" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}"/>
+                                    <MenuItem Header="Victim" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}"/>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                        <Viewbox Width="Auto" Height="Auto">
+                            <Grid x:Name="GridMain" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="2*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="TextBlockFirstName" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding FirstName}" Foreground="{Binding TextColor}"/>
+                                <TextBlock x:Name="TextBlockLastName" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding LastName}" Foreground="{Binding TextColor}"/>
+                            </Grid>
+                        </Viewbox>
+                    </Border>
+                </Border>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RelationshipItem">
+            <Canvas Background="{x:Null}">
+                <Path Data="{Binding Path}" StrokeThickness="{Binding HighlightPathThickness}" Stroke="{Binding HighlightPathColor}" Fill="{x:Null}" StrokeStartLineCap="{Binding StrokeStartLineCap}" StrokeEndLineCap="{Binding StrokeEndLineCap}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Path>
+                <Path Data="{Binding Path}" StrokeThickness="{Binding PathThickness}" Stroke="{Binding PathColor}" Fill="{x:Null}" StrokeStartLineCap="{Binding StrokeStartLineCap}" StrokeEndLineCap="{Binding StrokeEndLineCap}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Path>
+            </Canvas>
+        </DataTemplate>
+
+        <converters:IsItemNull x:Key="IsItemNull"/>
+        <converters:IsItemSelected x:Key="IsItemSelected"/>
+        <converters:IsItemVisible x:Key="IsItemVisible"/>
+
+        <Style x:Key="RelationshipListBorder" TargetType="Border">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+
+        <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
+            <Border Background="{TemplateBinding Background}"
+                x:Name="Bd" BorderBrush="Gray"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                <ScrollViewer x:Name="PART_ContentHost" Margin="4"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Bd"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="Width" Value="Auto">
+                    <Setter Property="MinWidth" Value="100"/>
+                </Trigger>
+                <Trigger Property="Height" Value="Auto">
+                    <Setter Property="MinHeight" Value="20"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="RelationshipListButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="4"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.7" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="RelationshipNameLabelTemplate" TargetType="{x:Type Label}">
+            <Grid>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseEnter">
+                        <i:InvokeCommandAction Command="{Binding MouseEnter}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeave">
+                        <i:InvokeCommandAction Command="{Binding MouseLeave}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Reciprocal.FirstName}" Foreground="{Binding HighlightTextColor}" Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontWeight="DemiBold">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <cmd:EventToCommand Command="{Binding MouseLeftButtonDown}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Label>
+                <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Grid.Column="1" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                    <Image Style="{StaticResource DeleteIcon}"/>
+                </Button>
+            </Grid>
+        </ControlTemplate>
+
+    </Window.Resources>
+
+    <Window.CommandBindings>
+       
+        <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
+        <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding NewFamily}" Key="n" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding OpenFile}" Key="o" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveFile}" Key="s" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveFileAs}" Key="s" Modifiers="Alt"/>
+        <KeyBinding Command="{Binding Undo}" Key="z" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding Redo}" Key="y" Modifiers="Ctrl"/>
+    </Window.InputBindings>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu
+            x:Name="MainMenu" Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding NewFamily}" ToolTip="{Binding NewFamily_ToolTip}" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource NewIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open" Command="{Binding OpenFile}" ToolTip="{Binding OpenFile_ToolTip}" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource OpenFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Command="{Binding SaveFile}" ToolTip="{Binding SaveFile_ToolTip}" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save As..." Command="{Binding SaveFileAs}" ToolTip="{Binding SaveFileAs_ToolTip}" InputGestureText="Alt+S">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource SaveFileIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_Print" Command="self:CustomCommands.Print" >
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource PrintIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Print View" Command="self:CustomCommands.PrintView" >
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource PrintViewIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" Command="{Binding Undo}" ToolTip="{Binding Undo_ToolTip}" InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource UndoIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Redo" Command="{Binding Redo}" ToolTip="{Binding Redo_ToolTip}" InputGestureText="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource RedoIcon}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
+                <Separator/>
+                <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
+                <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                <Separator/>
+                <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
+                <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
+                <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
+                <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
+                <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
+            </MenuItem>
+            <MenuItem Header="_About" Click="ShowAboutWindow">
+            </MenuItem>
+        </Menu>
+        
+        <DockPanel Grid.Row="1">
+            <ToolBarTray>
+                <ToolBar>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding OpenFile_ToolTip}" Command="{Binding OpenFile}">
+                        <Image Style="{StaticResource OpenFileIcon}"/>
+                    </Button>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding SaveFile_ToolTip}" Command="{Binding SaveFile}">
+                        <Image Style="{StaticResource SaveFileIcon}"/>
+                    </Button>
+                    <Separator Margin="12"/>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding Undo_ToolTip}" Command="{Binding Undo}">
+                        <Image Style="{StaticResource UndoIcon}"/>
+                    </Button>
+                    <Button Margin="4" Width="24" Height="24" ToolTip="{Binding Redo_ToolTip}" Command="{Binding Redo}">
+                        <Image Style="{StaticResource RedoIcon}"/>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
+        
+        <Grid x:Name="MainGrid" Grid.Row="2" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500" MinWidth="20"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+           
+            <Grid x:Name="DataGrid" Grid.Column="0" Background="Azure" Height="{Binding ElementName=MainGrid, Path=ActualHeight}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" MinHeight="20"/>
+                </Grid.RowDefinitions>
+
+                <ScrollViewer x:Name="PersonDataScrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding SelectedPerson}"
+                            Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Center" >
+
+                        <StackPanel Orientation="Vertical">
+                            <Border CornerRadius="5" BorderThickness="1" BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Margin="4" Text="{Binding FirstName}" FontSize="20" Foreground="{Binding TextColor}" HorizontalAlignment="Center"/>
+                                    <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                        <Image Style="{StaticResource DeleteIcon}"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            <StackPanel Orientation="Horizontal">
+                                <Border x:Name="PersonDataBorder" CornerRadius="5" BorderThickness="1"
+                                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
+                                    <StackPanel>
+                                        <Label Margin="4" Content="First Name: " />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                                        <Label Margin="4" Content="Last Name: " />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                                        <Grid Margin="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Margin="4" HorizontalAlignment="Left" Content="Gender: " />
+                                            <ComboBox Grid.Column="1" Margin="4" HorizontalAlignment="Right" SelectedItem="{Binding Gender, Mode=TwoWay}"
+                                                      ItemsSource="{Binding Source={x:Static self:PersonSettings.GenderList}}" Width="{Binding ElementName=BirthDatePicker, Path=ActualWidth}"/>
+                                        </Grid>
+                                        <Grid Margin="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label  Grid.Column="0" Margin="4" HorizontalAlignment="Left" Content="Birthdate: " />
+                                            <Border Grid.Column="1" Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
+                                                <DatePicker x:Name="BirthDatePicker" SelectedDate="{Binding DOB}" >
+                                                    <DatePicker.Resources>
+                                                        <Style TargetType="{x:Type DatePicker}">
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        </Style>
+                                                        <Style TargetType="{x:Type DatePickerTextBox}">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate>
+                                                                        <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                            <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                        </Grid>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </DatePicker.Resources>
+                                                </DatePicker>
+                                            </Border>
+                                        </Grid>
+                                        <Label Margin="4" Content="Notes:" />
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="PersonRelationshipsBorder" CornerRadius="5" BorderThickness="1" MinWidth="250"
+                                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
+                                    <StackPanel x:Name="RelationshipListStackPanel" Orientation="Vertical">
+                                        <Border x:Name="MotherRelationship" Style="{StaticResource RelationshipListBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Margin="4,0,0,0" Grid.Column="0" Content="Mother:"/>
+                                                <Label DataContext="{Binding MotherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
+
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2" ToolTip="{Binding AddMother_ToolTip}"
+                                                        Command="{Binding AddMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource AddPersonIcon}"/>
+                                                </Button>
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3" ToolTip="{Binding SelectMother_ToolTip}"
+                                                        Command="{Binding SelectMother}" Visibility="{Binding MotherRelationship, Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                        <Border x:Name="FatherRelationship" Style="{StaticResource RelationshipListBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Margin="4,0,0,0" Content="Father:" Grid.Column="0"/>
+                                                <Label DataContext="{Binding FatherRelationship}" Template="{StaticResource RelationshipNameLabelTemplate}" Grid.Column="1"/>
+
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="2" ToolTip="{Binding AddFather_ToolTip}"
+                                                        Command="{Binding AddFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource AddPersonIcon}"/>
+                                                </Button>
+                                                <Button Style="{StaticResource RelationshipListButtonStyle}" Grid.Column="3" ToolTip="{Binding SelectFather_ToolTip}"
+                                                        Command="{Binding SelectFather}" Visibility="{Binding FatherRelationship, Converter={StaticResource IsItemNull}}">
+                                                    <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                        <Border x:Name="SiblingRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Margin="4,0,0,0" Content="Siblings:" HorizontalAlignment="Left"/>
+                                                    <Button Grid.Column="1" x:Name="AddSiblingButton" ToolTip="Add a sibling..." Style="{StaticResource RelationshipListButtonStyle}">
+                                                        <i:Interaction.Behaviors>
+                                                            <self:DropDownButtonBehavior/>
+                                                        </i:Interaction.Behaviors>
+                                                        <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        <Button.ContextMenu>
+                                                            <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
+                                                                <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
+                                                            <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
+                                                            <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
+                                                                <MenuItem Header="{Binding AddSiblingUnknownParents_ToolTip}" Command="{Binding AddSiblingUnknownParents}"/>
+                                                            </ContextMenu>
+                                                        </Button.ContextMenu>
+                                                    </Button>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding SiblingRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border x:Name="FriendRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Friends:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddFriend}" ToolTip="{Binding AddFriend_ToolTip}">
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectFriend}" ToolTip="{Binding SelectFriend_ToolTip}">
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding FriendRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border x:Name="PartnerRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Partners:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddPartner}" ToolTip="{Binding AddPartner_ToolTip}">
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectPartner}" ToolTip="{Binding SelectPartner_ToolTip}">
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding PartnerRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border x:Name="ChildRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Children:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddChild}" ToolTip="{Binding AddChild_ToolTip}">
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectChild}" ToolTip="{Binding SelectChild_ToolTip}" >
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding ChildRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border x:Name="AbuserRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Abusers:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddAbuser}" ToolTip="{Binding AddAbuser_ToolTip}">
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectAbuser}" ToolTip="{Binding SelectAbuser_ToolTip}">
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding AbuserRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border x:Name="VictimRelationships" Style="{StaticResource RelationshipListBorder}">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Label Margin="4,0,0,0" Content="Victims:" HorizontalAlignment="Left"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding AddVictim}" ToolTip="{Binding AddVictim_ToolTip}">
+                                                            <Image Style="{StaticResource AddPersonIcon}"/>
+                                                        </Button>
+                                                        <Button Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding SelectVictim}" ToolTip="{Binding SelectVictim_ToolTip}">
+                                                            <Image Style="{StaticResource SelectPersonIcon}"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding VictimRelationships}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Margin="15,0,0,0" Template="{StaticResource RelationshipNameLabelTemplate}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+
+                <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="7" Background="#FFBCBCBC" HorizontalAlignment="Stretch" />
+
+                <ScrollViewer x:Name="RelationshipDataScrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="RelationshipDataGrid" Background="Azure" DataContext="{Binding SelectedRelationship}"
+                            Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Border x:Name="RelationshipDataHeaderBorder" Grid.Row="0" CornerRadius="5" BorderThickness="3"  BorderBrush="{Binding PathColor}"
+                                Background="White" Margin="10,20,10,10" HorizontalAlignment="Stretch">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock  Grid.Column="0" Margin="4" Text="{Binding Description}" FontSize="20" Foreground="Black" HorizontalAlignment="Center"/>
+                                <Button Grid.Column="1" Style="{StaticResource RelationshipListButtonStyle}" Command="{Binding Delete}" ToolTip="{Binding Delete_ToolTip}" Visibility="{Binding Converter={StaticResource IsItemSelected}}">
+                                    <Image Style="{StaticResource DeleteIcon}"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <Border x:Name="RelationshipDataContentBorder" Grid.Row="1" CornerRadius="5" BorderThickness="1" BorderBrush="Gray" Background="White" Margin="10" >
+                            <StackPanel>
+                                <Label Margin="4" Content="{Binding SourceDescription}" />
+                                <Label Margin="4" Content="{Binding DestinationDescription}" />
+                                <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
+                                    <Label Margin="4" Content="{Binding StartDateDescription}"/>
+                                    <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" >
+                                        <DatePicker x:Name="RelationshipStartDatePicker" SelectedDate="{Binding StartDate}" >
+                                            <DatePicker.Resources>
+                                                <Style TargetType="{x:Type DatePicker}">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Style>
+                                                <Style TargetType="{x:Type DatePickerTextBox}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                    <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DatePicker.Resources>
+                                        </DatePicker>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Margin="4" Orientation="Horizontal"  Visibility="{Binding EndDateVisible, Converter={StaticResource IsItemVisible}}">
+                                    <Label Margin="4" Content="{Binding EndDateDescription}" />
+                                    <Border Margin="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Right" Visibility="{Binding Ended, Converter={StaticResource IsItemVisible}}">
+                                        <DatePicker x:Name="RelationshipEndDatePicker" SelectedDate="{Binding EndDate}" >
+                                            <DatePicker.Resources>
+                                                <Style TargetType="{x:Type DatePicker}">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Style>
+                                                <Style TargetType="{x:Type DatePickerTextBox}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                                    <ScrollViewer Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DatePicker.Resources>
+                                        </DatePicker>
+                                    </Border>
+                                    <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Label Margin="4" Content="Notes:" />
+                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer >
+
+            </Grid>
+
+            <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
+
+            <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                          MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Background="White" >
+                
+                <ScrollViewer.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
+                        <Separator/>
+                        <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
+                        <MenuItem Header="_Zoom In" Command="self:CustomCommands.ZoomIn"/>
+                        <MenuItem Header="_Zoom Out" Command="self:CustomCommands.ZoomOut"/>
+                        <Separator/>
+                        <MenuItem Header="_Center" Command="self:CustomCommands.Center"/>
+                        <MenuItem Header="_Move Left" Command="self:CustomCommands.MoveLeft"/>
+                        <MenuItem Header="_Move Right" Command="self:CustomCommands.MoveRight"/>
+                        <MenuItem Header="_Move Up" Command="self:CustomCommands.MoveUp"/>
+                        <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
+                    </ContextMenu>
+                </ScrollViewer.ContextMenu>
+                
+                <ScrollViewer.CommandBindings>
+                    <CommandBinding Command="self:CustomCommands.ResetView" CanExecute="ResetView_CanExecute" Executed="ResetView_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ZoomOut" CanExecute="ZoomOut_CanExecute" Executed="ZoomOut_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoom_CanExecute" Executed="ResetZoom_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveUp" CanExecute="MoveUp_CanExecute" Executed="MoveUp_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveDown" CanExecute="MoveDown_CanExecute" Executed="MoveDown_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveLeft" CanExecute="MoveLeft_CanExecute" Executed="MoveLeft_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.MoveRight" CanExecute="MoveRight_CanExecute" Executed="MoveRight_Executed"/>
+                    <CommandBinding Command="self:CustomCommands.Center" CanExecute="Center_CanExecute" Executed="Center_Executed"/>
+                </ScrollViewer.CommandBindings>
+
+                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="White">
+
+                    <Canvas Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+
+                        <Border Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+
+                    <Canvas x:Name="TreeCanvas" Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+
+                        <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                                      ItemsSource="{Binding Relationships}"
+                                      Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource RelationshipItem}" >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas x:Name="RelationshipCanvas" IsItemsHost="True" Background="{x:Null}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+
+                        <ItemsControl x:Name="PersonItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                                      ItemsSource="{Binding Members}"
+                                      Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource PersonItem}" >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                        <Canvas x:Name="PeopleCanvas" IsItemsHost="True" Background="{x:Null}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+
+                    </Canvas>
+                        
+                    </Border>
+                        
+                    </Canvas>
+                    
+                </self:ZoomBorder>
+            
+            </ScrollViewer>
+                
+            <Popup x:Name="SelectCommandPopup" Grid.Column="2" IsOpen="{Binding SelectCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" Opened="SelectCommandPopup_Opened" >
+                <Border CornerRadius="4" Padding="1" Background="Azure" BorderThickness="3" BorderBrush="{Binding SelectCommandInProgressColor}">
+                    <TextBlock x:Name="ToolTipTextBox" Margin="4" Text="{Binding SelectCommandInProgressDescription}" Background="Azure" FontWeight="DemiBold"/>
+                </Border>
+            </Popup>
+
+
+        </Grid>
+
+    </Grid>
+
+</Window>
