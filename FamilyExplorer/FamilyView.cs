@@ -36,15 +36,12 @@ namespace FamilyExplorer
     /// </summary>
     public sealed class FamilyView : INotifyPropertyChanged
     {                
-       
-        // TODO: Print window open maximized and centered
-        // TODO: Single generation print cuts relationship paths
+               
+        // TODO: Print window open maximized and centered        
         // TODO: Keep zoomborder contents within bounds regardless of scaling
-        // TODO: Setup file names             
-        // TODO: Pan & zoom reset interaction           
+        // TODO: Setup file names                     
         // TODO: Relationship path over various generations can cross person
-        // TODO: Correct zoom blur
-        // TODO: Zoom commands, menu, context menu, keybindings                   
+        // TODO: Correct zoom blur        
         // TODO: Settings window           
         // TODO: Review & comment
         // TODO: Unit tests
