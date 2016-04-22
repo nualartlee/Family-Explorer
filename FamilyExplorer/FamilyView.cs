@@ -45,6 +45,7 @@ namespace FamilyExplorer
         // TODO: Settings window           
         // TODO: Review & comment
         // TODO: Unit tests
+        // TODO: Timeline view
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
