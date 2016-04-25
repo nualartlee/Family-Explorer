@@ -394,9 +394,9 @@
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
                                         <Label Margin="4" Content="First Name: " />
-                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName}" AcceptsReturn="False"/>
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="False"/>
                                         <Label Margin="4" Content="Last Name: " />
-                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName}" AcceptsReturn="False"/>
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,4" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="False"/>
                                         <Grid Margin="4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition/>
@@ -435,7 +435,7 @@
                                             </Border>
                                         </Grid>
                                         <Label Margin="4" Content="Notes:" />
-                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3"/>
                                     </StackPanel>
                                 </Border>
                                 <Border x:Name="PersonRelationshipsBorder" CornerRadius="5" BorderThickness="1" MinWidth="250"
@@ -640,8 +640,8 @@
                     <Grid x:Name="RelationshipDataGrid" Background="Azure" DataContext="{Binding SelectedRelationship}"
                             Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Border x:Name="RelationshipDataHeaderBorder" Grid.Row="0" CornerRadius="5" BorderThickness="3"  BorderBrush="{Binding PathColor}"
                                 Background="White" Margin="10,20,10,10" HorizontalAlignment="Stretch">
@@ -710,7 +710,7 @@
                                     <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <Label Margin="4" Content="Notes:" />
-                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes}" AcceptsReturn="True" MinLines="3"/>
+                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3"/>
                             </StackPanel>
                         </Border>
                     </Grid>

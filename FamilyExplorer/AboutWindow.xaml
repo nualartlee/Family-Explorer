@@ -40,7 +40,7 @@
         </TextBlock>
         <TextBlock x:Name="SourceTextBlock" Grid.Row="5" Margin="20,10,10,1" FontSize="12" FontWeight="Bold" />
         <TextBlock x:Name="SourceHyperlinkTextBlock" Grid.Row="6" Margin="20,10,10,1" FontSize="12" FontWeight="Bold">
-        <Hyperlink x:Name="SourceHyperlink" NavigateUri="https://www.github.com/nualartlee/Family-Explorer" RequestNavigate="LicenseHyperlink_RequestNavigate">https://www.github.com/nualartlee/Family-Explorer</Hyperlink>
+        <Hyperlink x:Name="SourceHyperlink" NavigateUri="http://nualartlee.github.io/FamilyExplorer" RequestNavigate="LicenseHyperlink_RequestNavigate">http://nualartlee.github.io/FamilyExplorer</Hyperlink>
         </TextBlock>
     </Grid>
 </Window>

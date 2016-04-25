@@ -37,7 +37,7 @@ namespace FamilyExplorer
     public sealed class FamilyView : INotifyPropertyChanged
     {                
                
-        // TODO: Print window open maximized and centered        
+        // TODO: On right click over family tree, context menu will appear while still out of focus: force focus on right click        
         // TODO: Keep zoomborder contents within bounds regardless of scaling
         // TODO: Setup file names                     
         // TODO: Relationship path over various generations can cross person

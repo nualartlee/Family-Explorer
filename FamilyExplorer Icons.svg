@@ -1112,11 +1112,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="-1610.9247"
-     inkscape:cy="384.64064"
+     inkscape:zoom="0.25"
+     inkscape:cx="-2141.2523"
+     inkscape:cy="515.38579"
      inkscape:document-units="px"
-     inkscape:current-layer="g9035"
+     inkscape:current-layer="g9140"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
@@ -5325,7 +5325,9 @@
            inkscape:export-ydpi="90.000038">
           <g
              transform="translate(1191.4926,98.20223)"
-             id="g7294-6">
+             id="g7294-6"
+             inkscape:export-xdpi="90.000038"
+             inkscape:export-ydpi="90.000038">
             <rect
                style="fill:url(#linearGradient8054);fill-opacity:1;stroke:none;stroke-width:2.16614604;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
                id="rect4290-62-5-0-9"
@@ -5344,7 +5346,9 @@
           </g>
           <g
              id="g5704-0-6-0"
-             transform="matrix(0.8002346,0,0,0.82221105,-107.5083,503.44357)">
+             transform="matrix(0.8002346,0,0,0.82221105,-107.5083,503.44357)"
+             inkscape:export-xdpi="90.000038"
+             inkscape:export-ydpi="90.000038">
             <text
                transform="matrix(0.42635978,0,0,0.42635978,-222.95231,531.92747)"
                sodipodi:linespacing="125%"
@@ -5378,7 +5382,9 @@
           </g>
           <g
              id="g8117"
-             transform="translate(1199.2139,538.81353)">
+             transform="translate(1199.2139,580.81353)"
+             inkscape:export-xdpi="90.000038"
+             inkscape:export-ydpi="90.000038">
             <g
                id="g4654-9-0-45-8"
                transform="matrix(1.8126694,0,0,1.8624499,-2187.5473,-966.59107)">
@@ -5870,39 +5876,6 @@
                   </g>
                 </g>
               </g>
-            </g>
-          </g>
-          <g
-             id="g8933"
-             transform="translate(445.38751,-56)">
-            <text
-               xml:space="preserve"
-               style="font-style:normal;font-weight:normal;font-size:25.3482933px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter4642-8-4-2)"
-               x="-394.53815"
-               y="863.95081"
-               id="text4457-4-1-4"
-               sodipodi:linespacing="125%"
-               transform="matrix(0.98222882,0,0,0.98222882,-429.24825,336.91237)"><tspan
-                 sodipodi:role="line"
-                 id="tspan4459-4-9-7"
-                 x="-394.53815"
-                 y="863.95081"
-                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#808080">0.0.1</tspan></text>
-            <g
-               id="g5598-40"
-               transform="matrix(0.98222882,0,0,0.98222882,-429.53622,337.27628)">
-              <text
-                 sodipodi:linespacing="125%"
-                 id="text4457-3-7-0-5"
-                 y="862.27252"
-                 x="-395.55676"
-                 style="font-style:normal;font-weight:normal;font-size:25.3482933px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                 xml:space="preserve"><tspan
-                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
-                   y="862.27252"
-                   x="-395.55676"
-                   id="tspan4459-9-7-9-0"
-                   sodipodi:role="line">0.0.1</tspan></text>
             </g>
           </g>
         </g>

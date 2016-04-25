@@ -58,10 +58,21 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>CEE9BAD03C203358F0BFD8229A8864EC5EE5B67C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">
@@ -230,6 +241,16 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.1.28.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.28.3\build\Fody.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>set datevar=%25DATE:~6,4%25%25DATE:~3,2%25%25DATE:~0,2%25
+findstr /v PostBuildEvent "$(ProjectDir)FamilyExplorer.vdproj" | findstr ProductVersion &gt;"$(SolutionDir)Setup\version.txt"
+set /p var=&lt;"$(SolutionDir)Setup\version.txt"
+set var=%25var:"=%25
+set var=%25var: =%25
+set var=%25var:.=_%25
+for /f "tokens=1,2 delims=:" %25%25i in ("%25var%25") do @echo %25%25j &gt;"$(SolutionDir)Setup\version.txt"
+set /p realvar=&lt;"$(SolutionDir)Setup\version.txt"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -237,4 +258,19 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="PostBuildMacros">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="Targets" />
+    </GetAssemblyIdentity>
+    <ItemGroup>
+      <VersionNumber Include="@(Targets->'%(Version)')" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+    $(PostBuildEventDependsOn);
+    PostBuildMacros;
+  </PostBuildEventDependsOn>
+    <PostBuildEvent>echo @(VersionNumber)&gt;&gt;"$(SolutionDir)Setup\version.txt"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
