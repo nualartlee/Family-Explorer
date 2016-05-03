@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<title>Family Explorer - Getting Started</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+.w3-sidenav a,.w3-sidenav h4{padding:12px;}
+.w3-navbar a{padding-top:12px !important;padding-bottom:12px !important;}
+</style>
+<body>
+
+<!-- Navbar -->
+<ul class="w3-navbar w3-theme w3-top w3-left-align w3-large" style="z-index:4;">  
+  <li><a href="index.html" class="w3-theme-l1"> <img src="FamilyExplorerLogo.png" alt="Family Explorer Logo" height="25" width="30" ></a></li>
+  <li class="w3-hide-small"><a href="downloads.html" class="w3-hover-white">Downloads</a></li>
+  <li class="w3-hide-small"><a href="gettingstarted.html" class="w3-hover-white">Getting Started</a></li>
+  <li class="w3-hide-small"><a href="bugreporting.html" class="w3-hover-white">Bug Reporting</a></li>
+  <li class="w3-hide-small"><a href="about.html" class="w3-hover-white">About</a></li> 
+</ul>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidenav is visible -->
+<div class="w3-main">
+
+  <div class="w3-row w3-padding-hor-64" style="margin-left:50px;min-height:800px">
+   <div class="w3-twothird w3-container">
+    <h1 class="w3-text-teal">Getting Started</h1>
+    <section>
+        
+     <article>
+     <h2>Download & Install</h2>
+
+     <p>If you haven't already, go to the <a href="Downloads.html">Downloads</a> page and get the latest version by clicking on the teal download button. Double-click on the downloaded file to start the installation and follow the prompts.</p>
+    
+    </article>
+        
+    
+        
+     <article>
+     <h2>Open Family Explorer</h2>
+
+     <p>Once you have installed Family Explorer, look on the desktop or in your programs list for the icon and click it to start.</p>
+    
+     <p>If you have already been using Family Explorer, you can just double-click on any previously saved family file to open it directly.</p>
+    </article>
+        
+        <div class="w3-container w3-padding-medium w3-center">
+    <div class="w3-card-4" >
+          <img src="Images/ProgramIcon.png" class="w3-round " style="width:50%" alt="Family Explorer Image">
+    </div>
+   </div>
+        
+      <article>
+      <h2>Add Members</h2>
+      <p>When you open Family Explorer for the first time, you will have a default member to start the family off. This member will already be selected and you will see the details in the top left window. </p>   
+      <p>You will know what person is selected in a tree by a green outline around it. A selected relationship between to people will also have a green outline, and the data will show in the bottom left window.</p>   
+      <p>Set the data for this person, and add additional people and relationships clicking the buttons in the top left window. You can also right-click on the person in the tree to add people from a context menu.</p>  
+          
+          
+     </article>
+    
+        <div class="w3-container w3-padding-medium w3-center">
+    <div class="w3-card-4" >
+          <img src="Images/AddPerson.png" class="w3-round " style="width:100%" alt="Family Explorer Image">
+    </div>
+   </div>
+        
+     <article>
+      <h2>Add Additional Relationships Between Existing Members</h2>
+      <p>You might want to record a particular type of relationship between two members that has not already been created when you added them. For example, a father and son with have a parent relationship by default, but you might want to record a very close relationship between them as a friendship.
+     </p>
+    <p>To make this kind of record, right-click on one of the individuals to open the context menu. Click on 'Select' and from the submenu select the type of relationship you would like to add. The cursor will indicate that you are adding this relationship and will ask you to click on the reciprocal person.</p>
+     </article>
+   
+         <div class="w3-container w3-padding-medium w3-center">
+    <div class="w3-card-4" >
+          <img src="Images/SelectFriend.png" class="w3-round " style="width:100%" alt="Family Explorer Image">
+    </div>
+   </div>
+
+     <article>
+      <h2>Print & Save</h2>
+      <p>To print the relationship tree whole, open the 'File' menu in the top left of the program window and select 'Print'. A preview window will display where you can select your printer and print. If you would like to print a section of interest, zoom in to it and select 'Print View' from the file menu.</p>  
+     <p>You can save the family data anytime from the same 'File' menu. To reopen that file later on, just double-click it in Windows File Explorer to open it up in Family Explorer.</p>  
+     </article>
+    
+         <div class="w3-container w3-padding-medium w3-center">
+    <div class="w3-card-4" >
+          <img src="Images/Print.png" class="w3-round " style="width:100%" alt="Family Explorer Image">
+    </div>
+   </div>
+        
+        
+    </section>
+   </div>
+   
+      
+      
+  </div>
+
+ <footer id="myFooter" class="w3-container">
+    <div class="w3-container w3-theme-l2" style="min-height:50px">
+           
+    </div>
+
+    <div class="w3-container w3-theme-l1">
+      <h7>&copy; 2016 Javier Nualart Lee</h5>  
+    </div>
+  </footer>
+
+<!-- END MAIN -->
+</div>
+
+<script>
+ // Script to open and close the sidenav
+ function w3_open() {
+    document.getElementsByClassName("w3-sidenav")[0].style.display = "block";
+    document.getElementsByClassName("w3-overlay")[0].style.display = "block";
+}
+ 
+ function w3_close() {
+    document.getElementsByClassName("w3-sidenav")[0].style.display = "none";
+    document.getElementsByClassName("w3-overlay")[0].style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
