@@ -2530,8 +2530,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Family Explorer"
-        "ProductCode" = "8:{F2CDF188-944A-4A3E-BDE7-AECBF6C64AB9}"
-        "PackageCode" = "8:{5EF5BAA4-384E-40AD-9081-5753C230D57C}"
+        "ProductCode" = "8:{2B84F40F-0AED-4811-BBEB-011E2002C649}"
+        "PackageCode" = "8:{070B66F7-CF3E-4AA4-91B4-5B9BF17D621A}"
         "UpgradeCode" = "8:{0E36FF7D-FACA-4F8B-99C0-E11E18F161E2}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

@@ -215,7 +215,7 @@ namespace UnitTests
 
                 // People & relationship count should have increased
                 Assert.AreEqual(people + 1, family.Members.Count, "Wrong family member count");
-                //Assert.AreEqual(relationships + 3, family.Relationships.Count, "Wrong family relationship count");
+                Assert.AreEqual(relationships + 3, family.Relationships.Count, "Wrong family relationship count");
             }
         }
     }

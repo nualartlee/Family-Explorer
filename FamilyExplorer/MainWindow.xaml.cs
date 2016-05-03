@@ -313,11 +313,11 @@ namespace FamilyExplorer
         }
         
         private void TreeZoomBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {           
+        {
+            // Unselect all
             family.SelectPerson(null);
-            family.SelectRelationship(null);
-            TreeZoomBorder.Focus();
-        }
+            family.SelectRelationship(null);            
+        }        
 
         private void TreeScrollViewer_MouseMove(object sender, MouseEventArgs e)
         {
@@ -342,5 +342,16 @@ namespace FamilyExplorer
             SelectCommandPopup.VerticalOffset = currentPos.Y + 15;
         }
 
+        private void TreeScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Give focus to the tree to enable zoom and pan funcitons
+            TreeScrollViewer.Focus();
+        }
+
+        private void ViewMenuItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Give focus to the tree to enable zoom and pan funcitons
+            TreeScrollViewer.Focus();
+        }
     }
 }

@@ -250,7 +250,7 @@
     </Window.Resources>
 
     <Window.CommandBindings>
-       
+
         <CommandBinding Command="self:CustomCommands.Print" CanExecute="Print_CanExecute" Executed="Print_Executed"/>
         <CommandBinding Command="self:CustomCommands.PrintView" CanExecute="PrintView_CanExecute" Executed="PrintView_Executed"/>
     </Window.CommandBindings>
@@ -319,7 +319,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_View">
+            <MenuItem Header="_View" PreviewMouseLeftButtonDown="ViewMenuItem_PreviewMouseLeftButtonDown">
                 <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
                 <Separator/>
                 <MenuItem Header="_Reset Zoom" Command="self:CustomCommands.ResetZoom"/>
@@ -335,7 +335,7 @@
             <MenuItem Header="_About" Click="ShowAboutWindow">
             </MenuItem>
         </Menu>
-        
+
         <DockPanel Grid.Row="1">
             <ToolBarTray>
                 <ToolBar>
@@ -355,7 +355,7 @@
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>
-        
+
         <Grid x:Name="MainGrid" Grid.Row="2" MouseMove="TreeScrollViewer_MouseMove" UseLayoutRounding="True">
 
             <Grid.ColumnDefinitions>
@@ -363,20 +363,20 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-           
+
             <Grid x:Name="DataGrid" Grid.Column="0" Background="Azure" Height="{Binding ElementName=MainGrid, Path=ActualHeight}">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" MinHeight="20"/>
+                    <RowDefinition Height="3*" MinHeight="20"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*" MinHeight="20"/>
+                    <RowDefinition Height="2*" MinHeight="20"/>
                 </Grid.RowDefinitions>
 
                 <ScrollViewer x:Name="PersonDataScrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Grid x:Name="PersonDataGrid" Background="Azure" DataContext="{Binding SelectedPerson}"
-                            Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Center" >
+                            Visibility="{Binding Converter={StaticResource IsItemSelected}}" HorizontalAlignment="Stretch" >
 
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" >
                             <Border CornerRadius="5" BorderThickness="1" BorderBrush="{Binding BorderBrush}" Background="{Binding Background}" Margin="10,20,10,10">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -389,7 +389,7 @@
                                     </Button>
                                 </Grid>
                             </Border>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Border x:Name="PersonDataBorder" CornerRadius="5" BorderThickness="1"
                                         BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
                                     <StackPanel>
@@ -434,8 +434,6 @@
                                                 </DatePicker>
                                             </Border>
                                         </Grid>
-                                        <Label Margin="4" Content="Notes:" />
-                                        <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3"/>
                                     </StackPanel>
                                 </Border>
                                 <Border x:Name="PersonRelationshipsBorder" CornerRadius="5" BorderThickness="1" MinWidth="250"
@@ -501,8 +499,8 @@
                                                         <Button.ContextMenu>
                                                             <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
                                                                 <MenuItem Header="{Binding AddSiblingEqualParents_ToolTip}" Command="{Binding AddSiblingEqualParents}"/>
-                                                            <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
-                                                            <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
+                                                                <MenuItem Header="{Binding AddSiblingByMother_ToolTip}" Command="{Binding AddSiblingByMother}" />
+                                                                <MenuItem Header="{Binding AddSiblingByFather_ToolTip}" Command="{Binding AddSiblingByFather}" />
                                                                 <MenuItem Header="{Binding AddSiblingUnknownParents_ToolTip}" Command="{Binding AddSiblingUnknownParents}"/>
                                                             </ContextMenu>
                                                         </Button.ContextMenu>
@@ -630,6 +628,19 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
+                            <Border x:Name="PersonNotesBorder" CornerRadius="5" BorderThickness="1"
+                                        BorderBrush="{Binding BorderBrush}" Background="White" Margin="10" >
+                                <StackPanel>
+                                    <Label Margin="4" Content="Notes:" />
+                                    <Canvas x:Name="PersonNotes2Canvas" Margin="10,4,10,10" Height="{Binding ElementName=PersonNotes2TextBox, Path=ActualHeight}" 
+                                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                        <TextBox x:Name="PersonNotes2TextBox" Template="{StaticResource TextBoxBaseControlTemplate}" 
+                                                 Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3"
+                                                  Width="{Binding ElementName=PersonNotes2Canvas, Path=ActualWidth}" TextWrapping="Wrap"/>
+
+                                    </Canvas>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
@@ -657,7 +668,7 @@
                             </Grid>
                         </Border>
                         <Border x:Name="RelationshipDataContentBorder" Grid.Row="1" CornerRadius="5" BorderThickness="1" BorderBrush="Gray" Background="White" Margin="10" >
-                            <StackPanel>
+                            <StackPanel x:Name="RelationshipDataStackPanel">
                                 <Label Margin="4" Content="{Binding SourceDescription}" />
                                 <Label Margin="4" Content="{Binding DestinationDescription}" />
                                 <StackPanel Margin="4" Orientation="Horizontal" Visibility="{Binding StartDateVisible, Converter={StaticResource IsItemVisible}}">
@@ -710,7 +721,10 @@
                                     <CheckBox Margin="4" IsChecked="{Binding Ended}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <Label Margin="4" Content="Notes:" />
-                                <TextBox Template="{StaticResource TextBoxBaseControlTemplate}" Margin="10,4,10,10" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3"/>
+                                <Canvas x:Name="RelationshipNotesCanvas" Margin="10,4,10,10" Height="{Binding ElementName=RelationshipNotesTextBox, Path=ActualHeight}">
+                                    <TextBox x:Name="RelationshipNotesTextBox" Template="{StaticResource TextBoxBaseControlTemplate}" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True" MinLines="3" TextWrapping="Wrap" Width="{Binding ElementName=RelationshipNotesCanvas, Path=ActualWidth}"/>
+                                </Canvas>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -721,8 +735,8 @@
             <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="7" Background="#FFBCBCBC"/>
 
             <ScrollViewer x:Name="TreeScrollViewer" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                          MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" Background="White" >
-                
+                           Background="White" PreviewMouseDown="TreeScrollViewer_PreviewMouseDown">
+
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="_Reset View" Command="self:CustomCommands.ResetView"/>
@@ -738,7 +752,7 @@
                         <MenuItem Header="_Move Down" Command="self:CustomCommands.MoveDown"/>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
-                
+
                 <ScrollViewer.CommandBindings>
                     <CommandBinding Command="self:CustomCommands.ResetView" CanExecute="ResetView_CanExecute" Executed="ResetView_Executed"/>
                     <CommandBinding Command="self:CustomCommands.ZoomIn" CanExecute="ZoomIn_CanExecute" Executed="ZoomIn_Executed"/>
@@ -751,55 +765,55 @@
                     <CommandBinding Command="self:CustomCommands.Center" CanExecute="Center_CanExecute" Executed="Center_Executed"/>
                 </ScrollViewer.CommandBindings>
 
-                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="White">
+                <self:ZoomBorder Grid.Column="2" x:Name="TreeZoomBorder" Background="White" MouseLeftButtonDown="TreeZoomBorder_MouseLeftButtonDown" >
 
                     <Canvas Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
                         <Border Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
-                    <Canvas x:Name="TreeCanvas" Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
+                            <Canvas x:Name="TreeCanvas" Background="White" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}">
 
-                        <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                                <ItemsControl x:Name="RelationshipItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Relationships}"
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource RelationshipItem}" >
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <Canvas x:Name="RelationshipCanvas" IsItemsHost="True" Background="{x:Null}"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style TargetType="ContentPresenter">
-                                    <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}"/>
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas x:Name="RelationshipCanvas" IsItemsHost="True" Background="{x:Null}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}"/>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
 
-                        <ItemsControl x:Name="PersonItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
+                                <ItemsControl x:Name="PersonItemsControl" Width="{Binding Tree.Width}" Height="{Binding Tree.Height}"
                                       ItemsSource="{Binding Members}"
                                       Cursor="{Binding FamilyTreeCursor}" ItemTemplate="{StaticResource PersonItem}" >
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                        <Canvas x:Name="PeopleCanvas" IsItemsHost="True" Background="{x:Null}"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style TargetType="ContentPresenter">
-                                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                                    <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas x:Name="PeopleCanvas" IsItemsHost="True" Background="{x:Null}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+
+                            </Canvas>
+
+                        </Border>
 
                     </Canvas>
-                        
-                    </Border>
-                        
-                    </Canvas>
-                    
+
                 </self:ZoomBorder>
-            
+
             </ScrollViewer>
-                
+
             <Popup x:Name="SelectCommandPopup" Grid.Column="2" IsOpen="{Binding SelectCommandInProgress}" AllowsTransparency="true" Placement="Relative" PlacementTarget="{Binding ElementName=MainGrid}" Opened="SelectCommandPopup_Opened" >
                 <Border CornerRadius="4" Padding="1" Background="Azure" BorderThickness="3" BorderBrush="{Binding SelectCommandInProgressColor}">
                     <TextBlock x:Name="ToolTipTextBox" Margin="4" Text="{Binding SelectCommandInProgressDescription}" Background="Azure" FontWeight="DemiBold"/>
